@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'httparty'
 
 require 'occi/api/client/http/net_http_fix'

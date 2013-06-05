@@ -1,5 +1,5 @@
 require 'rubygems'
-require 'occi'
+require 'occi-api'
 require 'pp'
 
 ## options

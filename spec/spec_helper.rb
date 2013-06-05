@@ -16,7 +16,7 @@ end
 # using so called cassettes (YAML)
 require 'vcr'
 
-require 'occi'
+require 'occi-api'
 
 # enable VCR for HTTP/HTTPS connections
 # using RSPEC metadata integration;
