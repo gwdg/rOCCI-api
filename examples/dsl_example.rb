@@ -2,7 +2,7 @@ require 'rubygems'
 require 'pp'
 
 # load and include rOCCI client DSL
-require 'occi'
+require 'occi-api'
 extend Occi::Api::Dsl
 
                               ## options

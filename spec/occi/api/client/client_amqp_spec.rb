@@ -1,5 +1,4 @@
 require "rspec"
-require "occi"
 
 #Todo mock the amqp messages
 
