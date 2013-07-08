@@ -439,127 +439,51 @@ module Occi
           true
         end
 
-        # Sets the logger and log levels. This allows users to pass existing logger
-        # instances to the rOCCI client.
-        #
-        # @example
-        #    set_logger { :out => STDERR, :level => Occi::Log::WARN, :logger => nil }
-        #
-        # @param [Hash] logger options
+        # @see Occi::Api::Client::ClientBase
         def set_logger(log_options)
           super log_options
 
           self.class.debug_output $stderr if log_options[:level] == Occi::Log::DEBUG
         end
 
-        # Sets auth method and appropriate httparty attributes. Supported auth methods
-        # are: ["basic", "digest", "x509", "none"]
-        #
-        # @example
-        #    set_auth { :type => "none" }
-        #    set_auth { :type => "basic", :username => "123", :password => "321" }
-        #    set_auth { :type => "digest", :username => "123", :password => "321" }
-        #    set_auth { :type => "x509", :user_cert => "~/cert.pem",
-        #                  :user_cert_password => "321", :ca_path => nil }
-        #    set_auth { :type => "keystone", :token => "005c8a5d7f2c437a9999302c458afbda" }
-        #
-        # @param [Hash] authentication options
-        def set_auth(auth_options)
+        # @see Occi::Api::Client::ClientBase
+        def set_auth(auth_options, fallback = false)
           @auth_options = auth_options
 
           case @auth_options[:type]
           when "basic"
-            # set up basic auth
-            raise ArgumentError, "Missing required options 'username' and 'password' for basic auth!" unless @auth_options[:username] and @auth_options[:password]
-            self.class.basic_auth @auth_options[:username], @auth_options[:password]
+            @authn_plugin = Http::AuthnPlugins::Basic.new self, @auth_options
           when "digest"
-            # set up digest auth
-            raise ArgumentError, "Missing required options 'username' and 'password' for digest auth!" unless @auth_options[:username] and @auth_options[:password]
-            self.class.digest_auth @auth_options[:username], @auth_options[:password]
+            @authn_plugin = Http::AuthnPlugins::Digest.new self, @auth_options
           when "x509"
-            # set up pem and optionally pem_password and ssl_ca_path
-            raise ArgumentError, "Missing required option 'user_cert' for x509 auth!" unless @auth_options[:user_cert]
-            raise ArgumentError, "The file specified in 'user_cert' does not exist!" unless File.exists? @auth_options[:user_cert]
-
-            # handle PKCS#12 credentials before passing them
-            # to httparty
-            if /\A(.)+\.p12\z/ =~ @auth_options[:user_cert]
-              self.class.pem AuthnUtils.extract_pem_from_pkcs12(@auth_options[:user_cert], @auth_options[:user_cert_password]), ''
-            else
-              # httparty will handle ordinary PEM formatted credentials
-              # TODO: Issue #49, check PEM credentials in jRuby
-              self.class.pem File.open(@auth_options[:user_cert], 'rb').read, @auth_options[:user_cert_password]
-            end
-
-            self.class.ssl_ca_path @auth_options[:ca_path] unless @auth_options[:ca_path].nil?
-            self.class.ssl_ca_file @auth_options[:ca_file] unless @auth_options[:ca_file].nil?
-            self.class.ssl_extra_chain_cert AuthnUtils.certs_to_file_ary(@auth_options[:proxy_ca]) unless @auth_options[:proxy_ca].nil?
-          when "keystone"
-            Occi::Log.warn "AuthN method 'keystone' is deprecated and you should use it only as a fall-back option!"
-            # set up OpenStack Keystone token based auth
-            raise ArgumentError, "Missing required option 'token' for OpenStack Keystone auth!" unless @auth_options[:token]
-            self.class.headers['X-Auth-Token'] = @auth_options[:token]
+            @authn_plugin = Http::AuthnPlugins::X509.new self, @auth_options
+          when "keystone" && fallback
+            @authn_plugin = Http::AuthnPlugins::Keystone.new self, @auth_options
           when "none", nil
-            # do nothing
+            @authn_plugin = Http::AuthnPlugins::Dummy.new self
           else
-            raise ArgumentError, "Unknown AUTH method [#{@auth_options[:type]}]!"
+            raise ::Occi::Api::Client::Errors::AuthnError, "Unknown authN method [#{@auth_options[:type]}]!"
           end
+
+          @authn_plugin.setup
         end
 
-        # Checks provided credentials and attempts transparent
-        # authentication with OS Keystone using the "www-authenticate"
-        # header.
-        #
-        # @example
-        #    check_authn
-        #
-        # @return [true, false]
-        def check_authn
-          response = self.class.head @endpoint
-
-          return true if response.success?
-          raise "#{response_message(response)}!" unless response.code == 401
-
-          if response.headers['www-authenticate'] && response.headers['www-authenticate'].start_with?('Keystone')
-            keystone_uri = /^Keystone uri='(.+)'$/.match(response.headers['www-authenticate'])[1]
-
-            return false unless keystone_uri
-
-            if @auth_options[:type] == "x509"
-              body = { "auth" => { "voms" => true } }
+        # @see Occi::Api::Client::ClientBase
+        def preauthenticate
+          begin
+            @authn_plugin.authenticate
+          rescue ::Occi::Api::Client::Errors::AuthnError => e
+            Occi::Log.debug e.message
+            if @authn_plugin.FALLBACKS.any?
+              set_auth @auth_options, true
+              @authn_plugin.authenticate
             else
-              body = {
-                "auth" => {
-                  "passwordCredentials" => {
-                    "username" => @auth_options[:username],
-                    "password" => @auth_options[:password]
-                  }
-                }
-              }
-            end
-
-            headers = self.class.headers.clone
-            headers['Content-Type'] = "application/json"
-            headers['Accept'] = headers['Content-Type']
-
-            response = self.class.post(keystone_uri + "/v2.0/tokens", :body => body.to_json, :headers => headers)
-
-            if response.success?
-              self.class.headers['X-Auth-Token'] = response['access']['token']['id']
-              return true
+              raise e
             end
           end
-
-          false
         end
 
-        # Sets media type. Will choose either application/occi+json or text/plain
-        # based on the formats supported by the server.
-        #
-        # @example
-        #    set_media_type # => 'application/occi+json'
-        #
-        # @return [String] chosen media type
+        # @see Occi::Api::Client::ClientBase
         def set_media_type(force_type = nil)
           # force media_type if provided
           if force_type

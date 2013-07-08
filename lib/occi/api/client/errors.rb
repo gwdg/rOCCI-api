@@ -1,0 +1,1 @@
+require 'occi/api/client/errors/authn_error'

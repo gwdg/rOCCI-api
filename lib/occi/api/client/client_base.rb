@@ -29,10 +29,16 @@ module Occi
           set_logger options[:log]
 
           # check the validity and canonize the endpoint URI
-          prepare_endpoint options[:endpoint]
+          set_endpoint options[:endpoint]
 
           # pass auth options
           set_auth options[:auth]
+
+          # verify authN before attempting actual
+          # message exchange with the server; this
+          # is necessary because of OCCI-OS and its
+          # redirect to OS Keystone
+          preauthenticate
 
           # set accepted media types
           set_media_type options[:media_type]
@@ -47,8 +53,8 @@ module Occi
         # @example
         #    client.connect # => true
         #
-        # @param [boolean] force re-connect on already connected client
-        # @return [boolean] true on successful connect
+        # @param [Boolean] force re-connect on already connected client
+        # @return [Boolean] true on successful connect
         def connect(force = false)
           raise "Client already connected!" if @connected && !force
           @connected = true
@@ -577,10 +583,24 @@ module Occi
         #    set_auth { :type => "digest", :username => "123", :password => "321" }
         #    set_auth { :type => "x509", :user_cert => "~/cert.pem",
         #                  :user_cert_password => "321", :ca_path => nil }
-        #    set_auth { :type => "keystone", :token => "005c8a5d7f2c437a9999302c458afbda" }
         #
         # @param [Hash] authentication options
-        def set_auth(auth_options); end
+        # @param [Boolean] allow fallback-only options
+        def set_auth(auth_options, fallback = false); end
+
+        # Attempts to establish a preliminary connection with the server
+        # to verify provided credentials and perform fallback authN
+        # if necessary. Has to be invoked after set_auth
+        def preauthenticate; end
+
+        # Sets media type. Will choose either application/occi+json or text/plain
+        # based on the formats supported by the server.
+        #
+        # @example
+        #    set_media_type # => 'application/occi+json'
+        #
+        # @return [String] chosen media type
+        def set_media_type(force_type = nil); end
 
         # Sets the logger and log levels. This allows users to pass existing logger
         # instances to the rOCCI client.
@@ -600,23 +620,14 @@ module Occi
         # slash if necessary.
         #
         # @example
-        #    prepare_endpoint "http://localhost:3300" # => "http://localhost:3300/"
+        #    set_endpoint "http://localhost:3300" # => "http://localhost:3300/"
         #
         # @param [String] endpoint URI in a non-canonical string
         # @return [String] canonical endpoint URI in a string, with a trailing slash
-        def prepare_endpoint(endpoint)
+        def set_endpoint(endpoint)
           raise 'Endpoint not a valid URI' if (endpoint =~ URI::ABS_URI).nil?
           @endpoint = endpoint.chomp('/') + '/'
         end
-
-        # Sets media type. Will choose either application/occi+json or text/plain
-        # based on the formats supported by the server.
-        #
-        # @example
-        #    set_media_type # => 'application/occi+json'
-        #
-        # @return [String] chosen media type
-        def set_media_type(force_type = nil); end
 
         # Creates an Occi::Model from data retrieved from the server.
         #
@@ -627,11 +638,6 @@ module Occi
         # @param [Occi::Collection] parsed representation of server's model
         # @return [Occi::Model] Model instance
         def set_model(model)
-
-          # check credentials and handle OpenStack Keystone
-          # TODO: check expiration dates on Keystone tokens
-          raise "You are not authorized to use this endpoint!" unless check_authn
-
           # build model
           @model = Occi::Model.new(model)
 
@@ -640,7 +646,7 @@ module Occi
             :resource_tpl => get_res_tpl_mixins_ary
           }
 
-          model
+          @model
         end
 
         #
