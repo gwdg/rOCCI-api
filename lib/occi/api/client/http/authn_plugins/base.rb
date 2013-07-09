@@ -18,6 +18,10 @@ module Occi::Api::Client
           raise ::Occi::Api::Client::Errors::AuthnError, "Authentication failed with code #{response.code.to_s}!" unless response.success?
         end
 
+        def fallbacks
+          FALLBACKS
+        end
+
       end
 
     end
