@@ -367,14 +367,15 @@ module Occi
 
           case response.code
           when 200
-            collection = Occi::Parser.parse(response.header["content-type"].split(";").first, response)
+            collection = Occi::Parser.parse(response.header["content-type"].split(";").first, response.body)
+
             if collection.empty?
-              Occi::Parser.locations(response.header["content-type"].split(";").first, response.body, response.header).first
+              Occi::Parser.locations(response.header["content-type"].split(";").first, response.body, response.headers).first
             else
               collection.resources.first.location if collection.resources.first
             end
           when 201
-            Occi::Parser.locations(response.header["content-type"].split(";").first, response.body, response.header).first
+            Occi::Parser.locations(response.header["content-type"].split(";").first, response.body, response.headers).first
           else
             raise "HTTP POST failed! #{response_msg}"
           end
@@ -413,7 +414,7 @@ module Occi
 
           case response.code
           when 200, 201
-            Occi::Parser.parse(response.header["content-type"].split(";").first, response)
+            Occi::Parser.parse(response.header["content-type"].split(";").first, response.body)
           else
             raise "HTTP POST failed! #{response_msg}"
           end
