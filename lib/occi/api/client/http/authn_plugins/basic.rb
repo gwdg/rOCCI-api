@@ -3,7 +3,11 @@ module Occi::Api::Client
     module AuthnPlugins
 
       class Basic < Base
-        FALLBACKS = %w(keystone)
+
+        def initialize(env_ref, options = {})
+          super env_ref, options
+          @fallbacks = %w(keystone)
+        end
 
         def setup(options = {})
           # set up basic auth

@@ -3,7 +3,11 @@ module Occi::Api::Client
     module AuthnPlugins
 
       class X509 < Base
-        FALLBACKS = %w(keystone)
+
+        def initialize(env_ref, options = {})
+          super env_ref, options
+          @fallbacks = %w(keystone)
+        end
 
         def setup(options = {})
           # set up pem and optionally pem_password and ssl_ca_path

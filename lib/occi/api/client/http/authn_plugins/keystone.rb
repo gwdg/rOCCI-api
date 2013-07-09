@@ -3,7 +3,6 @@ module Occi::Api::Client
     module AuthnPlugins
 
       class Keystone < Base
-        FALLBACKS = []
 
         def setup(options = {})
           response = @env_ref.class.head @env_ref.endpoint
