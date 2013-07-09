@@ -36,7 +36,7 @@ module Occi::Api::Client
         private
 
         def get_keystone_req(json = true)
-          if @options[:type] == "x509"
+          if @options[:original_type] == "x509"
             body = { "auth" => { "voms" => true } }
           elsif @options[:username] && @options[:password]
             body = {
