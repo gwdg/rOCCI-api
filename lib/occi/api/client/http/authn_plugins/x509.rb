@@ -29,9 +29,13 @@ module Occi::Api::Client
           @env_ref.class.ssl_ca_path @options[:ca_path] if @options[:ca_path]
           @env_ref.class.ssl_ca_file @options[:ca_file] if @options[:ca_file]
 
-          if @options[:proxy_ca]
-            cert_ary = ::Occi::Api::Client::AuthnUtils.certs_to_file_ary @options[:proxy_ca]
-            @env_ref.class.ssl_extra_chain_cert cert_ary
+          if @options[:voms]
+            cert_ary = ::Occi::Api::Client::AuthnUtils.certs_to_file_ary @options[:user_cert]
+
+            # remove the first cert since it was already used as pem_cert
+            # use the rest to establish the chain of trust
+            cert_ary.shift
+            @env_ref.class.ssl_extra_chain_cert cert_ary unless cert_ary.empty?
           end
         end
 

@@ -9,6 +9,8 @@ module Occi
     module Client
 
       class AuthnUtils
+        CERT_REGEXP = /\n?(-----BEGIN CERTIFICATE-----\n.+?\n-----END CERTIFICATE-----)\n/m
+
         # Reads credentials from a PKCS#12 compliant file. Returns
         # X.509 certificate and decrypted private key in PEM
         # formatted string.
@@ -73,7 +75,10 @@ module Occi
         # @return [Array<String>] An array of read certificates
         def self.certs_to_file_ary(ca_file)
           # TODO: read and separate multiple certificates
-          [] << File.open(ca_file).read
+          certs_str = File.open(ca_file).read
+
+          certs_ary = certs_str.scan(CERT_REGEXP)
+          certs_ary ? certs_ary.flatten : []
         end
       end
 

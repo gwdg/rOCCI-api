@@ -78,12 +78,6 @@ For X.509 auth use
     auth.user_cert_password = 'MyPassword'
     auth.ca_path = '/Path/To/root-certificates'
 
-**Deprecated:** For keystone auth use
-
-    auth = Hashie::Mash.new
-    auth.type = 'keystone'
-    auth.token = '887665443383838'
-
 ### DSL
 In your scripts, you can use the OCCI client DSL.
 
