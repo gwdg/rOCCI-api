@@ -457,7 +457,8 @@ module Occi
             @authn_plugin = Http::AuthnPlugins::Digest.new self, @auth_options
           when "x509"
             @authn_plugin = Http::AuthnPlugins::X509.new self, @auth_options
-          when "keystone" && fallback
+          when "keystone"
+            raise ::Occi::Api::Client::Errors::AuthnError, "This authN method is for fallback only!" unless fallback
             @authn_plugin = Http::AuthnPlugins::Keystone.new self, @auth_options
           when "none", nil
             @authn_plugin = Http::AuthnPlugins::Dummy.new self
@@ -474,6 +475,7 @@ module Occi
             @authn_plugin.authenticate
           rescue ::Occi::Api::Client::Errors::AuthnError => e
             Occi::Log.debug e.message
+
             if @authn_plugin.fallbacks.any?
               @auth_options[:type] = @authn_plugin.fallbacks.first
               set_auth @auth_options, true
