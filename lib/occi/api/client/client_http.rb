@@ -475,6 +475,7 @@ module Occi
           rescue ::Occi::Api::Client::Errors::AuthnError => e
             Occi::Log.debug e.message
             if @authn_plugin.fallbacks.any?
+              @auth_options[:type] = @authn_plugin.fallbacks.first
               set_auth @auth_options, true
               @authn_plugin.authenticate
             else
