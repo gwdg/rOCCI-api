@@ -86,7 +86,7 @@ module Occi
           set_model model
 
           # auto-connect?
-          @connected = options[:auto_connect]
+          @connected = @options[:auto_connect]
         end
         
         # @see Occi::Api::Client::ClientBase

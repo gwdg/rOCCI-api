@@ -7,11 +7,12 @@ module Occi
         # a few attributes which should be visible outside the client
         attr_reader :endpoint
         attr_reader :auth_options
-        attr_accessor :media_type
+        attr_reader :media_type
         attr_reader :connected
-        attr_accessor :model
+        attr_reader :model
         attr_reader :logger
         attr_reader :last_response
+        attr_reader :options
 
         def initialize(options = {})
           defaults = {
@@ -23,16 +24,16 @@ module Occi
           }
 
           options = options.marshal_dump if options.is_a? OpenStruct
-          options = defaults.merge options
+          @options = defaults.merge options
 
           # set Occi::Log
-          set_logger options[:log]
+          set_logger @options[:log]
 
           # check the validity and canonize the endpoint URI
-          set_endpoint options[:endpoint]
+          set_endpoint @options[:endpoint]
 
           # pass auth options
-          set_auth options[:auth]
+          set_auth @options[:auth]
 
           # verify authN before attempting actual
           # message exchange with the server; this
@@ -41,7 +42,7 @@ module Occi
           preauthenticate
 
           # set accepted media types
-          set_media_type options[:media_type]
+          set_media_type @options[:media_type]
 
           @connected = false
         end
