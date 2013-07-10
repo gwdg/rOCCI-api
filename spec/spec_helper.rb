@@ -1,8 +1,6 @@
-# make sure the local files will be loaded first;
-# this should prevent installed versions of this
-# gem to be included in the testing process
-$:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-$:.unshift(File.dirname(__FILE__))
+require 'rubygems'
+require 'occi-api'
+require 'vcr'
 
 # enable coverage reports
 if ENV['COVERAGE']
@@ -10,21 +8,16 @@ if ENV['COVERAGE']
   SimpleCov.start
 end
 
-# enable VCR integration;
-# this allows us to record and re-play network
-# communication between client and server
-# using so called cassettes (YAML)
-require 'vcr'
-
-require 'occi-api'
-
 # enable VCR for HTTP/HTTPS connections
 # using RSPEC metadata integration;
 # this will automatically generate a named
 # cassette for each unit test
 VCR.configure do |c|
   c.hook_into :webmock
-  c.cassette_library_dir = 'spec/cassettes'
+ 
+  gem_root = File.expand_path '..', __FILE__
+  c.cassette_library_dir = "#{gem_root}/cassettes"
+  
   c.configure_rspec_metadata!
 end
 

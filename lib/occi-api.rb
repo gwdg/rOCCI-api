@@ -3,8 +3,12 @@ require 'rubygems/package'
 
 require 'occi-core'
 
+module Occi::Api; end
+
+require 'occi/api/version'
+require 'occi/api/client/client_base'
+require 'occi/api/client/errors'
+require 'occi/api/client/http/authn_plugins'
 require 'occi/api/client/client_http'
 require 'occi/api/client/client_amqp'
 require 'occi/api/dsl'
-
-module Occi; end

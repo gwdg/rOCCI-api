@@ -45,7 +45,7 @@ module Occi
 
           ca_certs = AuthnUtils.certs_to_file_ary(path + "/rocci-cred-cert.pem")
 
-          ca_certs.should =~ [File.open(path + "/rocci-cred-cert.pem", "rb").read]
+          ca_certs.should =~ [File.open(path + "/rocci-cred-cert.pem", "rb").read.chomp("\n")]
         end
 
       end

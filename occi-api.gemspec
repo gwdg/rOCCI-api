@@ -2,11 +2,11 @@
 lib = File.expand_path('../lib/', __FILE__)
 $:.unshift lib unless $:.include?(lib)
 
-require 'occi/version'
+require 'occi/api/version'
 
 Gem::Specification.new do |gem|
   gem.name          = "occi-api"
-  gem.version       = Occi::VERSION
+  gem.version       = Occi::Api::VERSION
   gem.authors       = ["Florian Feldhaus","Piotr Kasprzak", "Boris Parak"]
   gem.email         = ["florian.feldhaus@gwdg.de", "piotr.kasprzak@gwdg.de", "xparak@mail.muni.cz"]
   gem.description   = %q{OCCI is a collection of classes to simplify the implementation of the Open Cloud Computing API in Ruby}
