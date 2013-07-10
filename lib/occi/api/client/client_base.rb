@@ -134,21 +134,21 @@ module Occi
         # directly as a String.
         #
         # @example
-        #    client.deploy "OVF DESCRIPTOR HERE" # => "http://localhost:3300/compute/343423...42njhdafa"
+        #    client.deploy_ovf "OVF DESCRIPTOR HERE" # => "http://localhost:3300/compute/343423...42njhdafa"
         #
         # @param [String] OVF descriptor (e.g., already read from a file or generated)
         # @return [String] URI of the new resource
-        def deploy_ovf; end
+        def deploy_ovf(descriptor); end
 
         # Deploys a compute resource based on an OVA descriptor available
         # directly as a String.
         #
         # @example
-        #    client.deploy "OVA DESCRIPTOR HERE" # => "http://localhost:3300/compute/343423...42njhdafa"
+        #    client.deploy_ova "OVA DESCRIPTOR HERE" # => "http://localhost:3300/compute/343423...42njhdafa"
         #
         # @param [String] OVA descriptor (e.g., already read from a file or generated)
         # @return [String] URI of the new resource
-        def deploy_ova; end
+        def deploy_ova(descriptor); end
 
         # Deletes a resource or all resource of a certain resource type
         # from the server.

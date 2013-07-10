@@ -192,44 +192,47 @@ module Occi
 
         # @see Occi::Api::Client::ClientBase
         def deploy(location)
-          media_types = self.class.head(@endpoint).headers['accept'].to_s
           raise "File #{location} does not exist!" unless File.exist? location
 
           file = File.read(location)
 
           if location.include? '.ovf'
-            if media_types.include? 'application/ovf'
-              headers = self.class.headers.clone
-              headers['Content-Type'] = 'application/ovf'
-              self.class.post(@endpoint + '/compute/',
-                              :body => file,
-                              :headers => headers)
-            else
-              raise "Unsupported descriptor format! Server does not support OVF descriptors."
-            end
+            deploy_ovf file
           elsif location.include? '.ova'
-            if media_types.include? ' application/ova '
-              headers = self.class.headers.clone
-              headers['Content-Type'] = 'application/ova'
-              self.class.post(@endpoint + '/compute/',
-                              :body => file,
-                              :headers => headers)
-            else
-              raise "Unsupported descriptor format! Server does not support OVA descriptors."
-            end
+            deploy_ova file
           else
             raise "Unsupported descriptor format! Only OVF or OVA files are supported."
           end
         end
 
         # @see Occi::Api::Client::ClientBase
-        def deploy_ovf
-          #
+        def deploy_ovf(descriptor)
+          media_types = self.class.head(@endpoint).headers['accept'].to_s
+
+          if media_types.include? 'application/ovf'
+            headers = self.class.headers.clone
+            headers['Content-Type'] = 'application/ovf'
+            self.class.post(@endpoint + '/compute/',
+                            :body => descriptor,
+                            :headers => headers)
+          else
+            raise "Unsupported descriptor format! Server does not support OVF descriptors."
+          end
         end
 
         # @see Occi::Api::Client::ClientBase
-        def deploy_ova
-          #
+        def deploy_ova(descriptor)
+          media_types = self.class.head(@endpoint).headers['accept'].to_s
+
+          if media_types.include? ' application/ova '
+            headers = self.class.headers.clone
+            headers['Content-Type'] = 'application/ova'
+            self.class.post(@endpoint + '/compute/',
+                            :body => descriptor,
+                            :headers => headers)
+          else
+            raise "Unsupported descriptor format! Server does not support OVA descriptors."
+          end
         end
 
         # @see Occi::Api::Client::ClientBase
