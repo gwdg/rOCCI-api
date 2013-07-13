@@ -5,6 +5,18 @@ module Occi::Api::Client
       class Keystone < Base
 
         def setup(options = {})
+          # get Keystone URL if possible, get unscoped token
+          set_keystone_base_url
+          set_auth_token
+
+          # use unscoped token for tenant discovery, get scoped token
+          tenant = get_prefered_tenant
+          set_auth_token(tenant)
+        end
+
+        private
+
+        def set_keystone_base_url
           response = @env_ref.class.head @env_ref.endpoint
           Occi::Log.debug response.inspect
 
@@ -12,18 +24,25 @@ module Occi::Api::Client
           raise ::Occi::Api::Client::Errors::AuthnError, "Keystone AuthN failed with #{response.code.to_s}!" unless response.code == 401
 
           unless response.headers['www-authenticate'] && response.headers['www-authenticate'].start_with?('Keystone')
-            raise ::Occi::Api::Client::Errors::AuthnError, "Target endpoint is probably not OpenStack!"
+            raise ::Occi::Api::Client::Errors::AuthnError, "Target endpoint is probably not OpenStack, fallback failed!"
           end
 
-          keystone_uri = /^Keystone uri='(.+)'$/.match(response.headers['www-authenticate'])[1]
+          @keystone_url = /^Keystone uri='(.+)'$/.match(response.headers['www-authenticate'])[1]
+          raise ::Occi::Api::Client::Errors::AuthnError, "Unable to get Keystone's URL from the response!" unless @keystone_url
 
-          raise ::Occi::Api::Client::Errors::AuthnError, "Unable to get Keystone's URL from the response!" unless keystone_uri
+          @keystone_url = @keystone_url.chomp('/')
+        end
 
+        def set_auth_token(tenant = nil)
           headers = @env_ref.class.headers.clone
           headers['Content-Type'] = "application/json"
           headers['Accept'] = headers['Content-Type']
 
-          response = @env_ref.class.post(keystone_uri + "/v2.0/tokens", :body => get_keystone_req, :headers => headers)
+          response = @env_ref.class.post(
+            "#{@keystone_url}/v2.0/tokens",
+            :body => get_keystone_req(tenant),
+            :headers => headers
+          )
           Occi::Log.debug response.inspect
 
           if response.success?
@@ -33,9 +52,7 @@ module Occi::Api::Client
           end
         end
 
-        private
-
-        def get_keystone_req(json = true)
+        def get_keystone_req(tenant = nil)
           if @options[:original_type] == "x509"
             body = { "auth" => { "voms" => true } }
           elsif @options[:username] && @options[:password]
@@ -51,7 +68,26 @@ module Occi::Api::Client
             raise ::Occi::Api::Client::Errors::AuthnError, "Unable to request a token from Keystone! Chosen AuthN not supported."
           end
 
-          json ? body.to_json : body
+          body['auth']['tenantName'] = tenant if tenant && !tenant.empty?
+          body.to_json
+        end
+
+        def get_prefered_tenant(match = nil)
+          headers = @env_ref.class.headers.clone
+          headers['Content-Type'] = "application/json"
+          headers['Accept'] = headers['Content-Type']
+
+          response = @env_ref.class.post(
+            "#{@keystone_url}/v2.0/tenants",
+            :headers => headers
+          )
+          Occi::Log.debug response.inspect
+
+          # TODO: impl match with regexp in case of multiple tenants?
+          tenant = response['tenants'].first['name'] if response.success?
+          raise ::Occi::Api::Client::Errors::AuthnError, "Unable to get a tenant from Keystone!" unless tenant
+
+          tenant
         end
 
       end
