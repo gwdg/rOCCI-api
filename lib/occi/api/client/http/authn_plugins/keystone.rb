@@ -77,7 +77,7 @@ module Occi::Api::Client
           headers['Content-Type'] = "application/json"
           headers['Accept'] = headers['Content-Type']
 
-          response = @env_ref.class.post(
+          response = @env_ref.class.get(
             "#{@keystone_url}/v2.0/tenants",
             :headers => headers
           )
