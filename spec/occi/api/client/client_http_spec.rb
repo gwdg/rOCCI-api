@@ -188,15 +188,32 @@ module Occi
         end
 
         it "finds and describes unscoped mixin" do
-          @client.find_mixin('mytesttemplate', nil, true)
+          mxn = @client.find_mixin('mytesttemplate', nil, true)
+          mxn.type_identifier.should eq 'http://occi.localhost:3300/occi/infrastructure/os_tpl#mytesttemplate'
         end
 
         it "finds and describes scoped os_tpl mixin" do
-          @client.find_mixin('mytesttemplate', "os_tpl", true)
+          mxn = @client.find_mixin('mytesttemplate', "os_tpl", true)
+          mxn.type_identifier.should eq 'http://occi.localhost:3300/occi/infrastructure/os_tpl#mytesttemplate'
         end
 
         it "finds and describes scoped resource_tpl mixin" do
-          @client.find_mixin('large', "resource_tpl", true)
+          mxn = @client.find_mixin('large', "resource_tpl", true)
+          mxn.type_identifier.should eq 'http://occi.localhost:3300/occi/infrastructure/resource_tpl#large'
+        end
+
+        it "returns nil when looking for a non-existent mixin" do
+          mxn = @client.find_mixin('blablabla', nil, true)
+          mxn.should be_nil
+        end
+
+        it "returns nil when looking for a non-existent mixin of a specific type" do
+          mxn = @client.find_mixin('blablabla', 'os_tpl', true)
+          mxn.should be_nil
+        end
+
+        it "raises an error when looking for a non-existent mixin type" do
+          expect{ @client.find_mixin('blablabla', 'blabla', true) }.to raise_error
         end
 
         it "creates a new compute resource"

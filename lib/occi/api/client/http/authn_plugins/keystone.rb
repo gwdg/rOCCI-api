@@ -17,7 +17,7 @@ module Occi::Api::Client
         private
 
         def set_keystone_base_url
-          response = @env_ref.class.head @env_ref.endpoint
+          response = @env_ref.class.head "#{@env_ref.endpoint}-/"
           Occi::Log.debug response.inspect
 
           return if response.success?

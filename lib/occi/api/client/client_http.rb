@@ -2,7 +2,7 @@ require 'httparty'
 
 require 'occi/api/client/http/net_http_fix'
 require 'occi/api/client/http/httparty_fix'
-require 'occi/api/client/http/authn_utils'
+require 'occi/api/client/authn_utils'
 require 'occi/api/client/http/authn_plugins'
 
 module Occi

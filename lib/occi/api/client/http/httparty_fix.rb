@@ -3,44 +3,20 @@ module HTTParty
 
     private
 
+    alias_method :old_attach_ssl_certificates, :attach_ssl_certificates
+
     def attach_ssl_certificates(http, options)
-      if http.use_ssl?
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      old_attach_ssl_certificates(http, options)
 
-        # Client certificate authentication
-        if options[:pem]
-          http.cert = OpenSSL::X509::Certificate.new(options[:pem])
-          http.key = OpenSSL::PKey::RSA.new(options[:pem], options[:pem_password])
-          http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-        end
+      # Set chain of client certificates
+      if options[:ssl_extra_chain_cert]
+        http.extra_chain_cert = []
 
-        # Set chain of client certificates
-        if options[:ssl_extra_chain_cert]
-          http.extra_chain_cert = []
-
-          options[:ssl_extra_chain_cert].each do |p_ca|
-            http.extra_chain_cert << OpenSSL::X509::Certificate.new(p_ca)
-          end
-        end
-
-        # SSL certificate authority file and/or directory
-        if options[:ssl_ca_file]
-          http.ca_file = options[:ssl_ca_file]
-          http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-        end
-
-        if options[:ssl_ca_path]
-          http.ca_path = options[:ssl_ca_path]
-          http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-        end
-
-        # This is only Ruby 1.9+
-        if options[:ssl_version] && http.respond_to?(:ssl_version=)
-          http.ssl_version = options[:ssl_version]
+        options[:ssl_extra_chain_cert].each do |p_ca|
+          http.extra_chain_cert << OpenSSL::X509::Certificate.new(p_ca)
         end
       end
     end
-
   end
 
   module ClassMethods

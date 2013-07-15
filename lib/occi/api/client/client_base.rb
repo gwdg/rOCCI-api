@@ -359,9 +359,11 @@ module Occi
         #
         def describe_mixin_wo_type(name)
           %w( os_tpl resource_tpl ).each do |type|
-            found = send("get_#{type.to_s}s".to_sym).select { |mixin| mixin.term == name }
-            return found if found && found.any?
+            found = send("get_#{type}s".to_sym).select { |mixin| mixin.term == name }
+            return found if found.any?
           end
+
+          []
         end
 
         # Looks up a mixin using its name and, optionally, a type as well.
@@ -577,7 +579,7 @@ module Occi
         #
         # @param [Hash] logger options
         def set_logger(log_options)
-          if log_options[:logger].nil? || (not log_options[:logger].kind_of? Occi::Log)
+          unless log_options[:logger] && log_options[:logger].kind_of?(Occi::Log)
             @logger = Occi::Log.new(log_options[:out])
             @logger.level = log_options[:level]
           end
@@ -592,7 +594,7 @@ module Occi
         # @param [String] endpoint URI in a non-canonical string
         # @return [String] canonical endpoint URI in a string, with a trailing slash
         def set_endpoint(endpoint)
-          raise 'Endpoint not a valid URI' if (endpoint =~ URI::ABS_URI).nil?
+          raise 'Endpoint not a valid URI' unless (endpoint =~ URI::ABS_URI)
           @endpoint = endpoint.chomp('/') + '/'
         end
 
