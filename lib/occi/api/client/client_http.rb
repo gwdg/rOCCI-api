@@ -482,6 +482,7 @@ module Occi
             Occi::Log.debug e.message
 
             if @authn_plugin.fallbacks.any?
+              # TODO: multiple fallbacks
               @auth_options[:original_type] = @auth_options[:type]
               @auth_options[:type] = @authn_plugin.fallbacks.first
 
