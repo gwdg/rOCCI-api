@@ -84,6 +84,7 @@ module Occi::Api::Client
           Occi::Log.debug response.inspect
 
           # TODO: impl match with regexp in case of multiple tenants?
+          raise ::Occi::Api::Client::Errors::AuthnError, "Keystone didn't return any tenants!" unless response['tenants'] && response['tenants'].first
           tenant = response['tenants'].first['name'] if response.success?
           raise ::Occi::Api::Client::Errors::AuthnError, "Unable to get a tenant from Keystone!" unless tenant
 
