@@ -324,7 +324,9 @@ module Occi
             entity_type = Occi::Core::Link if kind.related_to? Occi::Core::Link
           end
 
-          Occi::Log.debug "Parser call: #{response.content_type} #{entity_type} #{path.include?('-/')}"
+          entity_type = Occi::Core::Resource unless entity_type
+
+          Occi::Log.debug "Parser call: #{response.content_type} #{path.include?('-/')} #{entity_type} #{response.headers.inspect}"
           collection = Occi::Parser.parse(response.content_type, response.body, path.include?('-/'), entity_type, response.headers)
 
           Occi::Log.debug "Parsed collection: empty? #{collection.empty?}"
