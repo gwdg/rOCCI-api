@@ -14,6 +14,12 @@ module Occi::Api::Client
           set_auth_token(tenant)
         end
 
+        def authenticate(options = {})
+          # OCCI-OS doesn't support HEAD method!
+          response = @env_ref.class.get "#{@env_ref.endpoint}-/"
+          raise ::Occi::Api::Client::Errors::AuthnError, "Authentication failed with code #{response.code.to_s}!" unless response.success?
+        end
+
         private
 
         def set_keystone_base_url
