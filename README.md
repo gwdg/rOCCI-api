@@ -14,8 +14,7 @@ Ruby
 
 The following setup is recommended
 
-* usage of the Ruby Version Manager
-* Ruby 1.9.3
+* Ruby 1.9.3+
 * RubyGems installed
 
 The following libraries / packages may be required to use rOCCI
@@ -48,8 +47,8 @@ To build and install the bleeding edge version from master
     git clone git://github.com/gwdg/rOCCI-api.git
     cd rOCCI-api
     rvm install ruby-1.9.3
-    rvm --create --ruby-version use 1.9.3@rOCCI-api
-    bundle install --deployment
+    gem install bundler
+    bundle install
     rake install
 
 Usage
@@ -259,6 +258,12 @@ You can always, even if there is no logger defined, log output using the class m
 
 Changelog
 ---------
+
+### Version 4.0
+* added extended support for OCCI-OS
+* added full support for OS Keystone authentication
+* split the code into rOCCI-core, rOCCI-api and rOCCI-cli
+* internal changes, refactoring and some bugfixes
 
 ### Version 3.1
 * added basic OS Keystone support
