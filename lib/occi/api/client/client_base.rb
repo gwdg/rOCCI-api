@@ -196,17 +196,15 @@ module Occi
         # @param [String] resource name or resource identifier
         # @return [Occi::Core::Resource] new resource instance
         def get_resource(resource_type)
-
           Occi::Log.debug("Instantiating #{resource_type} ...")
 
-          type_id = nil
-          if @model.get_by_id resource_type
+          type_id = if @model.get_by_id resource_type
             # we got a resource type identifier
-            type_id = resource_type
+            resource_type
           else
             # we got a resource type name
             type_ids = @model.kinds.select { |kind| kind.term == resource_type }
-            type_id = type_ids.first.type_identifier if type_ids.any?
+            type_ids.first.type_identifier if type_ids.any?
           end
 
           raise "Unknown resource type! [#{resource_type}]" unless type_id
@@ -320,97 +318,72 @@ module Occi
         # @param [Boolean] should we describe the mixin or return its link?
         # @return [String, Occi::Collection, nil] link, mixin description or nothing found
         def find_mixin(name, type = nil, describe = false)
-
           Occi::Log.debug("Looking for mixin #{name} + #{type} + #{describe}")
-
-          # is type valid?
           raise "Unknown mixin type! [#{type}]" if type && !@mixins.has_key?(type.to_sym)
 
           # TODO: extend this code to support multiple matches and regex filters
           # should we look for links or descriptions?
-          if describe
-            # we are looking for descriptions
-            find_mixin_describe name, type
-          else
-            # we are looking for links
-            find_mixin_list name, type
-          end
+          describe ? describe_mixin(name, type) : list_mixin(name, type)
         end
 
         # Looks up a mixin using its name and, optionally, a type as well.
         # Will return mixin's full description.
         #
         # @example
-        #    client.find_mixin "debian6"
+        #    client.describe_mixin "debian6"
         #     # => #<Occi::Collection>
-        #    client.find_mixin "debian6", "os_tpl"
+        #    client.describe_mixin "debian6", "os_tpl"
         #     # => #<Occi::Collection>
-        #    client.find_mixin "large", "resource_tpl"
+        #    client.describe_mixin "large", "resource_tpl"
         #     # => #<Occi::Collection>
-        #    client.find_mixin "debian6", "resource_tpl" # => nil
+        #    client.describe_mixin "debian6", "resource_tpl" # => nil
         #
         # @param [String] name of the mixin
         # @param [String] type of the mixin
         # @return [Occi::Collection, nil] mixin description or nothing found
-        def find_mixin_describe(name, type = nil)
-          found_ary = []
+        def describe_mixin(name, type = nil)
+          found_ary = type ? describe_mixin_w_type(name, type) : describe_mixin_wo_type(name)
+          found_ary.any? ? found_ary.first : nil
+        end
 
-          if type
-            # get the first match from either os_tpls or resource_tpls
-            case type
-            when "os_tpl"
-              found_ary = get_os_templates.select { |mixin| mixin.term == name }
-            when "resource_tpl"
-              found_ary = get_resource_templates.select { |template| template.term == name }
-            else
-              # TODO: should raise an Error?
-            end
-          else
-            # try in os_tpls first
-            found_ary = get_os_templates.select { |os| os.term == name }
+        #
+        #
+        #
+        def describe_mixin_w_type(name, type)
+          return unless %w( os_tpl resource_tpl ).include? type.to_s
+          send("get_#{type.to_s}s".to_sym).select { |mixin| mixin.term == name }
+        end
 
-            # then try in resource_tpls
-
-            found_ary = get_resource_templates.select {
-              |template| template.term == name
-            } unless found_ary.any?
+        #
+        #
+        #
+        def describe_mixin_wo_type(name)
+          %w( os_tpl resource_tpl ).each do |type|
+            found = send("get_#{type}s".to_sym).select { |mixin| mixin.term == name }
+            return found if found.any?
           end
 
-          found_ary.any? ? found_ary.first : nil
+          []
         end
 
         # Looks up a mixin using its name and, optionally, a type as well.
         # Will return mixin's full location.
         #
         # @example
-        #    client.find_mixin "debian6"
+        #    client.list_mixin "debian6"
         #     # => "http://my.occi.service/occi/infrastructure/os_tpl#debian6"
-        #    client.find_mixin "debian6", "os_tpl"
+        #    client.list_mixin "debian6", "os_tpl"
         #     # => "http://my.occi.service/occi/infrastructure/os_tpl#debian6"
-        #    client.find_mixin "large", "resource_tpl"
+        #    client.list_mixin "large", "resource_tpl"
         #     # => "http://my.occi.service/occi/infrastructure/resource_tpl#large"
-        #    client.find_mixin "debian6", "resource_tpl" # => nil
+        #    client.list_mixin "debian6", "resource_tpl" # => nil
         #
         # @param [String] name of the mixin
         # @param [String] type of the mixin
         # @return [String, nil] link or nothing found
-        def find_mixin_list(name, type = nil)
-          # prefix mixin name with '#' to simplify the search
-          mxns = []
-          name_rev = "##{name}".reverse
-
-          if type
-            # return the first match with the selected type
-            mxns = @mixins[type.to_sym].select {
-              |mixin| mixin.to_s.reverse.start_with? name_rev
-            }
-          else
-            # there is no type preference, return first global match
-            mxns = @mixins.flatten(2).select {
-              |mixin| mixin.to_s.reverse.start_with? name_rev
-            }
-          end
-
+        def list_mixin(name, type = nil)
+          mxns = type ? @mixins[type.to_sym] : @mixins.flatten(2)
+          mxns = mxns.select { |mixin| mixin.to_s.reverse.start_with? "##{name}".reverse }
           mxns.any? ? mxns.first : nil
         end
 
@@ -433,18 +406,11 @@ module Occi
           if type
             # is type valid?
             raise "Unknown mixin type! #{type}" unless @mixins.has_key? type.to_sym
-
-            # return mixin of the selected type
             @mixins[type.to_sym]
           else
             # we did not get a type, return all mixins
             mixins = []
-
-            # flatten the hash and remove its keys
-            get_mixin_types.each do |ltype|
-              mixins.concat @mixins[ltype.to_sym]
-            end
-
+            get_mixin_types.each { |ltype| mixins.concat @mixins[ltype.to_sym] }
             mixins
           end
         end
@@ -472,7 +438,7 @@ module Occi
           identifiers = []
 
           get_mixin_types.each do |mixin_type|
-            identifiers << 'http://schemas.ogf.org/occi/infrastructure#' + mixin_type
+            identifiers << "http://schemas.ogf.org/occi/infrastructure##{mixin_type}"
           end
 
           identifiers
@@ -487,6 +453,7 @@ module Occi
         def get_os_templates
           @model.get.mixins.select { |mixin| mixin.related.select { |rel| rel.end_with? 'os_tpl' }.any? }
         end
+        alias_method :get_os_tpls, :get_os_templates
 
         # Retrieves available resource_tpls from the model.
         #
@@ -497,6 +464,7 @@ module Occi
         def get_resource_templates
           @model.get.mixins.select { |mixin| mixin.related.select { |rel| rel.end_with? 'resource_tpl' }.any? }
         end
+        alias_method :get_resource_tpls, :get_resource_templates
 
         # Creates a link of a specified kind and binds it to the given resource.
         #
@@ -611,7 +579,7 @@ module Occi
         #
         # @param [Hash] logger options
         def set_logger(log_options)
-          if log_options[:logger].nil? || (not log_options[:logger].kind_of? Occi::Log)
+          unless log_options[:logger] && log_options[:logger].kind_of?(Occi::Log)
             @logger = Occi::Log.new(log_options[:out])
             @logger.level = log_options[:level]
           end
@@ -626,7 +594,7 @@ module Occi
         # @param [String] endpoint URI in a non-canonical string
         # @return [String] canonical endpoint URI in a string, with a trailing slash
         def set_endpoint(endpoint)
-          raise 'Endpoint not a valid URI' if (endpoint =~ URI::ABS_URI).nil?
+          raise 'Endpoint not a valid URI' unless (endpoint =~ URI::ABS_URI)
           @endpoint = endpoint.chomp('/') + '/'
         end
 
@@ -644,7 +612,7 @@ module Occi
 
           @mixins = {
             :os_tpl => get_os_tpl_mixins_ary,
-            :resource_tpl => get_res_tpl_mixins_ary
+            :resource_tpl => get_resource_tpl_mixins_ary
           }
 
           @model
@@ -654,32 +622,30 @@ module Occi
         #
         #
         def get_os_tpl_mixins_ary
-          os_tpls = []
-
-          get_os_templates.each do |os_tpl|
-            unless os_tpl.nil? || os_tpl.type_identifier.nil?
-              tid = os_tpl.type_identifier.strip
-              os_tpls << tid unless tid.empty?
-            end
-          end
-
-          os_tpls
+          get_mixins_ary(:os_tpl)
         end
 
         #
         #
         #
-        def get_res_tpl_mixins_ary
-          res_tpls = []
+        def get_resource_tpl_mixins_ary
+          get_mixins_ary(:resource_tpl)
+        end
 
-          get_resource_templates.each do |res_tpl|
-            unless res_tpl.nil? || res_tpl.type_identifier.nil?
-              tid = res_tpl.type_identifier.strip
-              res_tpls << tid unless tid.empty?
-            end
+        #
+        #
+        #
+        def get_mixins_ary(mixin_type)
+          mixins = []
+
+          send("get_#{mixin_type.to_s}s".to_sym).each do |mixin|
+            next if mixin.nil? || mixin.type_identifier.nil?
+
+            tid = mixin.type_identifier.strip
+            mixins << tid unless tid.empty?
           end
 
-          res_tpls
+          mixins
         end
 
       end

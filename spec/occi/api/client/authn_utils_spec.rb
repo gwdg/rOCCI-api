@@ -1,5 +1,5 @@
 require 'rspec'
-require 'occi/api/client/http/authn_utils'
+require 'occi/api/client/authn_utils'
 
 module Occi
   module Api

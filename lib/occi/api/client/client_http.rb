@@ -2,7 +2,8 @@ require 'httparty'
 
 require 'occi/api/client/http/net_http_fix'
 require 'occi/api/client/http/httparty_fix'
-require 'occi/api/client/http/authn_utils'
+require 'occi/api/client/authn_utils'
+require 'occi/api/client/http/authn_plugins'
 
 module Occi
   module Api
@@ -323,7 +324,9 @@ module Occi
             entity_type = Occi::Core::Link if kind.related_to? Occi::Core::Link
           end
 
-          Occi::Log.debug "Parser call: #{response.content_type} #{entity_type} #{path.include?('-/')}"
+          entity_type = Occi::Core::Resource unless entity_type
+
+          Occi::Log.debug "Parser call: #{response.content_type} #{path.include?('-/')} #{entity_type} #{response.headers.inspect}"
           collection = Occi::Parser.parse(response.content_type, response.body, path.include?('-/'), entity_type, response.headers)
 
           Occi::Log.debug "Parsed collection: empty? #{collection.empty?}"
@@ -378,7 +381,13 @@ module Occi
               collection.resources.first.location if collection.resources.first
             end
           when 201
-            Occi::Parser.locations(response.header["content-type"].split(";").first, response.body, response.headers).first
+            # TODO: OCCI-OS hack, look for header Location instead of uri-list
+            # This should be probably implemented in Occi::Parser.locations
+            if response.header['location']
+              response.header['location']
+            else
+              Occi::Parser.locations(response.header["content-type"].split(";").first, response.body, response.header).first
+            end
           else
             raise "HTTP POST failed! #{response_msg}"
           end
@@ -481,6 +490,7 @@ module Occi
             Occi::Log.debug e.message
 
             if @authn_plugin.fallbacks.any?
+              # TODO: multiple fallbacks
               @auth_options[:original_type] = @auth_options[:type]
               @auth_options[:type] = @authn_plugin.fallbacks.first
 
