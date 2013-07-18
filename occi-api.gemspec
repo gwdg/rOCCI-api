@@ -9,8 +9,8 @@ Gem::Specification.new do |gem|
   gem.version       = Occi::Api::VERSION
   gem.authors       = ["Florian Feldhaus","Piotr Kasprzak", "Boris Parak"]
   gem.email         = ["florian.feldhaus@gwdg.de", "piotr.kasprzak@gwdg.de", "xparak@mail.muni.cz"]
-  gem.description   = %q{OCCI is a collection of classes to simplify the implementation of the Open Cloud Computing API in Ruby}
-  gem.summary       = %q{OCCI toolkit}
+  gem.description   = %q{This gem provides ready-to-use client classes to simplify the integration of OCCI into your application}
+  gem.summary       = %q{OCCI development library providing a high-level API}
   gem.homepage      = 'https://github.com/gwdg/rOCCI-api'
   gem.license       = 'Apache License, Version 2.0'
 
