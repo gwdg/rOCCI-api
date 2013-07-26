@@ -451,7 +451,7 @@ module Occi
         #
         # @return [Occi::Collection] collection containing all registered OS templates
         def get_os_templates
-          @model.get.mixins.select { |mixin| mixin.related.select { |rel| rel.end_with? 'os_tpl' }.any? }
+          @model.get.mixins.select { |mixin| mixin.related.select { |rel| rel.type_identifier.end_with? 'os_tpl' }.any? }
         end
         alias_method :get_os_tpls, :get_os_templates
 
@@ -462,7 +462,7 @@ module Occi
         #
         # @return [Occi::Collection] collection containing all registered resource templates
         def get_resource_templates
-          @model.get.mixins.select { |mixin| mixin.related.select { |rel| rel.end_with? 'resource_tpl' }.any? }
+          @model.get.mixins.select { |mixin| mixin.related.select { |rel| rel.type_identifier.end_with? 'resource_tpl' }.any? }
         end
         alias_method :get_resource_tpls, :get_resource_templates
 

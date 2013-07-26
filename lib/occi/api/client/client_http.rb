@@ -386,7 +386,7 @@ module Occi
             if response.header['location']
               response.header['location']
             else
-              Occi::Parser.locations(response.header["content-type"].split(";").first, response.body, response.header).first
+              Occi::Parser.locations(response.header["content-type"].split(";").first, response.body, response.headers).first
             end
           else
             raise "HTTP POST failed! #{response_msg}"
