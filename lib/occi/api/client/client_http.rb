@@ -14,9 +14,14 @@ module Occi
         # HTTParty for raw HTTP requests
         include HTTParty
 
-        # TODO: uncomment the following line as JSON is properly implemented in OpenStack
-        # headers 'Accept' => 'application/occi+json,text/plain;q=0.8,text/occi;q=0.2'
-        headers 'Accept' => 'text/plain,text/occi;q=0.2'
+        # TODO: change default Accept to JSON as soon as it is properly
+        #       implemented in OpenStack's OCCI-OS
+        #       'Accept' => 'application/occi+json,text/plain;q=0.8,text/occi;q=0.2'
+        DEFAULT_HEADERS = {
+          'Accept'     => 'text/plain,text/occi;q=0.2',
+          'User-Agent' => "rOCCI HTTPClient #{Occi::Api::VERSION}"
+        }
+        headers DEFAULT_HEADERS
 
         # hash mapping HTTP response codes to human-readable messages
         HTTP_CODES = {

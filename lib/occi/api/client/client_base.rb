@@ -466,36 +466,6 @@ module Occi
         end
         alias_method :get_resource_tpls, :get_resource_templates
 
-        # Creates a link of a specified kind and binds it to the given resource.
-        #
-        # @example
-        #    link_kind = 'http://schemas.ogf.org/occi/infrastructure#storagelink'
-        #    compute = client.get_resource "compute"
-        #    storage_location = "http://localhost:3300/storage/321df21adfad-f3adfa5f4adf-a3d54ffadffe"
-        #    linked_resource_kind = 'http://schemas.ogf.org/occi/infrastructure#storage'
-        #
-        #    link link_kind, compute, storage_location, linked_resource_kind
-        #
-        # @param [String] link type identifier (link kind)
-        # @param [Occi::Core::Resource] resource to link to
-        # @param [URI, String] resource to be linked
-        # @param [String] type identifier of the linked resource
-        # @param [Occi::Core::Attributes] link attributes
-        # @param [Array<String>] link mixins
-        # @return [Occi::Core::Link] link instance
-        def link(kind, source, target_location, target_kind, attributes=Occi::Core::Attributes.new, mixins=[])
-          link = Occi::Core::Link.new(kind)
-          link.mixins = mixins
-          link.attributes = attributes
-          link.target = (target_location.kind_of? URI::Generic) ? target_location.path : target_location.to_s
-          link.rel = target_kind
-
-          link.check @model
-          source.links << link
-
-          link
-        end
-
         # Returns the path for a given resource type identifier
         #
         # @example
