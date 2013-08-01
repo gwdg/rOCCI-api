@@ -174,10 +174,6 @@ module Occi
 
           raise "#{entity} not an entity!" unless entity.kind_of? Occi::Core::Entity
 
-          # is this entity valid?
-          #entity.model = @model
-          #entity.check
-
           Occi::Log.debug "Entity kind: #{entity.kind}"
           kind = entity.kind
           raise "No kind found for #{entity}" unless kind
