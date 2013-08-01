@@ -346,17 +346,23 @@ module Occi
           found_ary.any? ? found_ary.first : nil
         end
 
+        # Looks up a mixin with a specific type, will return
+        # mixin's full description.
         #
-        #
-        #
+        # @param [String] name of the mixin
+        # @param [String] type of the mixin
+        # @return [Occi::Collection] mixin description
         def describe_mixin_w_type(name, type)
           return unless %w( os_tpl resource_tpl ).include? type.to_s
           send("get_#{type.to_s}s".to_sym).select { |mixin| mixin.term == name }
         end
 
+        # Looks up a mixin in all available mixin types, will
+        # return mixin's full description. Returns always the
+        # first match found, search will start in os_tpl.
         #
-        #
-        #
+        # @param [String] name of the mixin
+        # @return [Occi::Collection] mixin description
         def describe_mixin_wo_type(name)
           %w( os_tpl resource_tpl ).each do |type|
             found = send("get_#{type}s".to_sym).select { |mixin| mixin.term == name }
@@ -466,36 +472,6 @@ module Occi
         end
         alias_method :get_resource_tpls, :get_resource_templates
 
-        # Creates a link of a specified kind and binds it to the given resource.
-        #
-        # @example
-        #    link_kind = 'http://schemas.ogf.org/occi/infrastructure#storagelink'
-        #    compute = client.get_resource "compute"
-        #    storage_location = "http://localhost:3300/storage/321df21adfad-f3adfa5f4adf-a3d54ffadffe"
-        #    linked_resource_kind = 'http://schemas.ogf.org/occi/infrastructure#storage'
-        #
-        #    link link_kind, compute, storage_location, linked_resource_kind
-        #
-        # @param [String] link type identifier (link kind)
-        # @param [Occi::Core::Resource] resource to link to
-        # @param [URI, String] resource to be linked
-        # @param [String] type identifier of the linked resource
-        # @param [Occi::Core::Attributes] link attributes
-        # @param [Array<String>] link mixins
-        # @return [Occi::Core::Link] link instance
-        def link(kind, source, target_location, target_kind, attributes=Occi::Core::Attributes.new, mixins=[])
-          link = Occi::Core::Link.new(kind)
-          link.mixins = mixins
-          link.attributes = attributes
-          link.target = (target_location.kind_of? URI::Generic) ? target_location.path : target_location.to_s
-          link.rel = target_kind
-
-          link.check @model
-          source.links << link
-
-          link
-        end
-
         # Returns the path for a given resource type identifier
         #
         # @example
@@ -543,6 +519,10 @@ module Occi
 
         protected
 
+        ##############################################################################
+        ######## STUBS START
+        ##############################################################################
+
         # Sets auth method and appropriate httparty attributes. Supported auth methods
         # are: ["basic", "digest", "x509", "none"]
         #
@@ -570,6 +550,10 @@ module Occi
         #
         # @return [String] chosen media type
         def set_media_type(force_type = nil); end
+
+        ##############################################################################
+        ######## STUBS END
+        ##############################################################################
 
         # Sets the logger and log levels. This allows users to pass existing logger
         # instances to the rOCCI client.
@@ -618,23 +602,27 @@ module Occi
           @model
         end
 
+        # Returns mixin type identifiers for os_tpl mixins
+        # in an array.
         #
-        #
-        #
+        # @return [Array] array of os_tpl mixin identifiers
         def get_os_tpl_mixins_ary
           get_mixins_ary(:os_tpl)
         end
 
+        # Returns mixin type identifiers for resource_tpl mixins
+        # in an array.
         #
-        #
-        #
+        # @return [Array] array of resource_tpl mixin identifiers
         def get_resource_tpl_mixins_ary
           get_mixins_ary(:resource_tpl)
         end
 
+        # Returns mixin type identifiers for given mixin type
+        # in an array.
         #
-        #
-        #
+        # @param [Symbol] mixin type
+        # @return [Array] array of mixin identifiers
         def get_mixins_ary(mixin_type)
           mixins = []
 
