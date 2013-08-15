@@ -17,9 +17,8 @@ Gem::Specification.new do |gem|
   gem.files         = `git ls-files`.split("\n")
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   gem.require_paths = ["lib"]
-  gem.extensions    = 'ext/mkrf_conf.rb'
 
-  gem.add_dependency 'occi-core', '~> 4.0.1'
+  gem.add_dependency 'occi-core', '~> 4.1.0'
   gem.add_dependency 'httparty'
   gem.add_dependency 'amqp'
   gem.add_dependency 'json'
@@ -35,5 +34,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "rspec-http"
   gem.add_development_dependency "webmock", "~> 1.9.3"
 
-  gem.required_ruby_version     = ">= 1.8.7"
+  gem.required_ruby_version     = ">= 1.9.3"
 end
