@@ -267,7 +267,7 @@ module Occi
 
           # encapsulate the acion in a collection
           collection = Occi::Collection.new
-          scheme, term = action.split(' #')
+          scheme, term = action.split('#')
           collection.actions << Occi::Core::Action.new(scheme + '#', term)
 
           # make the request
