@@ -1,12 +1,15 @@
 require 'rubygems'
-require 'occi-api'
 require 'vcr'
 
 # enable coverage reports
 if ENV['COVERAGE']
   require 'simplecov'
+
+  SimpleCov.add_filter "/spec/"
   SimpleCov.start
 end
+
+require 'occi-api'
 
 # enable VCR for HTTP/HTTPS connections
 # using RSPEC metadata integration;
