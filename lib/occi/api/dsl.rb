@@ -7,8 +7,6 @@ module Occi
         case protocol
         when :http 
           @client = Occi::Api::Client::ClientHttp.new(*args)
-        when :amqp
-          @client = Occi::Api::Client::ClientAmqp.new(*args)
         else
           raise "Protocol #{protocol.to_s} is not supported!"
         end

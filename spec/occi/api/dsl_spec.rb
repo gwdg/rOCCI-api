@@ -10,12 +10,6 @@ module Occi
 
         end
 
-        context "using ClientAmqp" do
-
-          it "does something"
-
-        end
-
       end
   end
 end
