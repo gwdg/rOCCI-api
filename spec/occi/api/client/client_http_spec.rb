@@ -158,33 +158,33 @@ module Occi
           cmpts = @client.describe("compute")
 
           cmpts.length.should eq 1
-          cmpts.first.resources.first.attributes['occi.core.id'].should eq('c62fce01-0d8e-510c-ba07-973b0d6d5034')
-          cmpts.first.resources.first.attributes['occi.core.title'].should eq('one-3')
-          cmpts.first.resources.first.attributes['occi.compute.cores'].should eq(2)
-          cmpts.first.resources.first.attributes['org.opennebula.compute.cpu'].should eq(2.0)
-          cmpts.first.resources.first.attributes['occi.compute.memory'].should eq(1.564)
+          cmpts.first.attributes['occi.core.id'].should eq('c62fce01-0d8e-510c-ba07-973b0d6d5034')
+          cmpts.first.attributes['occi.core.title'].should eq('one-3')
+          cmpts.first.attributes['occi.compute.cores'].should eq(2)
+          cmpts.first.attributes['org.opennebula.compute.cpu'].should eq(2.0)
+          cmpts.first.attributes['occi.compute.memory'].should eq(1.564)
         end
 
         it "describes network resources" do
           nets = @client.describe "network"
 
           nets.length.should eq 1
-          nets.first.resources.first.attributes['occi.core.id'].should eq('1e8e0d63-e3c8-5be7-8a46-f4df226bca01')
-          nets.first.resources.first.attributes['occi.core.title'].should eq('private')
-          nets.first.resources.first.attributes['occi.network.allocation'].should eq('dynamic')
-          nets.first.resources.first.attributes['org.opennebula.network.id'].should eq("1")
+          nets.first.attributes['occi.core.id'].should eq('1e8e0d63-e3c8-5be7-8a46-f4df226bca01')
+          nets.first.attributes['occi.core.title'].should eq('private')
+          nets.first.attributes['occi.network.allocation'].should eq('dynamic')
+          nets.first.attributes['org.opennebula.network.id'].should eq("1")
         end
 
         it "describes storage resources" do
           stors = @client.describe "storage"
 
           stors.length.should eq 2
-          stors.last.resources.first.attributes['occi.core.id'].should eq('5c1a7099-859e-5c3d-9386-740edbb610b8')
-          stors.last.resources.first.attributes['occi.core.title'].should eq('ttylinux - VMware ')
-          stors.last.resources.first.attributes['occi.storage.state'].should eq('online')
-          stors.last.resources.first.attributes['org.opennebula.storage.id'].should eq("4")
+          stors.to_a.last.attributes['occi.core.id'].should eq('5c1a7099-859e-5c3d-9386-740edbb610b8')
+          stors.to_a.last.attributes['occi.core.title'].should eq('ttylinux - VMware ')
+          stors.to_a.last.attributes['occi.storage.state'].should eq('online')
+          stors.to_a.last.attributes['org.opennebula.storage.id'].should eq("4")
 
-          stors.first.resources.first.attributes['occi.core.id'].should eq('32fc6c92-88aa-54dc-b814-be0df741278e')
+          stors.first.attributes['occi.core.id'].should eq('32fc6c92-88aa-54dc-b814-be0df741278e')
         end
 
         it "finds and describes unscoped mixin" do

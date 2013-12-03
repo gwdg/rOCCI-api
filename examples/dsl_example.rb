@@ -158,7 +158,7 @@ while cmpt_data[0].resources.first.attributes.occi.compute.state == "inactive"
   cmpt_data = describe cmpt_loc
 end
 
-puts "\nCompute resource #{cmpt_loc} is #{cmpt_data[0].resources.first.attributes.occi.compute.state}"
+puts "\nCompute resource #{cmpt_loc} is #{cmpt_data.first.state}"
 
 ## delete the resource and exit
 if clean_up_compute
