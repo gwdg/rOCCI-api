@@ -15,7 +15,7 @@ Gem::Specification.new do |gem|
   gem.license       = 'Apache License, Version 2.0'
 
   gem.files         = `git ls-files`.split("\n")
-  gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
+  gem.test_files    = `git ls-files -- {test,spec}/*`.split("\n")
   gem.require_paths = ["lib"]
 
   gem.add_dependency 'occi-core', '~> 4.2.0'
