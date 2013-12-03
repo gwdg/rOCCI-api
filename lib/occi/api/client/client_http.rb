@@ -145,11 +145,11 @@ module Occi
             end
           end
 
-          descriptions = []
+          descriptions = Occi::Collection.new
 
           if resource_type_identifier.nil?
             # no filters, describe all available resources
-            descriptions << get('/')
+            descriptions.merge! get('/')
           elsif @model.get_by_id(resource_type_identifier)
             # we got type identifier
             # get all available resources of this type
@@ -157,16 +157,16 @@ module Occi
 
             # make the requests
             locations.each do |location|
-              descriptions << get(sanitize_resource_link(location))
+              descriptions.merge! get(sanitize_resource_link(location))
             end
           elsif resource_type_identifier.start_with?(@endpoint) || resource_type_identifier.start_with?('/')
             # this is a link of a specific resource (obsolute or relative)
-            descriptions << get(sanitize_resource_link(resource_type_identifier))
+            descriptions.merge! get(sanitize_resource_link(resource_type_identifier))
           else
             raise "Unkown resource type identifier! [#{resource_type_identifier}]"
           end
 
-          descriptions
+          descriptions.resources
         end
 
         # @see Occi::Api::Client::ClientBase

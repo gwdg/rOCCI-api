@@ -91,16 +91,16 @@ module Occi
         #
         # @example
         #    client.describe
-        #     # => [#<Occi::Collection>, #<Occi::Collection>, #<Occi::Collection>]
+        #     # => #<Occi::Core::Resources>
         #    client.describe "compute"
-        #     # => [#<Occi::Collection>, #<Occi::Collection>, #<Occi::Collection>]
+        #     # => #<Occi::Core::Resources>
         #    client.describe "http://schemas.ogf.org/occi/infrastructure#compute"
-        #     # => [#<Occi::Collection>, #<Occi::Collection>, #<Occi::Collection>]
+        #     # => #<Occi::Core::Resources>
         #    client.describe "http://localhost:3300/compute/j5hk1234jk2524-2j3j2k34jjh234-adfaf1234"
-        #     # => [#<Occi::Collection>]
+        #     # => #<Occi::Core::Resources>
         #
         # @param [String] resource type identifier, type name or resource location
-        # @return [Array<Occi::Collection>] list of resource descriptions
+        # @return [Occi::Core::Resources] list of resource descriptions
         def describe(resource_type_identifier=nil); end
 
         # Creates a new resource on the server. Resource must be provided
