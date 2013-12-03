@@ -20,7 +20,6 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'occi-core', '~> 4.1.0'
   gem.add_dependency 'httparty'
-  gem.add_dependency 'amqp'
   gem.add_dependency 'json'
 
   gem.required_ruby_version     = ">= 1.9.3"
