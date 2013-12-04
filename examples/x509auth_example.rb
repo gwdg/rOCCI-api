@@ -49,7 +49,7 @@ client.get_mixin_type_identifiers.each do |mixin_typeid|
 end
 
 puts "\n\nListing all available mixins:"
-client.get_mixins.each do |mixin|
+client.list_mixins.each do |mixin|
   puts "\n#{mixin}"
 end
 
@@ -58,25 +58,25 @@ samples = [OS_TEMPLATE, "medium", "large", "small"]
 puts "\n\nFind mixins using their names:"
 samples.each do |mixin|
   puts "\n#{mixin}:\n"
-  pp client.find_mixin mixin
+  pp client.get_mixin mixin
 end
 
 puts "\n\nFind mixins using their names and a type:"
 samples.each do |mixin|
   puts "\n#{mixin}:\n"
-  pp client.find_mixin(mixin, "os_tpl")
+  pp client.get_mixin(mixin, "os_tpl")
 end
 
 puts "\n\nFind mixins using their names and a type:"
 samples.each do |mixin|
   puts "\n#{mixin}:\n"
-  pp client.find_mixin(mixin, "resource_tpl")
+  pp client.get_mixin(mixin, "resource_tpl")
 end
 
 puts "\n\nFind mixins using their names (showing detailed descriptions):"
 samples.each do |mixin|
   puts "\n#{mixin}:\n"
-  pp client.find_mixin(mixin, nil, true)
+  pp client.get_mixin(mixin, nil, true)
 end
 
 ## get links of all available resources
@@ -108,7 +108,7 @@ unless use_os_temlate
   ## network, storage and resource template (instance type)
 
   ## select instance type medium
-  cmpt.mixins << client.find_mixin('medium', "resource_tpl")
+  cmpt.mixins << client.get_mixin('medium', "resource_tpl")
 
   ## list network/storage locations and select the appropriate ones (the first ones in this case)
   puts "\nUsing:"
@@ -123,8 +123,8 @@ else
   ## with OS template, we have to find the template by name
   ## optionally we can change its "size" by choosing an instance type
   puts "\nUsing:"
-  pp os = client.find_mixin(OS_TEMPLATE, "os_tpl")
-  pp size = client.find_mixin('medium', "resource_tpl")
+  pp os = client.get_mixin(OS_TEMPLATE, "os_tpl")
+  pp size = client.get_mixin('medium', "resource_tpl")
 
   ## attach chosen resources to the compute resource
   cmpt.mixins << os << size

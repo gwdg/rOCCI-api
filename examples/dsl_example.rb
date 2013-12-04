@@ -55,7 +55,7 @@ mixin_type_identifiers.each do |mixin_typeid|
 end
 
 puts "\n\nListing all available mixins:"
-mixins.each do |mixin|
+mixin_list.each do |mixin|
   puts "\n#{mixin}"
 end
 
