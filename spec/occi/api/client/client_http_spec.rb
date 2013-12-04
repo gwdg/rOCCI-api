@@ -132,7 +132,7 @@ module Occi
         end
 
         it "lists all available mixins" do
-          @client.get_mixins.should include(
+          @client.list_mixins.should include(
             "http://occi.localhost:3300/occi/infrastructure/resource_tpl#large",
             "http://occi.localhost:3300/occi/infrastructure/resource_tpl#extra_large",
             "http://occi.localhost:3300/occi/infrastructure/resource_tpl#medium",
@@ -142,16 +142,22 @@ module Occi
         end
 
         it "lists os_tpl mixins" do
-          @client.get_mixins("os_tpl").should eq ["http://occi.localhost:3300/occi/infrastructure/os_tpl#mytesttemplate"]
+          mixins = Occi::Core::Mixins.new
+          mixins << Occi::Core::Mixin.new("http://occi.localhost:3300/occi/infrastructure/os_tpl#", "mytesttemplate")
+
+          expect(@client.get_mixins("os_tpl")).to eq mixins
+          expect(@client.get_os_tpls).to eq mixins
         end
 
         it "lists resource_tpl mixins" do
-          @client.get_mixins("resource_tpl").should include(
-            "http://occi.localhost:3300/occi/infrastructure/resource_tpl#large",
-            "http://occi.localhost:3300/occi/infrastructure/resource_tpl#extra_large",
-            "http://occi.localhost:3300/occi/infrastructure/resource_tpl#medium",
-            "http://occi.localhost:3300/occi/infrastructure/resource_tpl#small"
-          )
+          mixins = Occi::Core::Mixins.new
+          mixins << Occi::Core::Mixin.new("http://occi.localhost:3300/occi/infrastructure/resource_tpl#", "large")
+          mixins << Occi::Core::Mixin.new("http://occi.localhost:3300/occi/infrastructure/resource_tpl#", "extra_large")
+          mixins << Occi::Core::Mixin.new("http://occi.localhost:3300/occi/infrastructure/resource_tpl#", "medium")
+          mixins << Occi::Core::Mixin.new("http://occi.localhost:3300/occi/infrastructure/resource_tpl#", "small")
+
+          expect(@client.get_mixins("resource_tpl")).to eq mixins
+          expect(@client.get_resource_tpls).to eq mixins
         end
 
         it "describes compute resources" do
@@ -187,33 +193,43 @@ module Occi
           stors.first.attributes['occi.core.id'].should eq('32fc6c92-88aa-54dc-b814-be0df741278e')
         end
 
+        it "describes all available mixins" do
+          @client.get_mixins.should include(
+            Occi::Core::Mixin.new("http://occi.localhost:3300/occi/infrastructure/resource_tpl#", "large"),
+            Occi::Core::Mixin.new("http://occi.localhost:3300/occi/infrastructure/resource_tpl#", "extra_large"),
+            Occi::Core::Mixin.new("http://occi.localhost:3300/occi/infrastructure/resource_tpl#", "medium"),
+            Occi::Core::Mixin.new("http://occi.localhost:3300/occi/infrastructure/resource_tpl#", "small"),
+            Occi::Core::Mixin.new("http://occi.localhost:3300/occi/infrastructure/os_tpl#", "mytesttemplate")
+          )
+        end
+
         it "finds and describes unscoped mixin" do
-          mxn = @client.find_mixin('mytesttemplate', nil, true)
+          mxn = @client.get_mixin('mytesttemplate', nil, true)
           mxn.type_identifier.should eq 'http://occi.localhost:3300/occi/infrastructure/os_tpl#mytesttemplate'
         end
 
         it "finds and describes scoped os_tpl mixin" do
-          mxn = @client.find_mixin('mytesttemplate', "os_tpl", true)
+          mxn = @client.get_mixin('mytesttemplate', "os_tpl", true)
           mxn.type_identifier.should eq 'http://occi.localhost:3300/occi/infrastructure/os_tpl#mytesttemplate'
         end
 
         it "finds and describes scoped resource_tpl mixin" do
-          mxn = @client.find_mixin('large', "resource_tpl", true)
+          mxn = @client.get_mixin('large', "resource_tpl", true)
           mxn.type_identifier.should eq 'http://occi.localhost:3300/occi/infrastructure/resource_tpl#large'
         end
 
         it "returns nil when looking for a non-existent mixin" do
-          mxn = @client.find_mixin('blablabla', nil, true)
+          mxn = @client.get_mixin('blablabla', nil, true)
           mxn.should be_nil
         end
 
         it "returns nil when looking for a non-existent mixin of a specific type" do
-          mxn = @client.find_mixin('blablabla', 'os_tpl', true)
+          mxn = @client.get_mixin('blablabla', 'os_tpl', true)
           mxn.should be_nil
         end
 
         it "raises an error when looking for a non-existent mixin type" do
-          expect{ @client.find_mixin('blablabla', 'blabla', true) }.to raise_error
+          expect{ @client.get_mixin('blablabla', 'blabla', true) }.to raise_error
         end
 
         it "creates a new compute resource"
@@ -238,6 +254,14 @@ module Occi
 
         it "refreshes its model" do
           @client.refresh
+        end
+
+        it 'looks up a mixin type identifier for os_tpl' do
+          expect(@client.get_mixin_type_identifier('os_tpl')).to eq "http://schemas.ogf.org/occi/infrastructure#os_tpl"
+        end
+
+        it 'looks up a mixin type identifier for resource_tpl' do
+          expect(@client.get_mixin_type_identifier('resource_tpl')).to eq "http://schemas.ogf.org/occi/infrastructure#resource_tpl"
         end
 
       end

@@ -120,6 +120,12 @@ module Occi
         @client.get_mixins(*args)
       end
 
+      def mixin_list(*args)
+        check
+
+        @client.list_mixins(*args)
+      end
+
       def resource(*args)
         check
 
@@ -129,7 +135,7 @@ module Occi
       def mixin(*args)
         check
 
-        @client.find_mixin(*args)
+        @client.get_mixin(*args)
       end
 
       private
