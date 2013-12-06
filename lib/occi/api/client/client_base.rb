@@ -839,7 +839,11 @@ module Occi
             raise "Endpoint not a valid absolute URI! #{endpoint.inspect}"
           end
 
-          URI(endpoint)
+          # normalize URIs, remove trailing slashes
+          endpoint = URI(endpoint)
+          endpoint.path = endpoint.path.gsub(/\/+/, '/').chomp('/')
+
+          endpoint
         end
 
         # Creates an Occi::Model from data retrieved from the server.
