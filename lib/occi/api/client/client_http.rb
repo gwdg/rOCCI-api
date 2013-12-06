@@ -124,7 +124,7 @@ module Occi
           headers['Accept'] = 'text/uri-list'
 
           response = self.class.get(
-            @endpoint + path,
+            @endpoint.to_s + path,
             :headers => headers
           )
 
@@ -159,7 +159,7 @@ module Occi
             locations.each do |location|
               descriptions.merge! get(sanitize_resource_link(location))
             end
-          elsif resource_type_identifier.start_with?(@endpoint) || resource_type_identifier.start_with?('/')
+          elsif resource_type_identifier.start_with?(@endpoint.to_s) || resource_type_identifier.start_with?('/')
             # this is a link of a specific resource (obsolute or relative)
             descriptions.merge! get(sanitize_resource_link(resource_type_identifier))
           else
@@ -209,12 +209,12 @@ module Occi
 
         # @see Occi::Api::Client::ClientBase
         def deploy_ovf(descriptor)
-          media_types = self.class.head(@endpoint).headers['accept'].to_s
+          media_types = self.class.head(@endpoint.to_s).headers['accept'].to_s
 
           if media_types.include? 'application/ovf'
             headers = self.class.headers.clone
             headers['Content-Type'] = 'application/ovf'
-            self.class.post(@endpoint + '/compute/',
+            self.class.post(@endpoint.to_s + '/compute/',
                             :body => descriptor,
                             :headers => headers)
           else
@@ -224,12 +224,12 @@ module Occi
 
         # @see Occi::Api::Client::ClientBase
         def deploy_ova(descriptor)
-          media_types = self.class.head(@endpoint).headers['accept'].to_s
+          media_types = self.class.head(@endpoint.to_s).headers['accept'].to_s
 
           if media_types.include? ' application/ova '
             headers = self.class.headers.clone
             headers['Content-Type'] = 'application/ova'
-            self.class.post(@endpoint + '/compute/',
+            self.class.post(@endpoint.to_s + '/compute/',
                             :body => descriptor,
                             :headers => headers)
           else
@@ -260,10 +260,10 @@ module Occi
             }.first.type_identifier
 
             location = @model.get_by_id(type_identifier).location
-            resource_type_identifier = @endpoint + location
+            resource_type_identifier = @endpoint.to_s + location
           end
 
-          raise "Unknown resource identifier! #{resource_type_identifier}" unless resource_type_identifier.start_with? @endpoint
+          raise "Unknown resource identifier! #{resource_type_identifier}" unless resource_type_identifier.start_with? @endpoint.to_s
 
           # encapsulate the acion in a collection
           collection = Occi::Collection.new
@@ -307,9 +307,9 @@ module Occi
             headers['Category'] = categories unless categories.empty?
             headers['X-OCCI-Attributes'] = attributes unless attributes.empty?
 
-            self.class.get(@endpoint + path, :headers => headers)
+            self.class.get(@endpoint.to_s + path, :headers => headers)
           else
-            self.class.get(@endpoint + path)
+            self.class.get(@endpoint.to_s + path)
           end
 
           response_msg = response_message response
@@ -358,14 +358,14 @@ module Occi
 
           response = case @media_type
           when 'application/occi+json'
-            self.class.post(@endpoint + path,
+            self.class.post(@endpoint.to_s + path,
                             :body => collection.to_json,
                             :headers => headers)
           when 'text/occi'
-            self.class.post(@endpoint + path,
+            self.class.post(@endpoint.to_s + path,
                             :headers => collection.to_header.merge(headers))
           else
-            self.class.post(@endpoint + path,
+            self.class.post(@endpoint.to_s + path,
                             :body => collection.to_text,
                             :headers => headers)
           end
@@ -411,14 +411,14 @@ module Occi
 
           response = case @media_type
           when 'application/occi+json'
-            self.class.post(@endpoint + path,
+            self.class.post(@endpoint.to_s + path,
                             :body => collection.to_json,
                             :headers => headers)
           when 'text/occi'
-            self.class.post(@endpoint + path,
+            self.class.post(@endpoint.to_s + path,
                             :headers => collection.to_header.merge(headers))
           else
-            self.class.post(@endpoint + path,
+            self.class.post(@endpoint.to_s + path,
                             :body => collection.to_text,
                             :headers => headers)
           end
@@ -445,7 +445,7 @@ module Occi
           # remove the leading slash
           path = path.gsub(/\A\//, '')
 
-          response = self.class.delete(@endpoint + path)
+          response = self.class.delete(@endpoint.to_s + path)
 
           response_msg = response_message response
           raise "HTTP DELETE failed! #{response_msg}" unless response.code.between? 200, 300
@@ -512,7 +512,7 @@ module Occi
             self.class.headers 'Accept' => force_type
             media_type = force_type
           else
-            media_types = self.class.head(@endpoint).headers['accept']
+            media_types = self.class.head(@endpoint.to_s).headers['accept']
 
             Occi::Log.debug("Available media types: #{media_types.inspect}")
             media_type = case media_types
@@ -533,7 +533,7 @@ module Occi
         # Generates a human-readable response message based on the HTTP response code.
         #
         # @example
-        #    response_message self.class.delete(@endpoint + path)
+        #    response_message self.class.delete(@endpoint.to_s + path)
         #     # =>  'HTTP Response status: [200] OK'
         #
         # @param [HTTParty::Response] HTTParty response object
