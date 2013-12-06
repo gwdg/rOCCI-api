@@ -5,9 +5,9 @@ module Occi
       class ClientBase
 
         # a few attributes which should be visible outside the client
-        attr_reader :endpoint, :auth_options, :media_type,
-                    :connected, :model, :logger, :last_response,
-                    :options
+        attr_reader :endpoint, :auth_options, :media_type
+        attr_reader :connected, :model, :logger, :last_response
+        attr_reader :options
 
         def initialize(options = {})
           defaults = {
@@ -18,7 +18,7 @@ module Occi
             :media_type => nil
           }
 
-          options = options.marshal_dump if options.is_a? OpenStruct
+          options = options.marshal_dump if options.is_a?(OpenStruct)
           @options = defaults.merge(options)
 
           # set Occi::Log
@@ -211,21 +211,58 @@ module Occi
         def get_resource(resource_type)
           Occi::Log.debug("Instantiating #{resource_type.inspect}")
 
-          type_id = if @model.get_by_id resource_type
-            # we got a resource type identifier
-            resource_type
-          else
-            # we got a resource type name
-            type_ids = @model.kinds.to_a.select { |kind| kind.term == resource_type }
-            type_ids.any? ? type_ids.first.type_identifier : nil
-          end
-
+          type_id = get_resource_type_identifier(resource_type)
           raise "Unknown resource type! #{resource_type.inspect}" unless type_id
 
           new_resource = Occi::Core::Resource.new(type_id)
           new_resource.model = @model
 
           new_resource
+        end
+
+        # Retrieves all available category types.
+        #
+        # @example
+        #    client.get_category_types # => [ "entity", "resource", "link" ]
+        #
+        # @return [Array<String>] list of available category types in a human-readable format
+        def get_category_types
+          @model.categories.to_a.collect { |category| category.term }
+        end
+
+        # Retrieves all available category type identifiers.
+        #
+        # @example
+        #    client.get_category_type_identifiers
+        #    # => [ "http://schemas.ogf.org/occi/core#entity",
+        #    #      "http://schemas.ogf.org/occi/core#resource",
+        #    #      "http://schemas.ogf.org/occi/core#link" ]
+        #
+        # @return [Array<String>] list of available category type identifiers
+        def get_category_type_identifiers
+          @model.categories.to_a.collect { |category| category.type_identifier }
+        end
+
+        # Retrieves available category type identifier for the given category type.
+        #
+        # @example
+        #    client.get_category_type_identifier("compute")
+        #     # => 'http://schemas.ogf.org/occi/infrastructure#compute'
+        #
+        # @return [String, nil] category type identifier for the given category type
+        def get_category_type_identifier(type)
+          return type if type =~ URI::ABS_URI
+
+          cats = @model.categories.to_a.select { |k| k.term == type }
+          tis = cats.collect { |c| c.type_identifier }
+          tis.uniq!
+
+          if tis.length > 1
+            raise Occi::Api::Client::Errors::AmbiguousNameError,
+                  "Category type #{type.inspect} is ambiguous, use a type identifier!"
+          end
+
+          tis.first
         end
 
         # Retrieves all kind type identifiers related to a given type identifier
@@ -267,6 +304,28 @@ module Occi
           @model.kinds.to_a.collect { |kind| kind.type_identifier }
         end
 
+        # Retrieves available kind type identifier for the given kind type.
+        #
+        # @example
+        #    client.get_kind_type_identifier("compute")
+        #     # => 'http://schemas.ogf.org/occi/infrastructure#compute'
+        #
+        # @return [String, nil] kind type identifier for the given kind type
+        def get_kind_type_identifier(type)
+          return type if type =~ URI::ABS_URI
+
+          kinds = @model.kinds.to_a.select { |k| k.term == type }
+          tis = kinds.collect { |k| k.type_identifier }
+          tis.uniq!
+
+          if tis.length > 1
+            raise Occi::Api::Client::Errors::AmbiguousNameError,
+                  "Kind type #{type.inspect} is ambiguous, use a type identifier!"
+          end
+
+          tis.first
+        end
+
         # Retrieves all available entity types.
         #
         # @example
@@ -289,6 +348,29 @@ module Occi
         # @return [Array<String>] list of available entity types in a OCCI ID format
         def get_entity_type_identifiers
           get_kind_type_identifiers_related_to Occi::Core::Entity.kind.type_identifier
+        end
+
+        # Retrieves available entity type identifier for the given entity type.
+        #
+        # @example
+        #    client.get_entity_type_identifier("compute")
+        #     # => 'http://schemas.ogf.org/occi/infrastructure#compute'
+        #
+        # @return [String, nil] entity type identifier for the given entity type
+        def get_entity_type_identifier(type)
+          return type if type =~ URI::ABS_URI
+
+          collection = @model.get(Occi::Core::Entity.kind.type_identifier)
+          e_kinds = collection.kinds.to_a.select { |e| e.term == type }
+          tis = e_kinds.collect { |e| e.type_identifier }
+          tis.uniq!
+
+          if tis.length > 1
+            raise Occi::Api::Client::Errors::AmbiguousNameError,
+                  "Entity type #{type.inspect} is ambiguous, use a type identifier!"
+          end
+
+          tis.first
         end
 
         # Retrieves all available resource types.
@@ -315,6 +397,29 @@ module Occi
           get_kind_type_identifiers_related_to Occi::Core::Resource.kind.type_identifier
         end
 
+        # Retrieves available resource type identifier for the given resource type.
+        #
+        # @example
+        #    client.get_resource_type_identifier("compute")
+        #     # => 'http://schemas.ogf.org/occi/infrastructure#compute'
+        #
+        # @return [String, nil] resource type identifier for the given resource type
+        def get_resource_type_identifier(type)
+          return type if type =~ URI::ABS_URI
+
+          collection = @model.get(Occi::Core::Resource.kind.type_identifier)
+          r_kinds = collection.kinds.to_a.select { |r| r.term == type }
+          tis = r_kinds.collect { |r| r.type_identifier }
+          tis.uniq!
+
+          if tis.length > 1
+            raise Occi::Api::Client::Errors::AmbiguousNameError,
+                  "Resource type #{type.inspect} is ambiguous, use a type identifier!"
+          end
+
+          tis.first
+        end
+
         # Retrieves all available link types.
         #
         # @example
@@ -322,7 +427,7 @@ module Occi
         #
         # @return [Array<String>] list of available link types in a human-readable format
         def get_link_types
-          collection = @model.get Occi::Core::Link.kind
+          collection = @model.get(Occi::Core::Link.kind.type_identifier)
           collection.kinds.to_a.collect { |kind| kind.term }
         end
 
@@ -336,6 +441,29 @@ module Occi
         # @return [Array<String>] list of available link types in a OCCI ID format
         def get_link_type_identifiers
           get_kind_type_identifiers_related_to Occi::Core::Link.kind.type_identifier
+        end
+
+        # Retrieves available link type identifier for the given link type.
+        #
+        # @example
+        #    client.get_link_type_identifier("storagelink")
+        #     # => 'http://schemas.ogf.org/occi/infrastructure#storagelink'
+        #
+        # @return [String, nil] link type identifier for the given link type
+        def get_link_type_identifier(type)
+          return type if type =~ URI::ABS_URI
+
+          collection = @model.get(Occi::Core::Link.kind.type_identifier)
+          l_kinds = collection.kinds.to_a.select { |r| r.term == type }
+          tis = l_kinds.collect { |r| r.type_identifier }
+          tis.uniq!
+
+          if tis.length > 1
+            raise Occi::Api::Client::Errors::AmbiguousNameError,
+                  "Link type #{type.inspect} is ambiguous, use a type identifier!"
+          end
+
+          tis.first
         end
 
         # Looks up a mixin using its name and, optionally, a type as well.
@@ -441,16 +569,16 @@ module Occi
         # @return [Occi::Core::Mixins] collection of available mixins
         def get_mixins(type = nil)
           unless type.blank?
-            unless get_mixin_types.include?(type) || get_mixin_type_identifiers.include?(type)
+            type_id = get_mixin_type_identifier(type)
+            unless type_id
               raise ArgumentError,
                     "There is no such mixin type registered in the model! #{type.inspect}"
             end
 
-            type = get_mixin_type_identifier(type) if get_mixin_types.include?(type)
-            mixins = @model.mixins.to_a.select { |m| m.related_to?(type) }
+            mixins = @model.mixins.to_a.select { |m| m.related_to?(type_id) }
 
             # drop the type mixin itself
-            mixins.delete_if { |m| m.type_identifier == type }
+            mixins.delete_if { |m| m.type_identifier == type_id }
           else
             # we did not get a type, return all mixins
             mixins = Occi::Core::Mixins.new(@model.mixins)
@@ -516,8 +644,18 @@ module Occi
         #
         # @return [String, nil] mixin type identifier for the given mixin type
         def get_mixin_type_identifier(type)
-          mixins = get_mixins.to_a.select { |m| m.term == type }
-          mixins.collect { |m| m.type_identifier }.first
+          return type if type =~ URI::ABS_URI
+
+          mixins = @model.mixins.to_a.select { |m| m.term == type }
+          tis = mixins.collect { |m| m.type_identifier }
+          tis.uniq!
+
+          if tis.length > 1
+            raise Occi::Api::Client::Errors::AmbiguousNameError,
+                  "Mixin type #{type.inspect} is ambiguous, use a type identifier!"
+          end
+
+          tis.first
         end
 
         # Retrieves available os_tpls from the model.
@@ -556,15 +694,19 @@ module Occi
           raise ArgumentError,
                 "Kind type identifier is a required argument!" if kind_type_identifier.blank?
 
-          kinds = @model.kinds.select { |kind| kind.type_identifier == kind_type_identifier }
-          if kinds.any?
-            path_for_instance(kinds.first)
-          elsif kind_type_identifier.start_with?(@endpoint.to_s) || kind_type_identifier.start_with?('/')
+          if kind_type_identifier.start_with?(@endpoint.to_s) || kind_type_identifier.start_with?('/')
             #we got an instance link
-            sanitize_instance_link(kind_type_identifier)
-          else
-            raise "Unknown kind identifier! #{kind_type_identifier.inspect}"
+            return sanitize_instance_link(kind_type_identifier)
           end
+
+          kind_type_id = get_kind_type_identifier(kind_type_identifier)
+          unless kind_type_id
+            raise ArgumentError,
+                  "There is no such kind type registered in the model! #{kind_type_identifier.inspect}"
+          end
+
+          kinds = @model.kinds.select { |kind| kind.type_identifier == kind_type_id }
+          path_for_instance(kinds.first)
         end
 
         # Returns the path for a given instance, instances not providing
