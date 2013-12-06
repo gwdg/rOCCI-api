@@ -88,8 +88,8 @@ module Occi
           
           # get model information from the endpoint
           # and create Occi::Model instance
-          model = get('/-/')
-          set_model model
+          model_collection = get('/-/')
+          @model = get_model(model_collection)
 
           # auto-connect?
           @connected = @options[:auto_connect]
@@ -278,8 +278,8 @@ module Occi
         # @see Occi::Api::Client::ClientBase
         def refresh
           # re-download the model from the server
-          model = get('/-/')
-          set_model model
+          model_collection = get('/-/')
+          @model = get_model(model_collection)
         end
 
         private
@@ -454,26 +454,26 @@ module Occi
         end
 
         # @see Occi::Api::Client::ClientBase
-        def set_logger(log_options)
-          super log_options
+        def get_logger(log_options)
+          logger = super(log_options)
+          self.class.debug_output $stderr if logger.level == Occi::Log::DEBUG
 
-          self.class.debug_output $stderr if log_options[:level] == Occi::Log::DEBUG
+          logger
         end
 
         # @see Occi::Api::Client::ClientBase
-        def set_auth(auth_options, fallback = false)
-          @auth_options = auth_options
-
-          case @auth_options[:type]
+        def get_auth(auth_options, fallback = false)
+          # select appropriate authN type
+          case auth_options[:type]
           when "basic"
-            @authn_plugin = Http::AuthnPlugins::Basic.new self, @auth_options
+            @authn_plugin = Http::AuthnPlugins::Basic.new self, auth_options
           when "digest"
-            @authn_plugin = Http::AuthnPlugins::Digest.new self, @auth_options
+            @authn_plugin = Http::AuthnPlugins::Digest.new self, auth_options
           when "x509"
-            @authn_plugin = Http::AuthnPlugins::X509.new self, @auth_options
+            @authn_plugin = Http::AuthnPlugins::X509.new self, auth_options
           when "keystone"
             raise ::Occi::Api::Client::Errors::AuthnError, "This authN method is for fallback only!" unless fallback
-            @authn_plugin = Http::AuthnPlugins::Keystone.new self, @auth_options
+            @authn_plugin = Http::AuthnPlugins::Keystone.new self, auth_options
           when "none", nil
             @authn_plugin = Http::AuthnPlugins::Dummy.new self
           else
@@ -481,6 +481,8 @@ module Occi
           end
 
           @authn_plugin.setup
+
+          auth_options
         end
 
         # @see Occi::Api::Client::ClientBase
@@ -495,7 +497,7 @@ module Occi
               @auth_options[:original_type] = @auth_options[:type]
               @auth_options[:type] = @authn_plugin.fallbacks.first
 
-              set_auth @auth_options, true
+              @auth_options = get_auth(@auth_options, true)
               @authn_plugin.authenticate
             else
               raise e
@@ -504,21 +506,28 @@ module Occi
         end
 
         # @see Occi::Api::Client::ClientBase
-        def set_media_type(force_type = nil)
+        def get_media_type(force_type = nil)
           # force media_type if provided
-          if force_type
+          unless force_type.blank?
             self.class.headers 'Accept' => force_type
-            @media_type = force_type
+            media_type = force_type
           else
             media_types = self.class.head(@endpoint).headers['accept']
-            Occi::Log.debug("Available media types: #{media_types}")
-            @media_type = case media_types
+
+            Occi::Log.debug("Available media types: #{media_types.inspect}")
+            media_type = case media_types
             when /application\/occi\+json/
               'application/occi+json'
+            when /application\/occi\+xml/
+              'application/occi+xml'
+            when /text\/occi/
+              'text/occi'
             else
               'text/plain'
             end
           end
+
+          media_type
         end
 
         # Generates a human-readable response message based on the HTTP response code.

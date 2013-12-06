@@ -5,14 +5,9 @@ module Occi
       class ClientBase
 
         # a few attributes which should be visible outside the client
-        attr_reader :endpoint
-        attr_reader :auth_options
-        attr_reader :media_type
-        attr_reader :connected
-        attr_reader :model
-        attr_reader :logger
-        attr_reader :last_response
-        attr_reader :options
+        attr_reader :endpoint, :auth_options, :media_type,
+                    :connected, :model, :logger, :last_response,
+                    :options
 
         def initialize(options = {})
           defaults = {
@@ -24,16 +19,16 @@ module Occi
           }
 
           options = options.marshal_dump if options.is_a? OpenStruct
-          @options = defaults.merge options
+          @options = defaults.merge(options)
 
           # set Occi::Log
-          set_logger @options[:log]
+          @logger = get_logger(@options[:log])
 
           # check the validity and canonize the endpoint URI
-          set_endpoint @options[:endpoint]
+          @endpoint = get_endpoint_uri(@options[:endpoint])
 
           # pass auth options
-          set_auth @options[:auth]
+          @auth_options = get_auth(@options[:auth])
 
           # verify authN before attempting actual
           # message exchange with the server; this
@@ -42,7 +37,7 @@ module Occi
           preauthenticate
 
           # set accepted media types
-          set_media_type @options[:media_type]
+          @media_type = get_media_type(@options[:media_type])
 
           @connected = false
         end
@@ -82,7 +77,9 @@ module Occi
         #
         # @param [String] resource type identifier or just type name
         # @return [Array<String>] list of links
-        def list(resource_type_identifier=nil); end
+        def list(resource_type_identifier=nil)
+          raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
+        end
 
         # Retrieves descriptions for available resources specified by a type
         # identifier or resource location. If no type identifier or location
@@ -101,7 +98,9 @@ module Occi
         #
         # @param [String] resource type identifier, type name or resource location
         # @return [Occi::Core::Resources] list of resource descriptions
-        def describe(resource_type_identifier=nil); end
+        def describe(resource_type_identifier=nil)
+          raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
+        end
 
         # Creates a new resource on the server. Resource must be provided
         # as an instance of Occi::Core::Entity, e.g. instantiated using
@@ -118,7 +117,9 @@ module Occi
         #
         # @param [Occi::Core::Entity] resource to be created on the server
         # @return [String] URI of the new resource
-        def create(entity); end
+        def create(entity)
+          raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
+        end
 
         # Deploys a compute resource based on an OVF/OVA descriptor available
         # on a local file system.
@@ -128,7 +129,9 @@ module Occi
         #
         # @param [String] location of an OVF/OVA file
         # @return [String] URI of the new resource
-        def deploy(location); end
+        def deploy(location)
+          raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
+        end
 
         # Deploys a compute resource based on an OVF descriptor available
         # directly as a String.
@@ -138,7 +141,9 @@ module Occi
         #
         # @param [String] OVF descriptor (e.g., already read from a file or generated)
         # @return [String] URI of the new resource
-        def deploy_ovf(descriptor); end
+        def deploy_ovf(descriptor)
+          raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
+        end
 
         # Deploys a compute resource based on an OVA descriptor available
         # directly as a String.
@@ -148,7 +153,9 @@ module Occi
         #
         # @param [String] OVA descriptor (e.g., already read from a file or generated)
         # @return [String] URI of the new resource
-        def deploy_ova(descriptor); end
+        def deploy_ova(descriptor)
+          raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
+        end
 
         # Deletes a resource or all resource of a certain resource type
         # from the server.
@@ -160,7 +167,9 @@ module Occi
         #
         # @param [String] resource type identifier, type name or location
         # @return [Boolean] status
-        def delete(resource_type_identifier); end
+        def delete(resource_type_identifier)
+          raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
+        end
 
         # Triggers given action on a specific resource.
         #
@@ -170,7 +179,9 @@ module Occi
         # @param [String] resource location
         # @param [String] type of action
         # @return [String] resource location
-        def trigger(resource_type_identifier, action); end
+        def trigger(resource_type_identifier, action)
+          raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
+        end
 
         # Refreshes the Occi::Model used inside the client. Useful for
         # updating the model without creating a new instance or
@@ -178,7 +189,9 @@ module Occi
         #
         # @example
         #    client.refresh
-        def refresh; end
+        def refresh
+          raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
+        end
 
         ##############################################################################
         ######## STUBS END
@@ -196,7 +209,7 @@ module Occi
         # @param [String] resource name or resource identifier
         # @return [Occi::Core::Resource] new resource instance
         def get_resource(resource_type)
-          Occi::Log.debug("Instantiating #{resource_type} ...")
+          Occi::Log.debug("Instantiating #{resource_type.inspect}")
 
           type_id = if @model.get_by_id resource_type
             # we got a resource type identifier
@@ -215,20 +228,43 @@ module Occi
           new_resource
         end
 
-        # Retrieves all entity type identifiers related to a given type identifier
+        # Retrieves all kind type identifiers related to a given type identifier
         #
         # @example
-        #    client.get_entity_type_identifiers_related_to 'network'
+        #    client.get_kind_type_identifiers_related_to 'http://schemas.ogf.org/occi/infrastructure#network'
         #    # => [ "http://schemas.ogf.org/occi/infrastructure#network",
         #    #      "http://schemas.ogf.org/occi/infrastructure#ipnetwork" ]
         #
-        # @param [String] type_identifier
-        # @return [Array<String>] list of available entity type identifiers related to
-        #                         given type identifier in a human-readable format
-        def get_entity_types_related_to(type_identifier)
-          Occi::Log.debug("Getting entity type identifiers related to #{type_identifier}")
-          collection = @model.get type_identifier
-          collection.kinds.collect { |kind| kind.type_identifier }
+        # @param [String] type identifier
+        # @return [Array<String>] list of available kind type identifiers related to
+        #                         the given type identifier
+        def get_kind_type_identifiers_related_to(type_identifier)
+          Occi::Log.debug("Getting kind type identifiers related to #{type_identifier.inspect}")
+          collection = @model.get(type_identifier)
+          collection.kinds.to_a.collect { |kind| kind.type_identifier }
+        end
+
+        # Retrieves all available kind types.
+        #
+        # @example
+        #    client.get_kind_types # => [ "entity", "resource", "link" ]
+        #
+        # @return [Array<String>] list of available kind types in a human-readable format
+        def get_kind_types
+          @model.kinds.to_a.collect { |kind| kind.term }
+        end
+
+        # Retrieves all available kind type identifiers.
+        #
+        # @example
+        #    client.get_kind_type_identifiers
+        #    # => [ "http://schemas.ogf.org/occi/core#entity",
+        #    #      "http://schemas.ogf.org/occi/core#resource",
+        #    #      "http://schemas.ogf.org/occi/core#link" ]
+        #
+        # @return [Array<String>] list of available kind type identifiers
+        def get_kind_type_identifiers
+          @model.kinds.to_a.collect { |kind| kind.type_identifier }
         end
 
         # Retrieves all available entity types.
@@ -238,21 +274,21 @@ module Occi
         #
         # @return [Array<String>] list of available entity types in a human-readable format
         def get_entity_types
-          Occi::Log.debug("Getting entity types ...")
-          @model.kinds.to_a.collect { |kind| kind.term }
+          collection = @model.get(Occi::Core::Entity.kind.type_identifier)
+          collection.kinds.to_a.collect { |kind| kind.term }
         end
 
         # Retrieves all available entity type identifiers.
         #
         # @example
-        #    client.get_entity_type_identifiers
+        #    client.get_kind_type_identifiers
         #    # => [ "http://schemas.ogf.org/occi/core#entity",
         #    #      "http://schemas.ogf.org/occi/core#resource",
         #    #      "http://schemas.ogf.org/occi/core#link" ]
         #
         # @return [Array<String>] list of available entity types in a OCCI ID format
         def get_entity_type_identifiers
-          get_entity_types_related_to Occi::Core::Entity.kind.type_identifier
+          get_kind_type_identifiers_related_to Occi::Core::Entity.kind.type_identifier
         end
 
         # Retrieves all available resource types.
@@ -262,9 +298,8 @@ module Occi
         #
         # @return [Array<String>] list of available resource types in a human-readable format
         def get_resource_types
-          Occi::Log.debug("Getting resource types ...")
-          collection = @model.get Occi::Core::Resource.kind
-          collection.kinds.collect { |kind| kind.term }
+          collection = @model.get(Occi::Core::Resource.kind.type_identifier)
+          collection.kinds.to_a.collect { |kind| kind.term }
         end
 
         # Retrieves all available resource type identifiers.
@@ -277,7 +312,7 @@ module Occi
         #
         # @return [Array<String>] list of available resource types in a Occi ID format
         def get_resource_type_identifiers
-          get_entity_types_related_to Occi::Core::Resource.kind.type_identifier
+          get_kind_type_identifiers_related_to Occi::Core::Resource.kind.type_identifier
         end
 
         # Retrieves all available link types.
@@ -287,9 +322,8 @@ module Occi
         #
         # @return [Array<String>] list of available link types in a human-readable format
         def get_link_types
-          Occi::Log.debug("Getting link types ...")
           collection = @model.get Occi::Core::Link.kind
-          collection.kinds.collect { |kind| kind.term }
+          collection.kinds.to_a.collect { |kind| kind.term }
         end
 
         # Retrieves all available link type identifiers.
@@ -301,7 +335,7 @@ module Occi
         #
         # @return [Array<String>] list of available link types in a OCCI ID format
         def get_link_type_identifiers
-          get_entity_types_related_to Occi::Core::Link.kind.type_identifier
+          get_kind_type_identifiers_related_to Occi::Core::Link.kind.type_identifier
         end
 
         # Looks up a mixin using its name and, optionally, a type as well.
@@ -508,49 +542,82 @@ module Occi
         end
         alias_method :get_resource_tpls, :get_resource_templates
 
-        # Returns the path for a given resource type identifier
+        # Returns the path for a given kind type identifier
         #
         # @example
-        #    path_for_resource_type "http://schemas.ogf.org/occi/infrastructure#compute"
+        #    path_for_kind_type_identifier "http://schemas.ogf.org/occi/infrastructure#compute"
         #     # => "/compute/"
-        #    path_for_resource_type "http://localhost:3300/compute/35ad4f45gsf-gsfg524s6gsfg-sfgsf4gsfg"
+        #    path_for_kind_type_identifier "http://localhost:3300/compute/35ad4f45gsf-gsfg524s6gsfg-sfgsf4gsfg"
         #     # => "/compute/35ad4f45gsf-gsfg524s6gsfg-sfgsf4gsfg"
         #
-        # @param [String] resource type identifier
+        # @param [String] kind type identifier
         # @return [String] 
-        def path_for_resource_type(resource_type_identifier)
-          return "/" if resource_type_identifier.nil? || resource_type_identifier == "/"
+        def path_for_kind_type_identifier(kind_type_identifier)
+          raise ArgumentError,
+                "Kind type identifier is a required argument!" if kind_type_identifier.blank?
 
-          kinds = @model.kinds.select { |kind| kind.term == resource_type_identifier }
+          kinds = @model.kinds.select { |kind| kind.type_identifier == kind_type_identifier }
           if kinds.any?
-            #we got an type identifier
-            path = "/" + kinds.first.type_identifier.split('#').last + "/"
-          elsif resource_type_identifier.start_with?(@endpoint) || resource_type_identifier.start_with?('/')
-            #we got an resource link
-            path = sanitize_resource_link(resource_type_identifier)
+            path_for_instance(kinds.first)
+          elsif kind_type_identifier.start_with?(@endpoint.to_s) || kind_type_identifier.start_with?('/')
+            #we got an instance link
+            sanitize_instance_link(kind_type_identifier)
           else
-            raise "Unknown resource identifier! #{resource_type_identifier.inspect}"
+            raise "Unknown kind identifier! #{kind_type_identifier.inspect}"
           end
         end
 
-        # Extracts the resource path from a resource link. It will remove the leading @endpoint
+        # Returns the path for a given instance, instances not providing
+        # path information will raise an exception.
+        #
+        # @example
+        #    path_for_instance Occi::Infrastructure::Network.new
+        #     # => "/network/35ad4f45gsf-gsfg524s6gsfg-sfgsf4gsfg"
+        #    path_for_instance Occi::Infrastructire::Compute.new
+        #     # => "/compute/35ad4f45gsf-gsfg524s6gsfg-sfgsf4gsfg"
+        #    path_for_instance Occi::Core::Mixin.new
+        #     # => "/mixin/my_mixin/"
+        #    path_for_instance Occi::Infrastructire::Storagelink.new
+        #     # => "/link/storagelink/35ad4f45gsf-gsfg524s6gsfg-sfgsf4gsfg"
+        #
+        # @param [Object] instance
+        # @return [String] path for the given instance
+        def path_for_instance(instance)
+          unless instance.respond_to?(:location)
+            raise Occi::Api::Client::Errors::TypeMismatchError,
+                  "Expected an instance responding to #location, " \
+                  "got #{instance.class.name.inspect}"
+          end
+
+          if instance.location.blank?
+            raise Occi::Api::Client::Errors::LocationError,
+                  "Instance of #{instance.class.name.inspect} has " \
+                  "an empty location"
+          end
+
+          instance.location
+        end
+
+        # Extracts path from an instance link. It will remove the leading @endpoint
         # and replace it with a slash.
         #
         # @example
-        #    sanitize_resource_link "http://localhost:3300/compute/35ad4f45gsf-gsfg524s6gsfg-sfgsf4gsfg"
+        #    sanitize_instance_link "http://localhost:3300/compute/35ad4f45gsf-gsfg524s6gsfg-sfgsf4gsfg"
         #     # => "/compute/35ad4f45gsf-gsfg524s6gsfg-sfgsf4gsfg"
-        #    sanitize_resource_link "/compute/35ad4f45gsf-gsfg524s6gsfg-sfgsf4gsfg"
+        #    sanitize_instance_link "/compute/35ad4f45gsf-gsfg524s6gsfg-sfgsf4gsfg"
         #     # => "/compute/35ad4f45gsf-gsfg524s6gsfg-sfgsf4gsfg"
         #
-        # @param [String] string containing the full resource link
+        # @param [String] string containing the full instance link
         # @return [String] extracted path, with a leading slash
-        def sanitize_resource_link(resource_link)
+        def sanitize_instance_link(instance_link)
           # everything starting with '/' is considered to be a resource path
-          return resource_link if resource_link.start_with? '/'
+          return instance_link if instance_link.start_with? '/'
 
-          raise "Resource link #{resource_link.inspect} is not valid!" unless resource_link.start_with? @endpoint
+          unless instance_link.start_with?(@endpoint.to_s)
+            raise ArgumentError, "Resource link #{instance_link.inspect} is not valid!"
+          end
 
-          resource_link.gsub @endpoint, '/'
+          URI(instance_link).request_uri
         end
 
         protected
@@ -563,29 +630,36 @@ module Occi
         # are: ["basic", "digest", "x509", "none"]
         #
         # @example
-        #    set_auth { :type => "none" }
-        #    set_auth { :type => "basic", :username => "123", :password => "321" }
-        #    set_auth { :type => "digest", :username => "123", :password => "321" }
-        #    set_auth { :type => "x509", :user_cert => "~/cert.pem",
+        #    get_auth { :type => "none" }
+        #    get_auth { :type => "basic", :username => "123", :password => "321" }
+        #    get_auth { :type => "digest", :username => "123", :password => "321" }
+        #    get_auth { :type => "x509", :user_cert => "~/cert.pem",
         #                  :user_cert_password => "321", :ca_path => nil }
         #
         # @param [Hash] authentication options
         # @param [Boolean] allow fallback-only options
-        def set_auth(auth_options, fallback = false); end
+        # @return [Hash] transformed hash with authN information
+        def get_auth(auth_options, fallback = false)
+          raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
+        end
 
         # Attempts to establish a preliminary connection with the server
         # to verify provided credentials and perform fallback authN
-        # if necessary. Has to be invoked after set_auth
-        def preauthenticate; end
+        # if necessary. Has to be invoked after @auth_options have been set.
+        def preauthenticate
+          raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
+        end
 
         # Sets media type. Will choose either application/occi+json or text/plain
         # based on the formats supported by the server.
         #
         # @example
-        #    set_media_type # => 'application/occi+json'
+        #    get_media_type # => 'application/occi+json'
         #
         # @return [String] chosen media type
-        def set_media_type(force_type = nil); end
+        def get_media_type(force_type = nil)
+          raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
+        end
 
         ##############################################################################
         ######## STUBS END
@@ -595,40 +669,46 @@ module Occi
         # instances to the rOCCI client.
         #
         # @example
-        #    set_logger { :out => STDERR, :level => Occi::Log::WARN, :logger => nil }
+        #    get_logger { :out => STDERR, :level => Occi::Log::WARN, :logger => nil }
         #
         # @param [Hash] logger options
-        def set_logger(log_options)
+        # @return [Occi::Log] instance of the logger
+        def get_logger(log_options)
           unless log_options[:logger] && log_options[:logger].kind_of?(Occi::Log)
-            @logger = Occi::Log.new(log_options[:out])
-            @logger.level = log_options[:level]
+            logger = Occi::Log.new(log_options[:out])
+            logger.level = log_options[:level]
           end
+
+          logger
         end
 
-        # Checks whether the given endpoint URI is valid and adds a trailing
-        # slash if necessary.
+        # Checks whether the given endpoint URI is valid and converts it
+        # to a URI instance.
         #
         # @example
-        #    set_endpoint "http://localhost:3300" # => "http://localhost:3300/"
+        #    get_endpoint_uri "http://localhost:3300" # => #<URI::*>
         #
         # @param [String] endpoint URI in a non-canonical string
-        # @return [String] canonical endpoint URI in a string, with a trailing slash
-        def set_endpoint(endpoint)
-          raise 'Endpoint not a valid URI' unless (endpoint =~ URI::ABS_URI)
-          @endpoint = endpoint.chomp('/') + '/'
+        # @return [URI] canonical endpoint URI
+        def get_endpoint_uri(endpoint)
+          unless endpoint =~ URI::ABS_URI
+            raise "Endpoint not a valid absolute URI! #{endpoint.inspect}"
+          end
+
+          URI(endpoint)
         end
 
         # Creates an Occi::Model from data retrieved from the server.
         #
         # @example
-        #    model = get('/-/')
-        #    set_model model # => #<Occi::Model>
+        #    model_collection = get('/-/')
+        #    get_model model_collection # => #<Occi::Model>
         #
         # @param [Occi::Collection] parsed representation of server's model
         # @return [Occi::Model] Model instance
-        def set_model(model)
+        def get_model(model_collection)
           # build model
-          @model = Occi::Model.new(model)
+          Occi::Model.new(model_collection)
         end
 
         # Returns mixin type identifiers for os_tpl mixins
