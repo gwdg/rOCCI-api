@@ -819,6 +819,8 @@ module Occi
           unless log_options[:logger] && log_options[:logger].kind_of?(Occi::Log)
             logger = Occi::Log.new(log_options[:out])
             logger.level = log_options[:level]
+          else
+            logger = log_options[:logger]
           end
 
           logger
