@@ -504,7 +504,7 @@ module Occi
         # @return [String] message
         def response_message(response)
           @last_response = response
-          'HTTP Response status: [' + response.code.to_s + '] ' + reason_phrase(response.code)
+          "HTTP Response status: [#{response.code.to_s}] #{reason_phrase(response.code)}"
         end
 
         # Converts HTTP response codes to human-readable phrases.

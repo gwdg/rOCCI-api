@@ -665,7 +665,7 @@ module Occi
         #
         # @return [Occi::Core::Mixins] collection containing all registered OS templates
         def get_os_templates
-          get_mixins "http://schemas.ogf.org/occi/infrastructure#os_tpl"
+          get_mixins Occi::Infrastructure::OsTpl.mixin.type_identifier
         end
         alias_method :get_os_tpls, :get_os_templates
 
@@ -676,7 +676,7 @@ module Occi
         #
         # @return [Occi::Core::Mixins] collection containing all registered resource templates
         def get_resource_templates
-          get_mixins "http://schemas.ogf.org/occi/infrastructure#resource_tpl"
+          get_mixins Occi::Infrastructure::ResourceTpl.mixin.type_identifier
         end
         alias_method :get_resource_tpls, :get_resource_templates
 
@@ -715,11 +715,11 @@ module Occi
         # @example
         #    path_for_instance Occi::Infrastructure::Network.new
         #     # => "/network/35ad4f45gsf-gsfg524s6gsfg-sfgsf4gsfg"
-        #    path_for_instance Occi::Infrastructire::Compute.new
+        #    path_for_instance Occi::Infrastructure::Compute.new
         #     # => "/compute/35ad4f45gsf-gsfg524s6gsfg-sfgsf4gsfg"
         #    path_for_instance Occi::Core::Mixin.new
         #     # => "/mixin/my_mixin/"
-        #    path_for_instance Occi::Infrastructire::Storagelink.new
+        #    path_for_instance Occi::Infrastructure::Storagelink.new
         #     # => "/link/storagelink/35ad4f45gsf-gsfg524s6gsfg-sfgsf4gsfg"
         #
         # @param [Object] instance
