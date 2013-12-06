@@ -204,12 +204,15 @@ module Occi
           else
             # we got a resource type name
             type_ids = @model.kinds.to_a.select { |kind| kind.term == resource_type }
-            type_ids.first.type_identifier if type_ids.any?
+            type_ids.any? ? type_ids.first.type_identifier : nil
           end
 
           raise "Unknown resource type! #{resource_type.inspect}" unless type_id
 
-          Occi::Core::Resource.new type_id
+          new_resource = Occi::Core::Resource.new(type_id)
+          new_resource.model = @model
+
+          new_resource
         end
 
         # Retrieves all entity type identifiers related to a given type identifier
