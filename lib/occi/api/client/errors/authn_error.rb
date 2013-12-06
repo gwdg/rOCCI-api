@@ -1,7 +1,5 @@
-module Occi::Api::Client
-  module Errors
+module Occi::Api::Client::Errors
 
-    class AuthnError < RuntimeError; end
+  class AuthnError < RuntimeError; end
 
-  end
 end
