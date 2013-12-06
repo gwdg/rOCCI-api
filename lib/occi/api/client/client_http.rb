@@ -98,33 +98,18 @@ module Occi
         # @see Occi::Api::Client::ClientBase
         def list(resource_type_identifier=nil)
           if resource_type_identifier
-            # convert type to type identifier
-            kinds = @model.kinds.select {
-              |kind| kind.term == resource_type_identifier
-            }
-            if kinds.any?
-              resource_type_identifier = kinds.first.type_identifier
-            end
-
-            raise 'Unkown resource type identifier!' unless resource_type_identifier
-            unless @model.get_by_id resource_type_identifier
-              raise "Resource type identifier not allowed with this model! [#{resource_type_identifier}]"
-            end
-
-            # split the type identifier and get the most important part
-            uri_part = resource_type_identifier.split('#').last
-
-            # request uri-list from the server
-            path = uri_part + '/'
+            resource_type_identifier = get_resource_type_identifier(resource_type_identifier)
+            path = path_for_kind_type_identifier(resource_type_identifier)
           end
 
           path = '/' unless path
+          path = "#{@endpoint.to_s}#{path}"
 
           headers = self.class.headers.clone
           headers['Accept'] = 'text/uri-list'
 
           response = self.class.get(
-            @endpoint.to_s + path,
+            path,
             :headers => headers
           )
 
@@ -134,20 +119,13 @@ module Occi
 
         # @see Occi::Api::Client::ClientBase
         def describe(resource_type_identifier=nil)
-
-          # convert type to type identifier whenever possible
           if resource_type_identifier
-            kinds = @model.kinds.select {
-              |kind| kind.term == resource_type_identifier
-            }
-            if kinds.any?
-              resource_type_identifier = kinds.first.type_identifier
-            end
+            resource_type_identifier = get_resource_type_identifier(resource_type_identifier)
           end
 
           descriptions = Occi::Collection.new
 
-          if resource_type_identifier.nil?
+          if resource_type_identifier.blank?
             # no filters, describe all available resources
             descriptions.merge! get('/')
           elsif @model.get_by_id(resource_type_identifier)
@@ -157,13 +135,13 @@ module Occi
 
             # make the requests
             locations.each do |location|
-              descriptions.merge! get(sanitize_resource_link(location))
+              path = sanitize_instance_link(location)
+              descriptions.merge! get(path)
             end
-          elsif resource_type_identifier.start_with?(@endpoint.to_s) || resource_type_identifier.start_with?('/')
-            # this is a link of a specific resource (obsolute or relative)
-            descriptions.merge! get(sanitize_resource_link(resource_type_identifier))
           else
-            raise "Unkown resource type identifier! [#{resource_type_identifier}]"
+            # this is a link of a specific resource (absolute or relative)
+            path = sanitize_instance_link(resource_type_identifier)
+            descriptions.merge! get(path)
           end
 
           descriptions.resources
@@ -171,30 +149,27 @@ module Occi
 
         # @see Occi::Api::Client::ClientBase
         def create(entity)
+          raise "#{entity.class.name.inspect} not an entity!" unless entity.kind_of? Occi::Core::Entity
 
-          raise "#{entity} not an entity!" unless entity.kind_of? Occi::Core::Entity
-
-          Occi::Log.debug "Entity kind: #{entity.kind}"
-          kind = entity.kind
-          raise "No kind found for #{entity}" unless kind
+          Occi::Log.debug "Entity kind: #{entity.kind.type_identifier.inspect}"
+          raise "No kind found for #{entity.inspect}" unless entity.kind
 
           # get location for this kind of entity
-          Occi::Log.debug "Kind location: #{entity.kind.location}"
-          location = kind.location
+          path = path_for_kind_type_identifier(entity.kind.type_identifier)
           collection = Occi::Collection.new
 
           # is this entity a Resource or a Link?
-          Occi::Log.debug "Entity class: #{entity.class.name}"
+          Occi::Log.debug "Entity class: #{entity.class.name.inspect}"
           collection.resources << entity if entity.kind_of? Occi::Core::Resource
           collection.links << entity if entity.kind_of? Occi::Core::Link
 
           # make the request
-          post location, collection
+          post path, collection
         end
 
         # @see Occi::Api::Client::ClientBase
         def deploy(location)
-          raise "File #{location} does not exist!" unless File.exist? location
+          raise "File #{location.inspect} does not exist!" unless File.exist? location
 
           file = File.read(location)
 
@@ -211,10 +186,12 @@ module Occi
         def deploy_ovf(descriptor)
           media_types = self.class.head(@endpoint.to_s).headers['accept'].to_s
 
+          path = path_for_kind_type_identifier(Occi::Infrastructure::Compute.type_identifier)
+          path = "#{@endpoint.to_s}#{path}"
           if media_types.include? 'application/ovf'
             headers = self.class.headers.clone
             headers['Content-Type'] = 'application/ovf'
-            self.class.post(@endpoint.to_s + '/compute/',
+            self.class.post(path,
                             :body => descriptor,
                             :headers => headers)
           else
@@ -226,10 +203,12 @@ module Occi
         def deploy_ova(descriptor)
           media_types = self.class.head(@endpoint.to_s).headers['accept'].to_s
 
+          path = path_for_kind_type_identifier(Occi::Infrastructure::Compute.type_identifier)
+          path = "#{@endpoint.to_s}#{path}"
           if media_types.include? ' application/ova '
             headers = self.class.headers.clone
             headers['Content-Type'] = 'application/ova'
-            self.class.post(@endpoint.to_s + '/compute/',
+            self.class.post(path,
                             :body => descriptor,
                             :headers => headers)
           else
@@ -239,40 +218,24 @@ module Occi
 
         # @see Occi::Api::Client::ClientBase
         def delete(resource_type_identifier)
-          raise 'Resource not provided!' unless resource_type_identifier
-          path = path_for_resource_type(resource_type_identifier)
+          raise 'Resource not provided!' if resource_type_identifier.blank?
+          path = path_for_kind_type_identifier(resource_type_identifier)
 
-          Occi::Log.debug("Deleting #{path} ...")
+          Occi::Log.debug("Deleting #{path.inspect} for #{resource_type_identifier.inspect}")
           del path
         end
 
         # @see Occi::Api::Client::ClientBase
-        def trigger(resource_type_identifier, action)
+        def trigger(resource_type_identifier, action_instance)
           # TODO: not tested
-          raise 'Resource not provided!' unless resource_type_identifier
-          type_identifiers = @model.kinds.select {
-            |kind| kind.term == resource_type_identifier
-          }
+          raise 'Resource not provided!' if resource_type_identifier.blank?
 
-          if type_identifiers.any?
-            type_identifier = @model.kinds.select {
-              |kind| kind.term == resource_type_identifier
-            }.first.type_identifier
-
-            location = @model.get_by_id(type_identifier).location
-            resource_type_identifier = @endpoint.to_s + location
-          end
-
-          raise "Unknown resource identifier! #{resource_type_identifier}" unless resource_type_identifier.start_with? @endpoint.to_s
-
-          # encapsulate the acion in a collection
-          collection = Occi::Collection.new
-          scheme, term = action.split('#')
-          collection.actions << Occi::Core::Action.new(scheme + '#', term)
+          #
+          resource_type_identifier = get_resource_type_identifier(resource_type_identifier)
+          path = path_for_kind_type_identifier(resource_type_identifier)
 
           # make the request
-          path = sanitize_resource_link(resource_type_identifier) + '?action=' + term
-          post path, collection
+          post path, action_instance
         end
 
         # @see Occi::Api::Client::ClientBase
@@ -294,10 +257,10 @@ module Occi
         # @param [String] path for the GET request
         # @param [Occi::Collection] collection of filters
         # @return [Occi::Collection] parsed result of the request
-        def get(path='', filter=nil)
-          # remove the leading slash
-          path = path.gsub(/\A\//, '')
-
+        def get(path='/', filter=nil)
+          relative_path = path
+          path = "#{@endpoint.to_s}#{path}"
+          # apply filters if present
           response = if filter
             categories = filter.categories.collect { |category| category.to_text }.join(',')
             attributes = filter.entities.collect { |entity| entity.attributes.combine.collect { |k, v| k + '=' + v } }.join(',')
@@ -307,28 +270,28 @@ module Occi
             headers['Category'] = categories unless categories.empty?
             headers['X-OCCI-Attributes'] = attributes unless attributes.empty?
 
-            self.class.get(@endpoint.to_s + path, :headers => headers)
+            self.class.get(path, :headers => headers)
           else
-            self.class.get(@endpoint.to_s + path)
+            self.class.get(path)
           end
 
           response_msg = response_message response
           raise "HTTP GET failed! #{response_msg}" unless response.code.between? 200, 300
 
-          Occi::Log.debug "Response location: #{('/' + path).match(/\/.*\//).to_s}"
-          kind = @model.get_by_location(('/' + path).match(/\/.*\//).to_s) if @model
+          Occi::Log.debug "Response location: #{relative_path.inspect}"
+          kind = @model.get_by_location(relative_path) if @model
 
-          Occi::Log.debug "Response kind: #{kind}"
+          Occi::Log.debug "Response kind: #{kind.inspect}"
 
-          if kind
-            kind.related_to? Occi::Core::Resource ? entity_type = Occi::Core::Resource : entity_type = nil
-            entity_type = Occi::Core::Link if kind.related_to? Occi::Core::Link
+          entity_type = nil
+          if kind && kind.related_to?(Occi::Core::Link)
+            entity_type = Occi::Core::Link
           end
 
           entity_type = Occi::Core::Resource unless entity_type
 
-          Occi::Log.debug "Parser call: #{response.content_type} #{path.include?('-/')} #{entity_type} #{response.headers.inspect}"
-          collection = Occi::Parser.parse(response.content_type, response.body, path.include?('-/'), entity_type, response.headers)
+          Occi::Log.debug "Parser call: #{response.content_type} #{path.include?('/-/')} #{entity_type} #{response.headers.inspect}"
+          collection = Occi::Parser.parse(response.content_type, response.body, path.include?('/-/'), entity_type, response.headers)
 
           Occi::Log.debug "Parsed collection: empty? #{collection.empty?}"
           collection
@@ -350,27 +313,28 @@ module Occi
         # @param [Occi::Collection] resource data to be POSTed
         # @return [String] URI location
         def post(path, collection)
-          # remove the leading slash
-          path = path.gsub(/\A\//, '')
+          raise ArgumentError, "Path is a required argument!" if path.blank?
 
           headers = self.class.headers.clone
           headers['Content-Type'] = @media_type
 
+          path = "#{@endpoint.to_s}#{path}"
+
           response = case @media_type
           when 'application/occi+json'
-            self.class.post(@endpoint.to_s + path,
+            self.class.post(path,
                             :body => collection.to_json,
                             :headers => headers)
           when 'text/occi'
-            self.class.post(@endpoint.to_s + path,
+            self.class.post(path,
                             :headers => collection.to_header.merge(headers))
           else
-            self.class.post(@endpoint.to_s + path,
+            self.class.post(path,
                             :body => collection.to_text,
                             :headers => headers)
           end
 
-          response_msg = response_message response
+          response_msg = response_message(response)
 
           case response.code
           when 200
@@ -403,27 +367,28 @@ module Occi
         # @param [Occi::Collection] resource data to send
         # @return [Occi::Collection] parsed result of the request
         def put(path, collection)
-          # remove the leading slash
-          path = path.gsub(/\A\//, '')
+          raise ArgumentError, "Path is a required argument!" if path.blank?
 
           headers = self.class.headers.clone
           headers['Content-Type'] = @media_type
 
+          path = "#{@endpoint.to_s}#{path}"
+
           response = case @media_type
           when 'application/occi+json'
-            self.class.post(@endpoint.to_s + path,
+            self.class.post(path,
                             :body => collection.to_json,
                             :headers => headers)
           when 'text/occi'
-            self.class.post(@endpoint.to_s + path,
+            self.class.post(path,
                             :headers => collection.to_header.merge(headers))
           else
-            self.class.post(@endpoint.to_s + path,
+            self.class.post(path,
                             :body => collection.to_text,
                             :headers => headers)
           end
 
-          response_msg = response_message response
+          response_msg = response_message(response)
 
           case response.code
           when 200, 201
@@ -442,12 +407,11 @@ module Occi
         # @param [Occi::Collection] collection of filters (currently NOT used)
         # @return [Boolean] status
         def del(path, filter=nil)
-          # remove the leading slash
-          path = path.gsub(/\A\//, '')
+          raise ArgumentError, "Path is a required argument!" if path.blank?
 
-          response = self.class.delete(@endpoint.to_s + path)
+          response = self.class.delete("#{@endpoint.to_s}#{path}")
 
-          response_msg = response_message response
+          response_msg = response_message(response)
           raise "HTTP DELETE failed! #{response_msg}" unless response.code.between? 200, 300
 
           true

@@ -176,10 +176,10 @@ module Occi
         # @example
         #    TODO: add examples
         #
-        # @param [String] resource location
-        # @param [String] type of action
+        # @param [String] resource type or type identifier
+        # @param [Occi::Core::ActionInstance] type of action
         # @return [String] resource location
-        def trigger(resource_type_identifier, action)
+        def trigger(resource_type_identifier, action_instance)
           raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
         end
 
@@ -251,7 +251,7 @@ module Occi
         #
         # @return [String, nil] category type identifier for the given category type
         def get_category_type_identifier(type)
-          return type if type =~ URI::ABS_URI
+          return type if (type =~ URI::ABS_URI) || (type && type.start_with?('/'))
 
           cats = @model.categories.to_a.select { |k| k.term == type }
           tis = cats.collect { |c| c.type_identifier }
@@ -312,7 +312,7 @@ module Occi
         #
         # @return [String, nil] kind type identifier for the given kind type
         def get_kind_type_identifier(type)
-          return type if type =~ URI::ABS_URI
+          return type if (type =~ URI::ABS_URI) || (type && type.start_with?('/'))
 
           kinds = @model.kinds.to_a.select { |k| k.term == type }
           tis = kinds.collect { |k| k.type_identifier }
@@ -358,7 +358,7 @@ module Occi
         #
         # @return [String, nil] entity type identifier for the given entity type
         def get_entity_type_identifier(type)
-          return type if type =~ URI::ABS_URI
+          return type if (type =~ URI::ABS_URI) || (type && type.start_with?('/'))
 
           collection = @model.get(Occi::Core::Entity.kind.type_identifier)
           e_kinds = collection.kinds.to_a.select { |e| e.term == type }
@@ -405,7 +405,7 @@ module Occi
         #
         # @return [String, nil] resource type identifier for the given resource type
         def get_resource_type_identifier(type)
-          return type if type =~ URI::ABS_URI
+          return type if (type =~ URI::ABS_URI) || (type && type.start_with?('/'))
 
           collection = @model.get(Occi::Core::Resource.kind.type_identifier)
           r_kinds = collection.kinds.to_a.select { |r| r.term == type }
@@ -451,7 +451,7 @@ module Occi
         #
         # @return [String, nil] link type identifier for the given link type
         def get_link_type_identifier(type)
-          return type if type =~ URI::ABS_URI
+          return type if (type =~ URI::ABS_URI) || (type && type.start_with?('/'))
 
           collection = @model.get(Occi::Core::Link.kind.type_identifier)
           l_kinds = collection.kinds.to_a.select { |r| r.term == type }
@@ -644,7 +644,7 @@ module Occi
         #
         # @return [String, nil] mixin type identifier for the given mixin type
         def get_mixin_type_identifier(type)
-          return type if type =~ URI::ABS_URI
+          return type if (type =~ URI::ABS_URI) || (type && type.start_with?('/'))
 
           mixins = @model.mixins.to_a.select { |m| m.term == type }
           tis = mixins.collect { |m| m.type_identifier }
