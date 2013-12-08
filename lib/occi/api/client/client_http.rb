@@ -38,6 +38,9 @@ module Occi::Api::Client
     def initialize(options = {})
       super options
 
+      self.class.base_uri @endpoint.to_s
+      self.class.timeout @options[:timeout].to_i unless @options[:timeout].blank?
+
       # get model information from the endpoint
       # and create Occi::Model instance
       model_collection = get('/-/')
@@ -55,7 +58,6 @@ module Occi::Api::Client
       end
 
       path = '/' unless path
-      path = "#{@endpoint.to_s}#{path}"
 
       headers = self.class.headers.clone
       headers['Accept'] = 'text/uri-list'
@@ -136,10 +138,9 @@ module Occi::Api::Client
 
     # @see Occi::Api::Client::ClientBase
     def deploy_ovf(descriptor)
-      media_types = self.class.head(@endpoint.to_s).headers['accept'].to_s
+      media_types = self.class.head('/').headers['accept'].to_s
 
       path = path_for_kind_type_identifier(Occi::Infrastructure::Compute.type_identifier)
-      path = "#{@endpoint.to_s}#{path}"
       if media_types.include? 'application/ovf'
         headers = self.class.headers.clone
         headers['Content-Type'] = 'application/ovf'
@@ -153,10 +154,9 @@ module Occi::Api::Client
 
     # @see Occi::Api::Client::ClientBase
     def deploy_ova(descriptor)
-      media_types = self.class.head(@endpoint.to_s).headers['accept'].to_s
+      media_types = self.class.head('/').headers['accept'].to_s
 
       path = path_for_kind_type_identifier(Occi::Infrastructure::Compute.type_identifier)
-      path = "#{@endpoint.to_s}#{path}"
       if media_types.include? ' application/ova '
         headers = self.class.headers.clone
         headers['Content-Type'] = 'application/ova'

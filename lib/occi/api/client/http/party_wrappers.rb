@@ -14,8 +14,6 @@ module Occi::Api::Client
       # @param [Occi::Collection] collection of filters
       # @return [Occi::Collection] parsed result of the request
       def get(path='/', filter=nil)
-        relative_path = path
-        path = "#{@endpoint.to_s}#{path}"
         # apply filters if present
         response = if filter
           categories = filter.categories.collect { |category| category.to_text }.join(',')
@@ -34,8 +32,8 @@ module Occi::Api::Client
         response_msg = response_message response
         raise "HTTP GET failed! #{response_msg}" unless response.code.between? 200, 300
 
-        Occi::Log.debug "Response location: #{relative_path.inspect}"
-        kind = @model.get_by_location(relative_path) if @model
+        Occi::Log.debug "Response location: #{path.inspect}"
+        kind = @model.get_by_location(path) if @model
 
         Occi::Log.debug "Response kind: #{kind.inspect}"
 
@@ -73,8 +71,6 @@ module Occi::Api::Client
 
         headers = self.class.headers.clone
         headers['Content-Type'] = @media_type
-
-        path = "#{@endpoint.to_s}#{path}"
 
         response = case @media_type
         when 'application/occi+json'
@@ -128,8 +124,6 @@ module Occi::Api::Client
         headers = self.class.headers.clone
         headers['Content-Type'] = @media_type
 
-        path = "#{@endpoint.to_s}#{path}"
-
         response = case @media_type
         when 'application/occi+json'
           self.class.post(path,
@@ -165,7 +159,7 @@ module Occi::Api::Client
       def del(path, filter=nil)
         raise ArgumentError, "Path is a required argument!" if path.blank?
 
-        response = self.class.delete("#{@endpoint.to_s}#{path}")
+        response = self.class.delete(path)
 
         response_msg = response_message(response)
         raise "HTTP DELETE failed! #{response_msg}" unless response.code.between? 200, 300
