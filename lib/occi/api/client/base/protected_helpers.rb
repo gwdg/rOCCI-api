@@ -12,7 +12,7 @@ module Occi::Api::Client
       # @param [Hash] logger options
       # @return [Occi::Log] instance of the logger
       def get_logger(log_options)
-        unless log_options[:logger] && log_options[:logger].kind_of?(Occi::Log)
+        unless log_options[:logger].kind_of?(Occi::Log)
           logger = Occi::Log.new(log_options[:out])
           logger.level = log_options[:level]
         else
