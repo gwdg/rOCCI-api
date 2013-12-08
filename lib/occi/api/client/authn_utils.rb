@@ -15,7 +15,7 @@ module Occi::Api::Client
     # formatted string.
     #
     # @example
-    #    extract_pem_from_pkcs12 "~/.globus/usercert.p12", "123456"
+    #    AuthnUtils.extract_pem_from_pkcs12 "~/.globus/usercert.p12", "123456"
     #      # => #<String>
     #
     # @param [String] Path to a PKCS#12 file with credentials
@@ -23,43 +23,53 @@ module Occi::Api::Client
     # @return [String] Decrypted credentials in a PEM formatted string
     def self.extract_pem_from_pkcs12(path_to_p12_file, p12_password)
       # decode certificate and its private key
-      pem_from_pkcs12 = ""
       if defined? JRUBY_VERSION
-        # Java-based Ruby, read PKCS12 manually
-        # using KeyStore
-        keystore = Java::JavaSecurity::KeyStore.getInstance("PKCS12")
-        p12_input_stream = Java::JavaIo::FileInputStream.new(path_to_p12_file)
-        pass_char_array = Java::JavaLang::String.new(p12_password).to_char_array
-
-        # load and unlock PKCS#12 store
-        keystore.load p12_input_stream, pass_char_array
-
-        # read the first certificate and PK
-        cert = keystore.getCertificate("1")
-        pk = keystore.getKey("1", pass_char_array)
-
-        pem_from_pkcs12 << "-----BEGIN CERTIFICATE-----\n"
-        pem_from_pkcs12 << Java::JavaxXmlBind::DatatypeConverter.printBase64Binary(cert.getEncoded())
-        pem_from_pkcs12 << "\n-----END CERTIFICATE-----"
-
-        pem_from_pkcs12 << "\n"
-
-        pem_from_pkcs12 << "-----BEGIN PRIVATE KEY-----\n"
-        pem_from_pkcs12 << Java::JavaxXmlBind::DatatypeConverter.printBase64Binary(pk.getEncoded())
-        pem_from_pkcs12 << "\n-----END PRIVATE KEY-----"
+        extract_pem_from_pkcs12_java(path_to_p12_file, p12_password)
       else
-        # C-based Ruby, use OpenSSL::PKCS12
-        pkcs12 = OpenSSL::PKCS12.new(
-          File.open(
-            path_to_p12_file,
-            'rb'
-          ),
-          p12_password
-        )
-
-        # store cert and private key in a single PEM formatted string
-        pem_from_pkcs12 << pkcs12.certificate.to_pem << pkcs12.key.to_pem
+        extract_pem_from_pkcs12_c(path_to_p12_file, p12_password)
       end
+    end
+
+    def self.extract_pem_from_pkcs12_java(path_to_p12_file, p12_password)
+      # Java-based Ruby, read PKCS12 manually
+      # using KeyStore
+      keystore = Java::JavaSecurity::KeyStore.getInstance("PKCS12")
+      p12_input_stream = Java::JavaIo::FileInputStream.new(path_to_p12_file)
+      pass_char_array = Java::JavaLang::String.new(p12_password).to_char_array
+
+      # load and unlock PKCS#12 store
+      keystore.load p12_input_stream, pass_char_array
+
+      # read the first certificate and PK
+      cert = keystore.getCertificate("1")
+      pk = keystore.getKey("1", pass_char_array)
+
+      pem_from_pkcs12 = ""
+
+      pem_from_pkcs12 << "-----BEGIN CERTIFICATE-----\n"
+      pem_from_pkcs12 << Java::JavaxXmlBind::DatatypeConverter.printBase64Binary(cert.getEncoded())
+      pem_from_pkcs12 << "\n-----END CERTIFICATE-----"
+
+      pem_from_pkcs12 << "\n"
+
+      pem_from_pkcs12 << "-----BEGIN PRIVATE KEY-----\n"
+      pem_from_pkcs12 << Java::JavaxXmlBind::DatatypeConverter.printBase64Binary(pk.getEncoded())
+      pem_from_pkcs12 << "\n-----END PRIVATE KEY-----"
+
+      pem_from_pkcs12
+    end
+
+    def self.extract_pem_from_pkcs12_c(path_to_p12_file, p12_password)
+      # C-based Ruby, use OpenSSL::PKCS12
+      pem_from_pkcs12 = ""
+
+      pkcs12 = OpenSSL::PKCS12.new(
+        File.open(path_to_p12_file, 'rb'),
+        p12_password
+      )
+
+      # store cert and private key in a single PEM formatted string
+      pem_from_pkcs12 << pkcs12.certificate.to_pem << pkcs12.key.to_pem
 
       pem_from_pkcs12
     end
@@ -67,7 +77,7 @@ module Occi::Api::Client
     # Reads X.509 certificates from a file to an array.
     #
     # @example
-    #    certs_to_file_ary "~/.globus/usercert.pem"
+    #    AuthnUtils.certs_to_file_ary "~/.globus/usercert.pem"
     #      # => [#<String>, #<String>, ...]
     #
     # @param [String] Path to a PEM file containing certificates
