@@ -1,6 +1,2 @@
-require 'occi/api/client/http/authn_plugins/base'
-require 'occi/api/client/http/authn_plugins/dummy'
-require 'occi/api/client/http/authn_plugins/basic'
-require 'occi/api/client/http/authn_plugins/digest'
-require 'occi/api/client/http/authn_plugins/x509'
-require 'occi/api/client/http/authn_plugins/keystone'
+# load all plugins
+Dir[File.join(File.dirname(__FILE__), 'authn_plugins', '*.rb')].each { |file| require file.gsub('.rb', '') }
