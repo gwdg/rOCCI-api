@@ -25,6 +25,7 @@ module Occi::Api::Client
     # @example
     #    options = {
     #      :endpoint => "http://localhost:3300/",
+    #      :timeout => 15
     #      :auth => {:type => "none"},
     #      :log => {:out => STDERR, :level => Occi::Log::WARN, :logger => nil},
     #      :auto_connect => "value", auto_connect => true,
