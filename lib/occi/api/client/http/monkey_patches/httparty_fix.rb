@@ -1,3 +1,7 @@
+##############################################################################
+## HTTParty hack allowing the use of X.509 proxy certificates.
+##############################################################################
+
 module HTTParty
   class ConnectionAdapter
 
