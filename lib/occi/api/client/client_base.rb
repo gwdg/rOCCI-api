@@ -78,7 +78,7 @@ module Occi::Api::Client
     protected
 
     # include protected stuff
-    include Occi::Api::Clinet::Base::ProtectedStubs
+    include Occi::Api::Client::Base::ProtectedStubs
     include Occi::Api::Client::Base::ProtectedHelpers
 
   end
