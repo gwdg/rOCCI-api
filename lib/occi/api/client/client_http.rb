@@ -28,7 +28,7 @@ module Occi::Api::Client
     #      :timeout => 15
     #      :auth => {:type => "none"},
     #      :log => {:out => STDERR, :level => Occi::Log::WARN, :logger => nil},
-    #      :auto_connect => "value", auto_connect => true,
+    #      :auto_connect => true,
     #      :media_type => nil
     #    }
     #

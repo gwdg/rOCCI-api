@@ -11,15 +11,18 @@ module Occi::Api::Client
     attr_reader :options
 
     def initialize(options = {})
-      defaults = {
+      # define defaults and convert options to Hashie::Mash if necessary
+      defaults = Hashie::Mash.new({
         :endpoint => "http://localhost:3300/",
         :auth => {:type => "none"},
         :log => {:out => STDERR, :level => Occi::Log::WARN, :logger => nil},
         :auto_connect => true,
         :media_type => nil
-      }
+      })
 
       options = options.marshal_dump if options.is_a?(OpenStruct)
+      options = Hashie::Mash.new(options)
+
       @options = defaults.merge(options)
 
       # set Occi::Log

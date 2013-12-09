@@ -1,202 +1,45 @@
+# load all parts of the DSL
+Dir[File.join(File.dirname(__FILE__), 'dsl', '*.rb')].each { |file| require file.gsub('.rb', '') }
+
 module Occi::Api::Dsl
 
-  def connect(protocol, *args)
+  def connect(protocol = :http, options = {})
+    raise ArgumentError, 'Protocol is a required argument!' unless protocol
 
-    case protocol
+    if block_given?
+      options = options.marshal_dump if options.is_a?(OpenStruct)
+      options = Hashie::Mash.new(options)
+      yield(options)
+    end
+
+    case protocol.to_sym
     when :http 
-      @client = Occi::Api::Client::ClientHttp.new(*args)
+      @client = Occi::Api::Client::ClientHttp.new(options)
     else
       raise "Protocol #{protocol.to_s} is not supported!"
     end
 
+    @client.connect unless @client.connected
+
     true
   end
 
-  def list(*args)
-    check
-    @client.list(*args)
-  end
+  # include main request methods
+  include Occi::Api::Dsl::MainMethods
 
-  def describe(*args)
-    check
-    @client.describe(*args)
-  end
+  # include methods converting between types and type identifiers
+  include Occi::Api::Dsl::TypeMethods
 
-  def create(*args)
-    check
-    @client.create(*args)
-  end
+  # include methods helping with mixins
+  include Occi::Api::Dsl::MixinMethods
 
-  def delete(*args)
-    check
-    @client.delete(*args)
-  end
-
-  def trigger(*args)
-    check
-    @client.trigger(*args)
-  end
-
-  def refresh
-    check
-    @client.refresh
-  end
-
-  def model
-    check
-    @client.model
-  end
-
-  ###
-
-  def kind_types
-    check
-    @client.get_kind_types
-  end
-
-  def kind_type_identifier(*args)
-    check
-    @client.get_kind_type_identifier(*args)
-  end
-
-  def kind_type_identifiers
-    check
-    @client.get_kind_type_identifiers
-  end
-
-  def kind_type_identifiers_related_to(*args)
-    check
-    @client.get_kind_type_identifiers_related_to(*args)
-  end
-
-  def category_types
-    check
-    @client.get_category_types
-  end
-
-  def category_type_identifier(*args)
-    check
-    @client.get_category_type_identifier(*args)
-  end
-
-  def category_type_identifiers
-    check
-    @client.get_category_type_identifiers
-  end
-
-  def resource_types
-    check
-    @client.get_resource_types
-  end
-
-  def resource_type_identifier(*args)
-    check
-    @client.get_resource_type_identifier(*args)
-  end
-
-  def resource_type_identifiers
-    check
-    @client.get_resource_type_identifiers
-  end
-
-  def mixin_types
-    check
-    @client.get_mixin_types
-  end
-
-  def mixin_type_identifier(*args)
-    check
-    @client.get_mixin_type_identifier(*args)
-  end
-
-  def mixin_type_identifiers
-    check
-    @client.get_mixin_type_identifiers
-  end
-
-  def entity_types
-    check
-    @client.get_entity_types
-  end
-
-  def entity_type_identifier(*args)
-    check
-    @client.get_entity_type_identifier(*args)
-  end
-
-  def entity_type_identifiers
-    check
-    @client.get_entity_type_identifiers
-  end
-
-  def link_types
-    check
-    @client.get_link_types
-  end
-
-  def link_type_identifier(*args)
-    check
-    @client.get_link_type_identifier(*args)
-  end
-
-  def link_type_identifiers
-    check
-    @client.get_link_type_identifiers
-  end
-
-  ###
-
-  def mixins(*args)
-    check
-    @client.get_mixins(*args)
-  end
-
-  def os_templates
-    check
-    @client.get_os_templates
-  end
-
-  def resource_templates
-    check
-    @client.get_resource_templates
-  end
-
-  def mixin_list(*args)
-    check
-    @client.list_mixins(*args)
-  end
-
-  def resource(*args)
-    check
-    @client.get_resource(*args)
-  end
-
-  def mixin(*args)
-    check
-    @client.get_mixin(*args)
-  end
-
-  ###
-
-  def path_for_kind_type_identifier(*args)
-    check
-    @client.path_for_kind_type_identifier(*args)
-  end
-
-  def path_for_instance(*args)
-    check
-    @client.path_for_instance(*args)
-  end
-
-  def sanitize_instance_link(*args)
-    check
-    @client.sanitize_instance_link(*args)
-  end
+  # include general helpers, normalizers etc.
+  include Occi::Api::Dsl::HelperMethods
 
   private
 
   def check
-    raise "You have to issue 'connect' first!" if @client.nil?
+    raise "You have to issue 'connect' first!" unless @client
     raise "Client is disconnected!" unless @client.connected
   end
 

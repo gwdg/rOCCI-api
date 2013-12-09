@@ -62,7 +62,7 @@ module Occi::Api::Client
           self.class.headers 'Accept' => force_type
           media_type = force_type
         else
-          media_types = self.class.head('/').headers['accept']
+          media_types = self.class.head(@endpoint.to_s).headers['accept']
 
           Occi::Log.debug("Available media types: #{media_types.inspect}")
           media_type = case media_types
