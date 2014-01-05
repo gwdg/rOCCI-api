@@ -105,21 +105,15 @@ module Occi::Api::Client
     # @see Occi::Api::Client::ClientBase
     def create(entity)
       raise "#{entity.class.name.inspect} not an entity!" unless entity.kind_of? Occi::Core::Entity
+      raise "No kind found for #{entity.inspect}" unless entity.kind
 
       Occi::Log.debug "Entity kind: #{entity.kind.type_identifier.inspect}"
-      raise "No kind found for #{entity.inspect}" unless entity.kind
 
       # get location for this kind of entity
       path = path_for_kind_type_identifier(entity.kind.type_identifier)
-      collection = Occi::Collection.new
-
-      # is this entity a Resource or a Link?
-      Occi::Log.debug "Entity class: #{entity.class.name.inspect}"
-      collection.resources << entity if entity.kind_of? Occi::Core::Resource
-      collection.links << entity if entity.kind_of? Occi::Core::Link
 
       # make the request
-      post path, collection
+      post path, entity
     end
 
     # @see Occi::Api::Client::ClientBase
