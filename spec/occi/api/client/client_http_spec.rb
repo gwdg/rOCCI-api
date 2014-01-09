@@ -149,6 +149,26 @@ module Occi
           expect(@client.get_os_tpls).to eq mixins
         end
 
+        it "lists mixins including self" do
+          mixins = Occi::Core::Mixins.new
+          mixins << Occi::Core::Mixin.new("http://schemas.ogf.org/occi/infrastructure#", "os_tpl")
+          mixins << Occi::Core::Mixin.new("http://occi.localhost:3300/occi/infrastructure/os_tpl#", "mytesttemplate")
+
+          expect(@client.get_mixins("os_tpl", true)).to eq mixins
+        end
+
+        it "lists mixins with only self (no related)" do
+          mixins = Occi::Core::Mixins.new
+          mixins << Occi::Core::Mixin.new("http://occi.localhost:3300/occi/infrastructure/os_tpl#", "mytesttemplate")
+
+          expect(@client.get_mixins("http://occi.localhost:3300/occi/infrastructure/os_tpl#mytesttemplate", true)).to eq mixins
+        end
+
+        it "fails to list mixins with only self (no related) without include_self=true" do
+          mixins = Occi::Core::Mixins.new
+          expect(@client.get_mixins("http://occi.localhost:3300/occi/infrastructure/os_tpl#mytesttemplate")).to eq mixins
+        end
+
         it "lists resource_tpl mixins" do
           mixins = Occi::Core::Mixins.new
           mixins << Occi::Core::Mixin.new("http://occi.localhost:3300/occi/infrastructure/resource_tpl#", "large")
