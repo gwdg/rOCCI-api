@@ -121,7 +121,7 @@ module Occi::Api::Client
       #
       # @param [String] resource type or type identifier
       # @param [Occi::Core::ActionInstance] type of action
-      # @return [String] resource location
+      # @return [Boolean] status
       def trigger(resource_type_identifier, action_instance)
         raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
       end

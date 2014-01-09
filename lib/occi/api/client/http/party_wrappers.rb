@@ -17,7 +17,9 @@ module Occi::Api::Client
         # apply filters if present
         response = if filter
           categories = filter.categories.collect { |category| category.to_text }.join(',')
-          attributes = filter.entities.collect { |entity| entity.attributes.combine.collect { |k, v| k + '=' + v } }.join(',')
+          attributes = filter.entities.collect { |entity|
+            entity.attributes.combine.collect { |k, v| k + '=' + v }
+          }.join(',')
 
           headers = self.class.headers.clone
           headers['Content-Type'] = 'text/occi'
@@ -30,7 +32,7 @@ module Occi::Api::Client
         end
 
         response_msg = response_message response
-        raise "HTTP GET failed! #{response_msg}" unless response.code.between? 200, 300
+        raise "HTTP GET failed! #{response_msg}" unless response.code == 200
 
         Occi::Log.debug "Response location: #{path.inspect}"
         kind = @model.get_by_location(path) if @model
@@ -44,8 +46,12 @@ module Occi::Api::Client
 
         entity_type = Occi::Core::Resource unless entity_type
 
-        Occi::Log.debug "Parser call: #{response.content_type} #{path.include?('/-/')} #{entity_type} #{response.headers.inspect}"
-        collection = Occi::Parser.parse(response.content_type, response.body, path.include?('/-/'), entity_type, response.headers)
+        Occi::Log.debug "Parser call: #{response.content_type} #{path.include?('/-/')} " \
+                        "#{entity_type} #{response.headers.inspect}"
+        collection = Occi::Parser.parse(
+          response.content_type, response.body,
+          path.include?('/-/'), entity_type, response.headers
+        )
 
         Occi::Log.debug "Parsed collection: empty? #{collection.empty?}"
         collection
@@ -65,7 +71,7 @@ module Occi::Api::Client
       #
       # @param [String] path for the POST request
       # @param [Occi::Collection] resource data to be POSTed
-      # @return [String] URI location
+      # @return [Occi::Collection, String, Boolean] Collection, URI location or action result (if ActionInstance is passed)
       def post(path, collection)
         raise ArgumentError, "Path is a required argument!" if path.blank?
 
@@ -87,27 +93,9 @@ module Occi::Api::Client
         end
 
         response_msg = response_message(response)
+        raise "HTTP POST failed! #{response_msg}" unless response.code.between? 200, 201
 
-        case response.code
-        when 200
-          collection = Occi::Parser.parse(response.header["content-type"].split(";").first, response.body)
-
-          if collection.empty?
-            Occi::Parser.locations(response.header["content-type"].split(";").first, response.body, response.headers).first
-          else
-            collection.resources.first.location if collection.resources.first
-          end
-        when 201
-          # TODO: OCCI-OS hack, look for header Location instead of uri-list
-          # This should be probably implemented in Occi::Parser.locations
-          if response.header['location']
-            response.header['location']
-          else
-            Occi::Parser.locations(response.header["content-type"].split(";").first, response.body, response.headers).first
-          end
-        else
-          raise "HTTP POST failed! #{response_msg}"
-        end
+        collection.send(:standalone_action_instance?) ? post_action(response) : post_create(response)
       end
 
       # Performs PUT requests and parses responses to collections.
@@ -140,8 +128,7 @@ module Occi::Api::Client
 
         response_msg = response_message(response)
 
-        case response.code
-        when 200, 201
+        if response.code.between? 200, 201
           Occi::Parser.parse(response.header["content-type"].split(";").first, response.body)
         else
           raise "HTTP POST failed! #{response_msg}"
@@ -162,10 +149,45 @@ module Occi::Api::Client
         response = self.class.delete(path)
 
         response_msg = response_message(response)
-        raise "HTTP DELETE failed! #{response_msg}" unless response.code.between? 200, 300
+        raise "HTTP DELETE failed! #{response_msg}" unless response.code == 200
 
         true
       end
+
+      private
+
+      def post_action(response)
+        true
+      end
+
+      def post_create(response)
+        if response.code == 200
+          collection = Occi::Parser.parse(
+            response.header["content-type"].split(";").first,
+            response.body
+          )
+
+          if collection.empty?
+            Occi::Parser.locations(
+              response.header["content-type"].split(";").first,
+              response.body,
+              response.headers
+            ).first
+          else
+            raise "HTTP POST response does not " \
+                  "contain required resource rendering!" unless collection.resources.first
+            collection.resources.first.location
+          end
+        else
+          Occi::Parser.locations(
+            response.header["content-type"].split(";").first,
+            response.body,
+            response.headers
+          ).first
+        end
+      end
+
+      def post_update(response); end
 
     end
 

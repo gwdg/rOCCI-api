@@ -180,15 +180,20 @@ module Occi::Api::Client
 
     # @see Occi::Api::Client::ClientBase
     def trigger(resource_type_identifier, action_instance)
-      # TODO: not tested
       raise 'Resource not provided!' if resource_type_identifier.blank?
+      raise 'ActionInstance not provided!' if action_instance.blank?
 
-      #
+      # attempt to resolve shortened identifiers
       resource_type_identifier = get_resource_type_identifier(resource_type_identifier)
       path = path_for_kind_type_identifier(resource_type_identifier)
 
+      # prepare data
+      path = "#{path}?action=#{action_instance.action.term}"
+      collection = Occi::Collection.new
+      collection << action_instance
+
       # make the request
-      post path, action_instance
+      post path, collection
     end
 
     # @see Occi::Api::Client::ClientBase
