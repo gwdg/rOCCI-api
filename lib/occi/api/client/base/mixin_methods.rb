@@ -21,7 +21,8 @@ module Occi::Api::Client
       # @return [String, Occi::Core::Mixin, nil] link, mixin description or nothing found
       def get_mixin(name, type = nil, describe = false)
         # TODO: mixin fix
-        Occi::Log.debug("Looking for mixin #{name} + #{type} + #{describe}")
+        Occi::Log.debug "Looking for mixin #{name.inspect} #{type.inspect} " \
+                        "#{describe.inspect}"
 
         # TODO: extend this code to support multiple matches and regex filters
         # should we look for links or descriptions?
@@ -103,8 +104,9 @@ module Occi::Api::Client
       #     # => #<Occi::Core::Mixins>
       #
       # @param [String] type of mixins
+      # @param [Boolean] include type itself as a mixin
       # @return [Occi::Core::Mixins] collection of available mixins
-      def get_mixins(type = nil)
+      def get_mixins(type = nil, include_self = false)
         unless type.blank?
           type_id = get_mixin_type_identifier(type)
           unless type_id
@@ -115,7 +117,7 @@ module Occi::Api::Client
           mixins = @model.mixins.to_a.select { |m| m.related_to?(type_id) }
 
           # drop the type mixin itself
-          mixins.delete_if { |m| m.type_identifier == type_id }
+          mixins.delete_if { |m| m.type_identifier == type_id } unless include_self
         else
           # we did not get a type, return all mixins
           mixins = Occi::Core::Mixins.new(@model.mixins)
@@ -144,9 +146,10 @@ module Occi::Api::Client
       #     # => #<Array<String>>
       #
       # @param [String] type of mixins
+      # @param [Boolean] include type itself as a mixin
       # @return [Array<String>] collection of available mixin identifiers
-      def list_mixins(type = nil)
-        mixins = get_mixins(type)
+      def list_mixins(type = nil, include_self = false)
+        mixins = get_mixins(type, include_self)
         mixins.to_a.collect { |m| m.type_identifier }
       end
 
