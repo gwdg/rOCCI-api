@@ -32,6 +32,7 @@ module Occi::Api::Client
       #    client.get_category_type_identifier("compute")
       #     # => 'http://schemas.ogf.org/occi/infrastructure#compute'
       #
+      # @param type [String] short category type
       # @return [String, nil] category type identifier for the given category type
       def get_category_type_identifier(type)
         return type if (type =~ URI::ABS_URI) || (type && type.start_with?('/'))

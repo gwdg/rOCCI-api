@@ -34,7 +34,7 @@ module Occi::Api::Client
     #
     #    Occi::Api::Client::ClientHttp.new options # => #<Occi::Api::Client::ClientHttp>
     #
-    # @param [Hash] options, for available options and defaults see examples
+    # @param options [Hash] options, for available options and defaults see examples
     # @return [Occi::Api::Client::ClientHttp] client instance
     def initialize(options = {})
       super options

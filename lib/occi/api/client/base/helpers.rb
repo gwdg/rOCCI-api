@@ -11,7 +11,7 @@ module Occi::Api::Client
       #    path_for_kind_type_identifier "http://localhost:3300/compute/35ad4f45gsf-gsfg524s6gsfg-sfgsf4gsfg"
       #     # => "/compute/35ad4f45gsf-gsfg524s6gsfg-sfgsf4gsfg"
       #
-      # @param [String] kind type identifier
+      # @param kind_type_identifier [String] kind type identifier
       # @return [String] 
       def path_for_kind_type_identifier(kind_type_identifier)
         raise ArgumentError,
@@ -45,7 +45,7 @@ module Occi::Api::Client
       #    path_for_instance Occi::Infrastructure::Storagelink.new
       #     # => "/link/storagelink/35ad4f45gsf-gsfg524s6gsfg-sfgsf4gsfg"
       #
-      # @param [Object] instance
+      # @param instance [Object] instance
       # @return [String] path for the given instance
       def path_for_instance(instance)
         unless instance.respond_to?(:location)
@@ -72,7 +72,7 @@ module Occi::Api::Client
       #    sanitize_instance_link "/compute/35ad4f45gsf-gsfg524s6gsfg-sfgsf4gsfg"
       #     # => "/compute/35ad4f45gsf-gsfg524s6gsfg-sfgsf4gsfg"
       #
-      # @param [String] string containing the full instance link
+      # @param instance_link [String] string containing the full instance link
       # @return [String] extracted path, with a leading slash
       def sanitize_instance_link(instance_link)
         # everything starting with '/' is considered to be a resource path

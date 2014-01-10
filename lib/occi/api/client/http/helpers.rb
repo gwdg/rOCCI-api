@@ -86,7 +86,7 @@ module Occi::Api::Client
       #    response_message self.class.delete(path)
       #     # =>  'HTTP Response status: [200] OK'
       #
-      # @param [HTTParty::Response] HTTParty response object
+      # @param response [HTTParty::Response] HTTParty response object
       # @return [String] message
       def response_message(response)
         @last_response = response

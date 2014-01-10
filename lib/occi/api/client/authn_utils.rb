@@ -18,8 +18,8 @@ module Occi::Api::Client
     #    AuthnUtils.extract_pem_from_pkcs12 "~/.globus/usercert.p12", "123456"
     #      # => #<String>
     #
-    # @param [String] Path to a PKCS#12 file with credentials
-    # @param [String] Password needed to unlock the PKCS#12 file
+    # @param path_to_p12_file [String] Path to a PKCS#12 file with credentials
+    # @param p12_password [String] Password needed to unlock the PKCS#12 file
     # @return [String] Decrypted credentials in a PEM formatted string
     def self.extract_pem_from_pkcs12(path_to_p12_file, p12_password)
       # decode certificate and its private key
@@ -80,7 +80,7 @@ module Occi::Api::Client
     #    AuthnUtils.certs_to_file_ary "~/.globus/usercert.pem"
     #      # => [#<String>, #<String>, ...]
     #
-    # @param [String] Path to a PEM file containing certificates
+    # @param ca_file [String] Path to a PEM file containing certificates
     # @return [Array<String>] An array of read certificates
     def self.certs_to_file_ary(ca_file)
       # TODO: read and separate multiple certificates

@@ -52,7 +52,7 @@ module Occi::Api::Client
       # @example
       #    reason_phrase(500) # => "Internal Server Error"
       #
-      # @param [Integer] HTTP response code
+      # @param code [Integer] HTTP response code
       # @return [String] human-readable phrase
       def reason_phrase(code)
         HTTP_CODES[code.to_s]

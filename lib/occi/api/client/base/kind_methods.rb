@@ -10,7 +10,7 @@ module Occi::Api::Client
       #    # => [ "http://schemas.ogf.org/occi/infrastructure#network",
       #    #      "http://schemas.ogf.org/occi/infrastructure#ipnetwork" ]
       #
-      # @param [String] type identifier
+      # @param type_identifier [String] type identifier
       # @return [Array<String>] list of available kind type identifiers related to
       #                         the given type identifier
       def get_kind_type_identifiers_related_to(type_identifier)
@@ -48,6 +48,7 @@ module Occi::Api::Client
       #    client.get_kind_type_identifier("compute")
       #     # => 'http://schemas.ogf.org/occi/infrastructure#compute'
       #
+      # @param type [String] short kind type
       # @return [String, nil] kind type identifier for the given kind type
       def get_kind_type_identifier(type)
         return type if (type =~ URI::ABS_URI) || (type && type.start_with?('/'))

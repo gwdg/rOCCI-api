@@ -13,8 +13,8 @@ module Occi::Api::Client
       #    get_auth { :type => "x509", :user_cert => "~/cert.pem",
       #                  :user_cert_password => "321", :ca_path => nil }
       #
-      # @param [Hash] authentication options
-      # @param [Boolean] allow fallback-only options
+      # @param auth_options [Hash] authentication options
+      # @param fallback [Boolean] allow fallback-only options
       # @return [Hash] transformed hash with authN information
       def get_auth(auth_options, fallback = false)
         raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
@@ -33,6 +33,7 @@ module Occi::Api::Client
       # @example
       #    get_media_type # => 'application/occi+json'
       #
+      # @param force_type [String] type to be forcibly chosen
       # @return [String] chosen media type
       def get_media_type(force_type = nil)
         raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"

@@ -10,8 +10,8 @@ module Occi::Api::Client
       #    get "/compute/" # => #<Occi::Collection>
       #    get "/compute/fs65g4fs6g-sf54g54gsf-aa12faddf52" # => #<Occi::Collection>
       #
-      # @param [String] path for the GET request
-      # @param [Occi::Collection] collection of filters
+      # @param path [String] path for the GET request
+      # @param filter [Occi::Collection] collection of filters
       # @return [Occi::Collection] parsed result of the request
       def get(path='/', filter=nil)
         # apply filters if present
@@ -69,8 +69,8 @@ module Occi::Api::Client
       #    post "/network/", collection # => "http://localhost:3300/network/23sf4g65as-asdgsg2-sdfgsf2g"
       #    post "/storage/", collection # => "http://localhost:3300/storage/23sf4g65as-asdgsg2-sdfgsf2g"
       #
-      # @param [String] path for the POST request
-      # @param [Occi::Collection] resource data to be POSTed
+      # @param path [String] path for the POST request
+      # @param collection [Occi::Collection] resource data to be POSTed
       # @return [Occi::Collection, String, Boolean] Collection, URI location or action result (if ActionInstance is passed)
       def post(path, collection)
         raise ArgumentError, "Path is a required argument!" if path.blank?
@@ -103,8 +103,8 @@ module Occi::Api::Client
       # @example
       #    TODO: add examples
       #
-      # @param [String] path for the PUT request
-      # @param [Occi::Collection] resource data to send
+      # @param path [String] path for the PUT request
+      # @param collection [Occi::Collection] resource data to send
       # @return [Occi::Collection] parsed result of the request
       def put(path, collection)
         raise ArgumentError, "Path is a required argument!" if path.blank?
@@ -140,8 +140,8 @@ module Occi::Api::Client
       # @example
       #    del "/compute/65sf4g65sf4g-sf6g54sf5g-sfgsf32g3" # => true
       #
-      # @param [String] path for the DELETE request
-      # @param [Occi::Collection] collection of filters (currently NOT used)
+      # @param path [String] path for the DELETE request
+      # @param filter [Occi::Collection] collection of filters (currently NOT used)
       # @return [Boolean] status
       def del(path, filter=nil)
         raise ArgumentError, "Path is a required argument!" if path.blank?
