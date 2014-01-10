@@ -37,6 +37,21 @@ module Occi::Api::Dsl
       @client.get_category_type_identifiers
     end
 
+    def action_types
+      check
+      @client.get_action_types
+    end
+
+    def action_type_identifier(*args)
+      check
+      @client.get_action_type_identifier(*args)
+    end
+
+    def action_type_identifiers
+      check
+      @client.get_action_type_identifiers
+    end
+
     def resource_types
       check
       @client.get_resource_types

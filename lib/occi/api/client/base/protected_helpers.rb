@@ -9,7 +9,7 @@ module Occi::Api::Client
       # @example
       #    get_logger { :out => STDERR, :level => Occi::Log::WARN, :logger => nil }
       #
-      # @param [Hash] logger options
+      # @param log_options [Hash] logger options
       # @return [Occi::Log] instance of the logger
       def get_logger(log_options)
         unless log_options[:logger].kind_of?(Occi::Log)
@@ -28,7 +28,7 @@ module Occi::Api::Client
       # @example
       #    get_endpoint_uri "http://localhost:3300" # => #<URI::*>
       #
-      # @param [String] endpoint URI in a non-canonical string
+      # @param endpoint [String] endpoint URI in a non-canonical string
       # @return [URI] canonical endpoint URI
       def get_endpoint_uri(endpoint)
         unless endpoint =~ URI::ABS_URI
@@ -48,7 +48,7 @@ module Occi::Api::Client
       #    model_collection = get('/-/')
       #    get_model model_collection # => #<Occi::Model>
       #
-      # @param [Occi::Collection] parsed representation of server's model
+      # @param model_collection [Occi::Collection] parsed representation of server's model
       # @return [Occi::Model] Model instance
       def get_model(model_collection)
         # build model

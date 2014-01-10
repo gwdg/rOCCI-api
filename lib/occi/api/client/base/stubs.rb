@@ -18,7 +18,7 @@ module Occi::Api::Client
       #    client.list "http://schemas.ogf.org/occi/infrastructure#compute"
       #     # => [ "http://localhost:3300/compute/jh425jhj3h413-7dj29d7djd9e3-djh2jh4j4j" ]
       #
-      # @param [String] resource type identifier or just type name
+      # @param resource_type_identifier [String] resource type identifier or just type name
       # @return [Array<String>] list of links
       def list(resource_type_identifier=nil)
         raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
@@ -39,7 +39,7 @@ module Occi::Api::Client
       #    client.describe "http://localhost:3300/compute/j5hk1234jk2524-2j3j2k34jjh234-adfaf1234"
       #     # => #<Occi::Core::Resources>
       #
-      # @param [String] resource type identifier, type name or resource location
+      # @param resource_type_identifier [String] resource type identifier, type name or resource location
       # @return [Occi::Core::Resources] list of resource descriptions
       def describe(resource_type_identifier=nil)
         raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
@@ -58,7 +58,7 @@ module Occi::Api::Client
       #
       #    client.create res # => "http://localhost:3300/compute/df7698...f987fa"
       #
-      # @param [Occi::Core::Entity] resource to be created on the server
+      # @param entity [Occi::Core::Entity] resource to be created on the server
       # @return [String] URI of the new resource
       def create(entity)
         raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
@@ -70,7 +70,7 @@ module Occi::Api::Client
       # @example
       #    client.deploy "~/MyVMs/rOcciVM.ovf" # => "http://localhost:3300/compute/343423...42njhdafa"
       #
-      # @param [String] location of an OVF/OVA file
+      # @param location [String] location of an OVF/OVA file
       # @return [String] URI of the new resource
       def deploy(location)
         raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
@@ -82,7 +82,7 @@ module Occi::Api::Client
       # @example
       #    client.deploy_ovf "OVF DESCRIPTOR HERE" # => "http://localhost:3300/compute/343423...42njhdafa"
       #
-      # @param [String] OVF descriptor (e.g., already read from a file or generated)
+      # @param descriptor [String] OVF descriptor (e.g., already read from a file or generated)
       # @return [String] URI of the new resource
       def deploy_ovf(descriptor)
         raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
@@ -94,7 +94,7 @@ module Occi::Api::Client
       # @example
       #    client.deploy_ova "OVA DESCRIPTOR HERE" # => "http://localhost:3300/compute/343423...42njhdafa"
       #
-      # @param [String] OVA descriptor (e.g., already read from a file or generated)
+      # @param descriptor [String] OVA descriptor (e.g., already read from a file or generated)
       # @return [String] URI of the new resource
       def deploy_ova(descriptor)
         raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
@@ -108,7 +108,7 @@ module Occi::Api::Client
       #    client.delete "http://schemas.ogf.org/occi/infrastructure#compute" # => true
       #    client.delete "http://localhost:3300/compute/245j42594...98s9df8s9f" # => true
       #
-      # @param [String] resource type identifier, type name or location
+      # @param resource_type_identifier [String] resource type identifier, type name or location
       # @return [Boolean] status
       def delete(resource_type_identifier)
         raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
@@ -119,8 +119,8 @@ module Occi::Api::Client
       # @example
       #    TODO: add examples
       #
-      # @param [String] resource type or type identifier
-      # @param [Occi::Core::ActionInstance] type of action
+      # @param resource_type_identifier [String] resource type or type identifier
+      # @param action_instance [Occi::Core::ActionInstance] type of action
       # @return [Boolean] status
       def trigger(resource_type_identifier, action_instance)
         raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"

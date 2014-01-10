@@ -53,7 +53,7 @@ module Occi::Api::Client
     # @example
     #    client.connect # => true
     #
-    # @param [Boolean] force re-connect on already connected client
+    # @param force [Boolean] force re-connect on already connected client
     # @return [Boolean] true on successful connect
     def connect(force = false)
       raise "Client already connected!" if @connected && !force
@@ -62,6 +62,9 @@ module Occi::Api::Client
 
     # include stuff
     include Occi::Api::Client::Base::Stubs
+
+    # include action-related stuff
+    include Occi::Api::Client::Base::ActionMethods
 
     # include category-related stuff
     include Occi::Api::Client::Base::CategoryMethods

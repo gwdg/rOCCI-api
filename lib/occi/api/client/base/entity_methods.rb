@@ -12,7 +12,7 @@ module Occi::Api::Client
       #   client.get_resource "http://schemas.ogf.org/occi/infrastructure#network"
       #    # => Occi::Core::Resource
       #
-      # @param [String] resource name or resource identifier
+      # @param resource_type [String] resource name or resource identifier
       # @return [Occi::Core::Resource] new resource instance
       def get_resource(resource_type)
         Occi::Log.debug("Instantiating #{resource_type.inspect}")
@@ -56,6 +56,7 @@ module Occi::Api::Client
       #    client.get_entity_type_identifier("compute")
       #     # => 'http://schemas.ogf.org/occi/infrastructure#compute'
       #
+      # @param type [String] short entity type
       # @return [String, nil] entity type identifier for the given entity type
       def get_entity_type_identifier(type)
         return type if (type =~ URI::ABS_URI) || (type && type.start_with?('/'))
@@ -103,6 +104,7 @@ module Occi::Api::Client
       #    client.get_resource_type_identifier("compute")
       #     # => 'http://schemas.ogf.org/occi/infrastructure#compute'
       #
+      # @param type [String] short resource type
       # @return [String, nil] resource type identifier for the given resource type
       def get_resource_type_identifier(type)
         return type if (type =~ URI::ABS_URI) || (type && type.start_with?('/'))
@@ -149,6 +151,7 @@ module Occi::Api::Client
       #    client.get_link_type_identifier("storagelink")
       #     # => 'http://schemas.ogf.org/occi/infrastructure#storagelink'
       #
+      # @param type [String] short link type
       # @return [String, nil] link type identifier for the given link type
       def get_link_type_identifier(type)
         return type if (type =~ URI::ABS_URI) || (type && type.start_with?('/'))

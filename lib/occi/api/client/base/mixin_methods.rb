@@ -15,9 +15,9 @@ module Occi::Api::Client
       #     # => "http://my.occi.service/occi/infrastructure/resource_tpl#large"
       #    client.get_mixin "debian6", "resource_tpl" # => nil
       #
-      # @param [String] name of the mixin
-      # @param [String] type of the mixin
-      # @param [Boolean] should we describe the mixin or return its link?
+      # @param name [String] name of the mixin
+      # @param type [String] type of the mixin
+      # @param describe [Boolean] should we describe the mixin or return its link?
       # @return [String, Occi::Core::Mixin, nil] link, mixin description or nothing found
       def get_mixin(name, type = nil, describe = false)
         # TODO: mixin fix
@@ -41,8 +41,8 @@ module Occi::Api::Client
       #     # => #<Occi::Core::Mixin>
       #    client.describe_mixin "debian6", "resource_tpl" # => nil
       #
-      # @param [String] name of the mixin
-      # @param [String] type of the mixin
+      # @param name [String] name of the mixin
+      # @param type [String] type of the mixin
       # @return [Occi::Core::Mixin, nil] mixin description or nothing found
       def describe_mixin(name, type = nil)
         mixins = get_mixins(type)
@@ -54,8 +54,8 @@ module Occi::Api::Client
       # Looks up a mixin with a specific type, will return
       # mixin's full description.
       #
-      # @param [String] name of the mixin
-      # @param [String] type of the mixin
+      # @param name [String] name of the mixin
+      # @param type [String] type of the mixin
       # @return [Occi::Core::Mixin] mixin description
       def describe_mixin_w_type(name, type)
         describe_mixin(name, type)
@@ -65,7 +65,7 @@ module Occi::Api::Client
       # return mixin's full description. Returns always the
       # first match found, search will start in os_tpl.
       #
-      # @param [String] name of the mixin
+      # @param name [String] name of the mixin
       # @return [Occi::Core::Mixin] mixin description
       def describe_mixin_wo_type(name)
         describe_mixin(name, nil)
@@ -83,8 +83,8 @@ module Occi::Api::Client
       #     # => "http://my.occi.service/occi/infrastructure/resource_tpl#large"
       #    client.list_mixin "debian6", "resource_tpl" # => nil
       #
-      # @param [String] name of the mixin
-      # @param [String] type of the mixin
+      # @param name [String] name of the mixin
+      # @param type [String] type of the mixin
       # @return [String, nil] link or nothing found
       def list_mixin(name, type = nil)
         mixin = describe_mixin(name, type)
@@ -103,8 +103,8 @@ module Occi::Api::Client
       #    client.get_mixins "resource_tpl"
       #     # => #<Occi::Core::Mixins>
       #
-      # @param [String] type of mixins
-      # @param [Boolean] include type itself as a mixin
+      # @param type [String] type of mixins
+      # @param include_self [Boolean] include type itself as a mixin
       # @return [Occi::Core::Mixins] collection of available mixins
       def get_mixins(type = nil, include_self = false)
         unless type.blank?
@@ -145,8 +145,8 @@ module Occi::Api::Client
       #    client.list_mixins "resource_tpl"
       #     # => #<Array<String>>
       #
-      # @param [String] type of mixins
-      # @param [Boolean] include type itself as a mixin
+      # @param type [String] type of mixins
+      # @param include_self [Boolean] include type itself as a mixin
       # @return [Array<String>] collection of available mixin identifiers
       def list_mixins(type = nil, include_self = false)
         mixins = get_mixins(type, include_self)
@@ -182,6 +182,7 @@ module Occi::Api::Client
       #    client.get_mixin_type_identifier("os_tpl")
       #     # => 'http://schemas.ogf.org/occi/infrastructure#os_tpl'
       #
+      # @param type [String] short mixin type
       # @return [String, nil] mixin type identifier for the given mixin type
       def get_mixin_type_identifier(type)
         return type if (type =~ URI::ABS_URI) || (type && type.start_with?('/'))
