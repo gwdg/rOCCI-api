@@ -13,7 +13,7 @@ module Occi::Api::Client
     def initialize(options = {})
       # define defaults and convert options to Hashie::Mash if necessary
       defaults = Hashie::Mash.new({
-        :endpoint => "http://localhost:3300/",
+        :endpoint => "http://localhost:3000/",
         :auth => {:type => "none"},
         :log => {:out => STDERR, :level => Occi::Log::WARN, :logger => nil},
         :auto_connect => true,
