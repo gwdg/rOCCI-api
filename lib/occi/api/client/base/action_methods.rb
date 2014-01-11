@@ -50,7 +50,7 @@ module Occi::Api::Client
 
         if tis.length > 1
           raise Occi::Api::Client::Errors::AmbiguousNameError,
-                "Category type #{type.inspect} is ambiguous, use a type identifier!"
+                "Action type #{type.inspect} is ambiguous, use a type identifier!"
         end
 
         tis.first
