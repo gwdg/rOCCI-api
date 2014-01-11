@@ -15,7 +15,8 @@ module Occi::Api::Client
     #       'Accept' => 'application/occi+json,text/plain;q=0.8,text/occi;q=0.2'
     DEFAULT_HEADERS = {
       'Accept'     => 'text/plain,text/occi;q=0.2',
-      'User-Agent' => "rOCCI HTTPClient #{Occi::Api::VERSION}"
+      'User-Agent' => "rOCCI-core/#{Occi::VERSION} rOCCI-api/#{Occi::Api::VERSION} OCCI/1.1 " \
+                      "#{RUBY_ENGINE}-#{RUBY_PLATFORM}/#{RUBY_VERSION}p#{RUBY_PATCHLEVEL}"
     }
     headers DEFAULT_HEADERS
 
@@ -24,7 +25,7 @@ module Occi::Api::Client
     #
     # @example
     #    options = {
-    #      :endpoint => "http://localhost:3300/",
+    #      :endpoint => "http://localhost:3000/",
     #      :timeout => 15
     #      :auth => {:type => "none"},
     #      :log => {:out => STDERR, :level => Occi::Log::WARN, :logger => nil},
@@ -40,7 +41,7 @@ module Occi::Api::Client
       super options
 
       self.class.base_uri @endpoint.to_s
-      self.class.timeout @options[:timeout].to_i unless @options[:timeout].blank?
+      self.class.default_timeout @options[:timeout].to_i unless @options[:timeout].blank?
 
       # get model information from the endpoint
       # and create Occi::Model instance
