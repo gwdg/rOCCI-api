@@ -76,7 +76,7 @@ module Occi::Api::Client
         response_msg = response_message(response)
 
         if response.code.between? 200, 201
-          Occi::Parser.parse(response.header["content-type"], response.body)
+          Occi::Parser.parse(response.content_type, response.body)
         else
           raise "HTTP POST failed! #{response_msg}"
         end
@@ -114,7 +114,7 @@ module Occi::Api::Client
         end
         entity_type = Occi::Core::Resource unless entity_type
 
-        Occi::Log.debug "Parser call: #{response.content_type} #{path.include?('/-/')} " \
+        Occi::Log.debug "Parser call: #{response.content_type.inspect} #{path.include?('/-/')} " \
                         "#{entity_type} #{response.headers.inspect}"
         collection = Occi::Parser.parse(
           response.content_type, response.body,
@@ -158,13 +158,13 @@ module Occi::Api::Client
       def post_create(response)
         if response.code == 200
           collection = Occi::Parser.parse(
-            response.header["content-type"],
+            response.content_type,
             response.body
           )
 
           if collection.empty?
             Occi::Parser.locations(
-              response.header["content-type"],
+              response.content_type,
               response.body,
               response.headers
             ).first
@@ -175,7 +175,7 @@ module Occi::Api::Client
           end
         else
           Occi::Parser.locations(
-            response.header["content-type"],
+            response.content_type,
             response.body,
             response.headers
           ).first
