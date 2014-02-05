@@ -7,7 +7,7 @@ module Net
 
     old_verbose, $VERBOSE = $VERBOSE, nil
 
-    if RUBY_VERSION =~ /^2\.0/
+    if RUBY_VERSION =~ /^2\.\d/
       # For Rubies 2.0.x
       SSL_IVNAMES = SSL_IVNAMES.concat [:@extra_chain_cert]
       SSL_ATTRIBUTES = SSL_ATTRIBUTES.concat [:extra_chain_cert]
