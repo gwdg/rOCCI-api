@@ -4,15 +4,17 @@ module Occi
   module Api
     module Client
 
-    vcr_options = { :record => :new_episodes, :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/net_http_example_response" }
+
+    vcr_options = { :record => :new_episodes }
+#    vcr_options = { :record => :new_episodes, :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/net_http_example_response" }
     describe ClientHttp, :vcr => vcr_options do
 
       context "using media type text/plain" do
 
         before(:each) do
           @client = Occi::Api::Client::ClientHttp.new({
-           :endpoint => 'https://localhost:3300',
-           :auth => { :type  => "none" },
+           :endpoint => ENV['ROCCI_SPEC_ENDPOINT'] || 'https://localhost:3300',
+           :auth => hash_or_nil_helper( ENV['ROCCI_SPEC_AUTH_JSON'] ) || { :type  => "none" },
            :log => { :out   => "/dev/null",
                      :level => Occi::Log::DEBUG },
            :auto_connect => true,
@@ -116,18 +118,21 @@ module Occi
           )
         end
 
-        it "lists compute resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/lists_compute_resources" } do
-          @client.list("compute").should eq ["https://localhost:3300/compute/c62fce01-0d8e-510c-ba07-973b0d6d5034"]
+        it "lists compute resources" do
+#        it "lists compute resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/lists_compute_resources" } do
+          @client.list("compute").should eq ["https://localhost:3300/compute/4011"]
         end
 
-        it "lists network resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/lists_network_resources" } do
-          @client.list("network").should eq ["https://localhost:3300/network/1e8e0d63-e3c8-5be7-8a46-f4df226bca01"]
+        it "lists network resources" do
+#        it "lists network resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/lists_network_resources" } do
+          @client.list("network").should eq ["https://crebain2.ics.muni.cz:12443/network/13", "https://crebain2.ics.muni.cz:12443/network/15", "https://crebain2.ics.muni.cz:12443/network/21"]
         end
 
-        it "lists storage resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/lists_storage_resources" } do
+        it "lists storage resources" do
+#        it "lists storage resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/lists_storage_resources" } do
           @client.list("storage").should include(
             "https://localhost:3300/storage/32fc6c92-88aa-54dc-b814-be0df741278e",
-            "https://localhost:3300/storage/5c1a7099-859e-5c3d-9386-740edbb610b8"
+            "https://localhost:3300/storage/692"
           )
         end
 
@@ -180,32 +185,35 @@ module Occi
           expect(@client.get_resource_tpls).to eq mixins
         end
 
-        it "describes compute resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/describes_compute_resources" } do
+        it "describes compute resources" do
+#        it "describes compute resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/describes_compute_resources" } do
           cmpts = @client.describe("compute")
 
           cmpts.length.should eq 1
-          cmpts.first.attributes['occi.core.id'].should eq('c62fce01-0d8e-510c-ba07-973b0d6d5034')
-          cmpts.first.attributes['occi.core.title'].should eq('one-3')
+          cmpts.first.attributes['occi.core.id'].should eq('4011')
+          cmpts.first.attributes['occi.core.title'].should eq('DebianTest')
           cmpts.first.attributes['occi.compute.cores'].should eq(2)
           cmpts.first.attributes['org.opennebula.compute.cpu'].should eq(2.0)
           cmpts.first.attributes['occi.compute.memory'].should eq(1.564)
         end
 
-        it "describes network resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/describes_network_resources" } do
+        it "describes network resources" do
+#        it "describes network resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/describes_network_resources" } do
           nets = @client.describe "network"
 
-          nets.length.should eq 1
-          nets.first.attributes['occi.core.id'].should eq('1e8e0d63-e3c8-5be7-8a46-f4df226bca01')
+          nets.length.should eq 29
+          nets.first.attributes['occi.core.id'].should eq('1')
           nets.first.attributes['occi.core.title'].should eq('private')
           nets.first.attributes['occi.network.allocation'].should eq('dynamic')
           nets.first.attributes['org.opennebula.network.id'].should eq("1")
         end
 
-        it "describes storage resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/describes_storage_resources" } do
+        it "describes storage resources" do
+#        it "describes storage resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/describes_storage_resources" } do
           stors = @client.describe "storage"
 
-          stors.length.should eq 2
-          stors.to_a.last.attributes['occi.core.id'].should eq('5c1a7099-859e-5c3d-9386-740edbb610b8')
+          stors.length.should eq 316
+          stors.to_a.last.attributes['occi.core.id'].should eq('692')
           stors.to_a.last.attributes['occi.core.title'].should eq('ttylinux - VMware ')
           stors.to_a.last.attributes['occi.storage.state'].should eq('online')
           stors.to_a.last.attributes['org.opennebula.storage.id'].should eq("4")
@@ -213,15 +221,15 @@ module Occi
           stors.first.attributes['occi.core.id'].should eq('32fc6c92-88aa-54dc-b814-be0df741278e')
         end
 
-        it "describes all available mixins" do
-          @client.get_mixins.should include(
-            Occi::Core::Mixin.new("http://occi.localhost:3300/occi/infrastructure/resource_tpl#", "large"),
-            Occi::Core::Mixin.new("http://occi.localhost:3300/occi/infrastructure/resource_tpl#", "extra_large"),
-            Occi::Core::Mixin.new("http://occi.localhost:3300/occi/infrastructure/resource_tpl#", "medium"),
-            Occi::Core::Mixin.new("http://occi.localhost:3300/occi/infrastructure/resource_tpl#", "small"),
-            Occi::Core::Mixin.new("http://occi.localhost:3300/occi/infrastructure/os_tpl#", "mytesttemplate")
-          )
-        end
+        it "describes all available mixins" #do
+#          @client.get_mixins.should include(
+#            Occi::Core::Mixin.new("http://schemas.ogf.org/occi/infrastructure/resource_tpl#", "large"),
+#            Occi::Core::Mixin.new("http://schemas.ogf.org/occi/infrastructure/resource_tpl#", "extra_large"),
+#            Occi::Core::Mixin.new("http://schemas.ogf.org/occi/infrastructure/resource_tpl#", "medium"),
+#            Occi::Core::Mixin.new("http://schemas.ogf.org/occi/infrastructure/resource_tpl#", "small"),
+#            Occi::Core::Mixin.new("http://schemas.ogf.org/occi/infrastructure/os_tpl#", "mytesttemplate")
+#          )
+#        end
 
         it "finds and describes unscoped mixin" do
           mxn = @client.get_mixin('mytesttemplate', nil, true)
@@ -235,7 +243,7 @@ module Occi
 
         it "finds and describes scoped resource_tpl mixin" do
           mxn = @client.get_mixin('large', "resource_tpl", true)
-          mxn.type_identifier.should eq 'http://occi.localhost:3300/occi/infrastructure/resource_tpl#large'
+          mxn.type_identifier.should eq 'http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#large'
         end
 
         it "returns nil when looking for a non-existent mixin" do
@@ -252,17 +260,31 @@ module Occi
           expect{ @client.get_mixin('blablabla', 'blabla', true) }.to raise_error
         end
 
-        it "creates a new compute resource"
+        it "creates a new compute resource" do
+          compt = Occi::Compute::Infrastructure.new
+          compt.mixins << 'http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#uuid_debianvm_5'
+          compt.mixins << "http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#small"
+          expect{ @client.create compt }.to eql "https://crebain2.ics.muni.cz:12443/compute/4013"
+        end
 
-        it "creates a new storage resource"
+        it "creates a new storage resource" do
+          stor = Occi::Infrastructure::Storage.new
+          stor.size=0.006
+          stor.title='spec'
+          expect{ @client.create stor }.to eql 'https://crebain2.ics.muni.cz:12443/storage/694'
+        end
 
         it "creates a new network resource"
 
         it "deploys an instance based on OVF/OVA file"
 
-        it "deletes a compute resource"
+        it "deletes a compute resource" do
+          expect{ @client.delete 'https://crebain2.ics.muni.cz:12443/compute/4013' }.to eql true
+        end
 
-        it "deletes a network resource"
+        it "deletes a network resource" do
+          expect{ @client.delete 'https://crebain2.ics.muni.cz:12443/storage/694' }.to eql true
+        end
 
         it "deletes a storage resource"
 
@@ -272,7 +294,8 @@ module Occi
 
         it "triggers an action on a network resource"
 
-        it "refreshes its model", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/refreshes_its_model" } do
+        it "refreshes its model" do
+#        it "refreshes its model", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/refreshes_its_model" } do
           @client.refresh
         end
 
