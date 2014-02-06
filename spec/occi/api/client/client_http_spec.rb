@@ -120,29 +120,28 @@ module Occi
 
         it "lists compute resources" do
 #        it "lists compute resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/lists_compute_resources" } do
-          @client.list("compute").should eq ["https://localhost:3300/compute/4011"]
+          @client.list("compute").should eq ["https://crebain2.ics.muni.cz:12443/compute/4011"]
         end
 
         it "lists network resources" do
 #        it "lists network resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/lists_network_resources" } do
-          @client.list("network").should eq ["https://crebain2.ics.muni.cz:12443/network/13", "https://crebain2.ics.muni.cz:12443/network/15", "https://crebain2.ics.muni.cz:12443/network/21"]
+          @client.list("network").should eq ["https://crebain2.ics.muni.cz:12443/network/1", "https://crebain2.ics.muni.cz:12443/network/2", "https://crebain2.ics.muni.cz:12443/network/12"]
         end
 
         it "lists storage resources" do
 #        it "lists storage resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/lists_storage_resources" } do
           @client.list("storage").should include(
-            "https://localhost:3300/storage/32fc6c92-88aa-54dc-b814-be0df741278e",
-            "https://localhost:3300/storage/547"
+            "https://crebain2.ics.muni.cz:12443/storage/4",
+            "https://crebain2.ics.muni.cz:12443/storage/547"
           )
         end
 
         it "lists all available mixins" do
           @client.list_mixins.should include(
-            "http://occi.localhost:3300/occi/infrastructure/resource_tpl#large",
-            "http://occi.localhost:3300/occi/infrastructure/resource_tpl#extra_large",
-            "http://occi.localhost:3300/occi/infrastructure/resource_tpl#medium",
-            "http://occi.localhost:3300/occi/infrastructure/resource_tpl#small",
-            "http://occi.localhost:3300/occi/infrastructure/os_tpl#mytesttemplate"
+            "http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#large",
+            "http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#extra_large",
+            "http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#medium",
+            "http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#small"
           )
         end
 
@@ -201,11 +200,8 @@ module Occi
 #        it "describes network resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/describes_network_resources" } do
           nets = @client.describe "network"
 
-          nets.length.should eq 3
-          nets.first.attributes['occi.core.id'].should eq('1')
-          nets.first.attributes['occi.core.title'].should eq('public')
-          nets.first.attributes['occi.network.allocation'].should eq('dynamic')
-          nets.first.attributes['org.opennebula.network.id'].should eq("1")
+          expect(nets.length).to eq 3
+          expect(nets.to_a.select{ |item| item.attributes['occi.core.id'] == '1' && item.attributes['occi.core.title'] == 'public' && item.attributes['occi.network.allocation'] == 'static' && item.attributes['org.opennebula.network.id'] == '1'}.any?).to eql true
         end
 
         it "describes storage resources" do
@@ -264,14 +260,14 @@ module Occi
           compt = Occi::Infrastructure::Compute.new
           compt.mixins << 'http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#uuid_debianvm_5'
           compt.mixins << "http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#small"
-          expect(@client.create compt).to eql "https://crebain2.ics.muni.cz:12443/compute/4014"
+          expect(@client.create compt).to eql "https://crebain2.ics.muni.cz:12443/compute/4015"
         end
 
         it "creates a new storage resource" do
           stor = Occi::Infrastructure::Storage.new
           stor.size=0.006
           stor.title='spec'
-          expect(@client.create stor).to eql 'https://crebain2.ics.muni.cz:12443/storage/695'
+          expect(@client.create stor).to eql 'https://crebain2.ics.muni.cz:12443/storage/696'
         end
 
         it "creates a new network resource"
@@ -279,13 +275,13 @@ module Occi
         it "deploys an instance based on OVF/OVA file"
 
         it "deletes a compute resource" do
-          expect(@client.delete 'https://crebain2.ics.muni.cz:12443/compute/4014').to eql true
+          expect(@client.delete 'https://crebain2.ics.muni.cz:12443/compute/4015').to eql true
         end
 
         it "deletes a network resource"
 
         it "deletes a storage resource" do
-          expect(@client.delete 'https://crebain2.ics.muni.cz:12443/storage/695').to eql true
+          expect(@client.delete 'https://crebain2.ics.muni.cz:12443/storage/696').to eql true
         end
 
         it "triggers an action on a compute resource"
