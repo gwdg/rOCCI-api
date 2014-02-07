@@ -308,17 +308,23 @@ module Occi
       context "using media type application/occi+json" do
 
         before(:each) do
-          #@client = Occi::Api::ClientHttp.new({
-          #  :endpoint => 'https://localhost:3300',
-          #  :auth => { :type  => "none" },
-          #  :log => { :out   => "/dev/null",
-          #            :level => Occi::Log::DEBUG },
-          #  :auto_connect => true,
-          #  :media_type => "application/occi+json"
-          #})
+          @client = Occi::Api::Client::ClientHttp.new({
+           :endpoint => ENV['ROCCI_SPEC_ENDPOINT'] || 'https://localhost:3300',
+           :auth => hash_or_nil_helper( ENV['ROCCI_SPEC_AUTH_JSON'] ) || { :type  => "none" },
+           :log => { :out   => "/dev/null",
+                     :level => Occi::Log::DEBUG },
+           :auto_connect => true,
+           :media_type => "application/occi+json"
+          })
         end
 
-        it "establishes connection"
+        after(:each) do
+          @client.logger.close if @client && @client.logger
+        end
+
+        it "establishes connection" do
+          @client.connected.should be_true
+        end
 
         it "lists compute resources"
 
