@@ -286,14 +286,14 @@ The OCCI gem includes its own logging mechanism using a message queue. By defaul
 A new OCCI Logger can be initialized by specifying the log destination (either a filename or an IO object like
 STDOUT) and the log level.
 
-    logger = Occi::Log.new STDOUT
-    logger.level = Occi::Log::INFO
+    logger = Occi::Api::Log.new STDOUT
+    logger.level = Occi::Api::Log::INFO
 
 You can create multiple Loggers to receive the log output.
 
-You can always, even if there is no logger defined, log output using the class methods of OCCI::Log e.g.
+You can always, even if there is no logger defined, log output using the class methods of OCCI::Api::Log e.g.
 
-    Occi::Log.info("Test message")
+    Occi::Api::Log.info("Test message")
 
 Changelog
 ---------
