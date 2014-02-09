@@ -9,6 +9,7 @@ module Occi::Api::Dsl; end
 module Occi::Api::Client::Errors; end
 
 require 'occi/api/version'
+require 'occi/api/log'
 require 'occi/api/client/authn_utils'
 require 'occi/api/client/errors'
 require 'occi/api/client/client_base'
