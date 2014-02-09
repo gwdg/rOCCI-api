@@ -14,7 +14,7 @@ module Occi
            :endpoint => 'https://localhost:3300',
            :auth => { :type  => "none" },
            :log => { :out   => "/dev/null",
-                     :level => Occi::Log::DEBUG },
+                     :level => Occi::Api::Log::DEBUG },
            :auto_connect => true,
            :media_type => "text/plain,text/occi"
           })
@@ -293,7 +293,7 @@ module Occi
           #  :endpoint => 'https://localhost:3300',
           #  :auth => { :type  => "none" },
           #  :log => { :out   => "/dev/null",
-          #            :level => Occi::Log::DEBUG },
+          #            :level => Occi::Api::Log::DEBUG },
           #  :auto_connect => true,
           #  :media_type => "application/occi+json"
           #})

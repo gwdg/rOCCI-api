@@ -27,7 +27,7 @@ module Occi::Api::Client
 
         def set_keystone_base_url
           response = @env_ref.class.head "#{@env_ref.endpoint.to_s}/-/"
-          Occi::Log.debug response.inspect
+          Occi::Api::Log.debug response.inspect
 
           return if response.success?
           raise ::Occi::Api::Client::Errors::AuthnError,
@@ -61,7 +61,7 @@ module Occi::Api::Client
             :body => get_keystone_req(tenant),
             :headers => headers
           )
-          Occi::Log.debug response.inspect
+          Occi::Api::Log.debug response.inspect
 
           if response.success?
             @env_ref.class.headers['X-Auth-Token'] = response['access']['token']['id']
@@ -101,7 +101,7 @@ module Occi::Api::Client
             "#{@keystone_url}/v2.0/tenants",
             :headers => headers
           )
-          Occi::Log.debug response.inspect
+          Occi::Api::Log.debug response.inspect
 
           # TODO: impl match with regexp in case of multiple tenants?
           raise ::Occi::Api::Client::Errors::AuthnError,

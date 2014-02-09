@@ -6,7 +6,7 @@ module Occi::Api::Client
       # @see Occi::Api::Client::ClientBase
       def get_logger(log_options)
         logger = super(log_options)
-        self.class.debug_output $stderr if logger.level == Occi::Log::DEBUG
+        self.class.debug_output $stderr if logger.level == Occi::Api::Log::DEBUG
 
         logger
       end
@@ -40,7 +40,7 @@ module Occi::Api::Client
         begin
           @authn_plugin.authenticate
         rescue ::Occi::Api::Client::Errors::AuthnError => e
-          Occi::Log.debug e.message
+          Occi::Api::Log.debug e.message
 
           if @authn_plugin.fallbacks.any?
             # TODO: multiple fallbacks
@@ -64,7 +64,7 @@ module Occi::Api::Client
         else
           media_types = self.class.head(@endpoint.to_s).headers['accept']
 
-          Occi::Log.debug("Available media types: #{media_types.inspect}")
+          Occi::Api::Log.debug("Available media types: #{media_types.inspect}")
           media_type = case media_types
           when /application\/occi\+json/
             'application/occi+json'

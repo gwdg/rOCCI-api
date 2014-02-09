@@ -132,7 +132,7 @@ To connect to an OCCI endpoint/server (e.g. running on http://localhost:3300/ )
     options = {
       :endpoint => "http://localhost:3300/",
       :auth => {:type => "none"},
-      :log => {:out => STDERR, :level => Occi::Log::WARN, :logger => nil},
+      :log => {:out => STDERR, :level => Occi::Api::Log::WARN, :logger => nil},
       :auto_connect => "value", auto_connect => true,
       :media_type => nil
     }
@@ -209,7 +209,7 @@ To connect to an OCCI endpoint/server (e.g. running on http://localhost:3300/ )
     options = {
       :endpoint => "http://localhost:3300/",
       :auth => {:type => "none"},
-      :log => {:out => STDERR, :level => Occi::Log::WARN, :logger => nil},
+      :log => {:out => STDERR, :level => Occi::Api::Log::WARN, :logger => nil},
       :auto_connect => "value", auto_connect => true,
       :media_type => nil
     }

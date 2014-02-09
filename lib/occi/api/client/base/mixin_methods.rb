@@ -21,7 +21,7 @@ module Occi::Api::Client
       # @return [String, Occi::Core::Mixin, nil] link, mixin description or nothing found
       def get_mixin(name, type = nil, describe = false)
         # TODO: mixin fix
-        Occi::Log.debug "Looking for mixin #{name.inspect} #{type.inspect} " \
+        Occi::Api::Log.debug "Looking for mixin #{name.inspect} #{type.inspect} " \
                         "#{describe.inspect}"
 
         # TODO: extend this code to support multiple matches and regex filters

@@ -104,24 +104,24 @@ module Occi::Api::Client
       private
 
       def get_process_response(path, response)
-        Occi::Log.debug "Response from location: #{path.inspect}"
+        Occi::Api::Log.debug "Response from location: #{path.inspect}"
         kind = @model.get_by_location(path) if @model
 
-        Occi::Log.debug "Response should contain kind: #{kind.inspect}"
+        Occi::Api::Log.debug "Response should contain kind: #{kind.inspect}"
         entity_type = nil
         if kind && kind.related_to?(Occi::Core::Link)
           entity_type = Occi::Core::Link
         end
         entity_type = Occi::Core::Resource unless entity_type
 
-        Occi::Log.debug "Parser call: #{response.content_type.inspect} #{path.include?('/-/')} " \
+        Occi::Api::Log.debug "Parser call: #{response.content_type.inspect} #{path.include?('/-/')} " \
                         "#{entity_type} #{response.headers.inspect}"
         collection = Occi::Parser.parse(
           response.content_type, response.body,
           path.include?('/-/'), entity_type, response.headers
         )
 
-        Occi::Log.debug "Parsed collection: empty? #{collection.empty?}"
+        Occi::Api::Log.debug "Parsed collection: empty? #{collection.empty?}"
         collection
       end
 
