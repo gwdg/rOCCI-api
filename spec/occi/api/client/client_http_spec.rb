@@ -290,7 +290,7 @@ module Occi
 #          startactioninstance = Occi::Core::ActionInstance.new startaction, nil
 #          @client.trigger "https://crebain2.ics.muni.cz:12443/compute/4053", startactioninstance
 #          expect ...
-        end
+#        end
 
         it "triggers an action on a storage resource"
 
