@@ -6,7 +6,7 @@ module Occi
 
 
     vcr_options = { :record => :new_episodes }
-#    vcr_options = { :record => :new_episodes, :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/net_http_example_response" }
+#    vcr_options = { :record => :none, :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/net_http_example_response" }
     describe ClientHttp, :vcr => vcr_options do
 
       context "using media type text/plain" do
@@ -284,7 +284,13 @@ module Occi
           expect(@client.delete 'https://crebain2.ics.muni.cz:12443/storage/696').to eql true
         end
 
-        it "triggers an action on a compute resource"
+        it "triggers an action on a compute resource" #do
+#           TODO: Not yet implemented on server side
+#          startaction = Occi::Core::Action.new scheme='http://schemas.ogf.org/occi/infrastructure/compute/action#', term='start', title='start compute instance'
+#          startactioninstance = Occi::Core::ActionInstance.new startaction, nil
+#          @client.trigger "https://crebain2.ics.muni.cz:12443/compute/4053", startactioninstance
+#          expect ...
+        end
 
         it "triggers an action on a storage resource"
 
@@ -416,7 +422,9 @@ module Occi
 
         it "triggers an action on a network resource"
 
-        it "refreshes its model"
+        it "refreshes its model" do
+          @client.refresh
+        end
 
       end
     end
