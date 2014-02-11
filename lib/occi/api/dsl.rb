@@ -16,7 +16,7 @@ module Occi::Api::Dsl
     when :http 
       @client = Occi::Api::Client::ClientHttp.new(options)
     else
-      raise "Protocol #{protocol.to_s} is not supported!"
+      raise ArgumentError, "Protocol #{protocol.to_s} is not supported!"
     end
 
     @client.connect unless @client.connected
@@ -39,8 +39,8 @@ module Occi::Api::Dsl
   private
 
   def check
-    raise "You have to issue 'connect' first!" unless @client
-    raise "Client is disconnected!" unless @client.connected
+    raise RuntimeError, "You have to issue 'connect' first!" unless @client
+    raise RuntimeError, "Client is disconnected!" unless @client.connected
   end
 
 end
