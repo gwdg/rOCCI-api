@@ -217,7 +217,7 @@ module Occi
           expect(stors.to_a.select{ |item| item.attributes['occi.core.id'] == '375' }.any?).to eql true
         end
 
-        it "describes all available mixins" #do
+        it "describes all available mixins" do
 #          @client.get_mixins.should include(
 #            Occi::Core::Mixin.new("http://schemas.ogf.org/occi/infrastructure/resource_tpl#", "large"),
 #            Occi::Core::Mixin.new("http://schemas.ogf.org/occi/infrastructure/resource_tpl#", "extra_large"),
@@ -225,7 +225,13 @@ module Occi
 #            Occi::Core::Mixin.new("http://schemas.ogf.org/occi/infrastructure/resource_tpl#", "small"),
 #            Occi::Core::Mixin.new("http://schemas.ogf.org/occi/infrastructure/os_tpl#", "mytesttemplate")
 #          )
-#        end
+          @client.get_mixins.should include(
+            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "large"),
+            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "extra_large"),
+            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "medium"),
+            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "small")
+          )
+        end
 
         it "finds and describes unscoped mixin" do
           mxn = @client.get_mixin('mytesttemplate', nil, true)
@@ -393,7 +399,14 @@ module Occi
           expect(stors.to_a.select{ |item| item.attributes['occi.core.id'] == '375' }.any?).to eql true
         end
 
-        it "describes all available mixins"
+        it "describes all available mixins" do
+          @client.get_mixins.should include(
+            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "large"),
+            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "extra_large"),
+            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "medium"),
+            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "small")
+          )
+        end
 
         it "describes os_tpl mixins"
 
