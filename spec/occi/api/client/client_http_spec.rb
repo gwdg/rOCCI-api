@@ -270,7 +270,14 @@ module Occi
           expect(@client.create stor).to eql 'https://crebain2.ics.muni.cz:12443/storage/696'
         end
 
-        it "creates a new network resource"
+        it "creates a new network resource" do
+          net = Occi::Infrastructure::Network.new
+          net.mixins << "http://opennebula.org/occi/infrastructure#network"
+          net.title='privatetest'
+          net.allocation='static'
+          net.attributes["org.opennebula.network.bridge"]="xenbr0"
+          expect(@client.create net).to eql 'https://crebain2.ics.muni.cz:12443/network/63'
+        end
 
         it "deploys an instance based on OVF/OVA file"
 
@@ -278,7 +285,9 @@ module Occi
           expect(@client.delete 'https://crebain2.ics.muni.cz:12443/compute/4015').to eql true
         end
 
-        it "deletes a network resource"
+        it "deletes a network resource" do
+          expect(@client.delete 'https://crebain2.ics.muni.cz:12443/network/63').to eql true
+        end
 
         it "deletes a storage resource" do
           expect(@client.delete 'https://crebain2.ics.muni.cz:12443/storage/696').to eql true
@@ -404,13 +413,22 @@ module Occi
           expect(@client.create stor).to eql 'https://crebain2.ics.muni.cz:12443/storage/697'
         end
 
-        it "creates a new network resource"
+        it "creates a new network resource" do
+          net = Occi::Infrastructure::Network.new
+          net.mixins << "http://opennebula.org/occi/infrastructure#network"
+          net.title='privatetest'
+          net.allocation='static'
+          net.attributes["org.opennebula.network.bridge"]="xenbr0"
+          expect(@client.create net).to eql 'https://crebain2.ics.muni.cz:12443/network/64'
+        end
 
         it "deletes a compute resource" do
           expect(@client.delete 'https://crebain2.ics.muni.cz:12443/compute/4017').to eql true
         end
 
-        it "deletes a network resource"
+        it "deletes a network resource" do
+          expect(@client.delete 'https://crebain2.ics.muni.cz:12443/network/64').to eql true
+        end
 
         it "deletes a storage resource" do
           expect(@client.delete 'https://crebain2.ics.muni.cz:12443/storage/697').to eql true
