@@ -368,9 +368,25 @@ module Occi
           )
         end
 
-        it "lists os_tpl mixins"
+        it "lists os_tpl mixins" do
+          mixins = Occi::Core::Mixins.new
+          mixins << Occi::Core::Mixin.new("http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#", "uuid_monitoring_4")
+          mixins << Occi::Core::Mixin.new("http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#", "uuid_debianvm_5")
 
-        it "lists resource_tpl mixins"
+          expect(mixins).to be_subset(@client.get_mixins("os_tpl"))
+          expect(mixins).to be_subset(@client.get_os_tpls)
+        end
+
+        it "lists resource_tpl mixins" do
+          mixins = Occi::Core::Mixins.new
+          mixins << Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#", "large")
+          mixins << Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#", "extra_large")
+          mixins << Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#", "medium")
+          mixins << Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#", "small")
+
+          expect(mixins).to be_subset(@client.get_mixins("resource_tpl"))
+          expect(mixins).to be_subset(@client.get_resource_tpls)
+        end
 
         it "describes compute resources" do
           cmpts = @client.describe("compute")
@@ -412,9 +428,20 @@ module Occi
           )
         end
 
-        it "describes os_tpl mixins"
+        it "describes os_tpl mixins" do
+          expect(@client.get_mixins("os_tpl")).to include(
+            Occi::Core::Mixin.new("http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl", "uuid_monitoring_4")
+          )
+        end
 
-        it "describes resource_tpl mixins"
+        it "describes resource_tpl mixins" do
+          expect(@client.get_mixins).to include(
+            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "large"),
+            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "extra_large"),
+            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "medium"),
+            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "small"),
+          )
+        end
 
         it "creates a new compute resource" do
           compt = Occi::Infrastructure::Compute.new
