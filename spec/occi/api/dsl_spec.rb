@@ -23,7 +23,7 @@ module Occi
             @dummy.connect(:http,
             {
               :endpoint => ENV['ROCCI_SPEC_ENDPOINT'] || 'https://localhost:3300',
-              :auth => hash_or_nil_helper( ENV['ROCCI_SPEC_AUTH_JSON'] ) || { :type  => "none" },
+              :auth => hash_or_nil_helper( ENV['ROCCI_SPEC_AUTH_JSON'] ) || { :type => "basic", :username => "rocci-test", :password => "edited"},
               :log => { :out   => "/dev/null",
                         :level => Occi::Log::DEBUG },
               :auto_connect => true,
@@ -37,7 +37,7 @@ module Occi
             @dummy.connect(:ftp,
             { 
               :endpoint => ENV['ROCCI_SPEC_ENDPOINT'] || 'https://localhost:3300',
-              :auth => hash_or_nil_helper( ENV['ROCCI_SPEC_AUTH_JSON'] ) || { :type  => "none" },
+              :auth => hash_or_nil_helper( ENV['ROCCI_SPEC_AUTH_JSON'] ) || { :type => "basic", :username => "rocci-test", :password => "edited"},
               :log => { :out   => "/dev/null",
                         :level => Occi::Log::DEBUG },
               :auto_connect => true,
@@ -49,7 +49,7 @@ module Occi
           expect(
             @dummy.connect(:http, { :auth => 'https://localhost:3300a' } ) { |opts|
               opts.endpoint = ENV['ROCCI_SPEC_ENDPOINT'] || 'https://localhost:3300'
-              opts.auth = hash_or_nil_helper( ENV['ROCCI_SPEC_AUTH_JSON'] ) || { :type  => "none" }
+              opts.auth = hash_or_nil_helper( ENV['ROCCI_SPEC_AUTH_JSON'] ) || { :type => "basic", :username => "rocci-test", :password => "edited"}
               opts.log = { :out   => "/dev/null",
                         :level => Occi::Log::DEBUG }
               opts.auto_connect = true
