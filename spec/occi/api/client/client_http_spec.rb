@@ -5,9 +5,8 @@ module Occi
     module Client
 
 
-#    vcr_options = { :record => :new_episodes }
+#    vcr_options = { :record => :new_episodes } # To be used only when (re)implementing tests
     vcr_options = { :record => :none }
-#    vcr_options = { :record => :none, :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/net_http_example_response" }
     describe ClientHttp, :vcr => vcr_options do
 
       context "using media type text/plain" do
@@ -120,17 +119,14 @@ module Occi
         end
 
         it "lists compute resources" do
-#        it "lists compute resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/lists_compute_resources" } do
           @client.list("compute").should eq ["https://localhost:3300/compute/4011"]
         end
 
         it "lists network resources" do
-#        it "lists network resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/lists_network_resources" } do
           @client.list("network").should eq ["https://localhost:3300/network/1", "https://localhost:3300/network/2", "https://localhost:3300/network/12"]
         end
 
         it "lists storage resources" do
-#        it "lists storage resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/lists_storage_resources" } do
           @client.list("storage").should include(
             "https://localhost:3300/storage/4",
             "https://localhost:3300/storage/547"
@@ -188,7 +184,6 @@ module Occi
         end
 
         it "describes compute resources" do
-#        it "describes compute resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/describes_compute_resources" } do
           cmpts = @client.describe("compute")
 
           cmpts.length.should eq 1
@@ -200,7 +195,6 @@ module Occi
         end
 
         it "describes network resources" do
-#        it "describes network resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/describes_network_resources" } do
           nets = @client.describe "network"
 
           expect(nets.length).to eq 4
@@ -208,7 +202,6 @@ module Occi
         end
 
         it "describes storage resources" do
-#        it "describes storage resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/describes_storage_resources" } do
           stors = @client.describe "storage"
 
           expect(stors.length).to eq 6
@@ -315,7 +308,6 @@ module Occi
         end
 
         it "refreshes its model" do
-#        it "refreshes its model", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/refreshes_its_model" } do
           @client.refresh
         end
 
