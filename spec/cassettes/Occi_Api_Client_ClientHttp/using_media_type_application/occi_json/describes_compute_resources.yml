@@ -17,7 +17,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 13:48:36 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -46,7 +46,7 @@ http_interactions:
       encoding: US-ASCII
       string: ''
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 13:48:37 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/-/
@@ -64,7 +64,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 13:48:37 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -783,7 +783,7 @@ http_interactions:
         IiwidGl0bGUiOiJkZWFjdGl2YXRlIHN0b3JhZ2VsaW5rIiwiYXR0cmlidXRl
         cyI6e319XX0=
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 13:48:37 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/compute/
@@ -801,7 +801,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 13:48:38 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -832,7 +832,7 @@ http_interactions:
       encoding: US-ASCII
       string: https://localhost:3300/compute/4011
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 13:48:38 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/compute/4011
@@ -850,7 +850,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 13:48:38 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -881,5 +881,5 @@ http_interactions:
       encoding: US-ASCII
       string: ! '{"resources":[{"kind":"http://schemas.ogf.org/occi/infrastructure#compute","mixins":["http://opennebula.org/occi/infrastructure#compute"],"attributes":{"occi":{"core":{"id":"4011","title":"DebianTest"},"compute":{"cores":2,"memory":4.0,"speed":1.0,"state":"waiting"}},"org":{"opennebula":{"compute":{"id":"4011","cpu":2.0,"bootloader":"pygrub"}}}},"id":"4011","links":["/link/storagelink/compute_4011_disk_0","/link/networkinterface/compute_4011_nic_0"]}]}'
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 13:48:38 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 recorded_with: VCR 2.8.0

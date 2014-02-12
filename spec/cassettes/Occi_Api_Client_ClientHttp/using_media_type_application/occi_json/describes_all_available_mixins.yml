@@ -17,7 +17,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Tue, 11 Feb 2014 11:23:12 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -46,7 +46,7 @@ http_interactions:
       encoding: US-ASCII
       string: ''
     http_version: 
-  recorded_at: Tue, 11 Feb 2014 11:23:12 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/-/
@@ -64,7 +64,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Tue, 11 Feb 2014 11:23:12 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -791,5 +791,5 @@ http_interactions:
         IiwidGl0bGUiOiJkZWFjdGl2YXRlIHN0b3JhZ2VsaW5rIiwiYXR0cmlidXRl
         cyI6e319XX0=
     http_version: 
-  recorded_at: Tue, 11 Feb 2014 11:23:12 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 recorded_with: VCR 2.8.0

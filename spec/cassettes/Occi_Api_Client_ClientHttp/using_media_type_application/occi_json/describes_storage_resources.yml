@@ -17,7 +17,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 13:49:40 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -46,7 +46,7 @@ http_interactions:
       encoding: US-ASCII
       string: ''
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 13:49:40 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/-/
@@ -64,7 +64,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 13:49:40 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -783,7 +783,7 @@ http_interactions:
         IiwidGl0bGUiOiJkZWFjdGl2YXRlIHN0b3JhZ2VsaW5rIiwiYXR0cmlidXRl
         cyI6e319XX0=
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 13:49:40 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/storage/
@@ -801,7 +801,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 13:49:42 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -842,7 +842,7 @@ http_interactions:
 
         https://localhost:3300/storage/547'
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 13:49:42 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/storage/4
@@ -860,7 +860,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 13:49:42 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -892,7 +892,7 @@ http_interactions:
       string: ! '{"resources":[{"kind":"http://schemas.ogf.org/occi/infrastructure#storage","mixins":["http://opennebula.org/occi/infrastructure#storage"],"actions":[{"scheme":"http://schemas.ogf.org/occi/infrastructure/storage/action#","term":"offline","attributes":{}},{"scheme":"http://schemas.ogf.org/occi/infrastructure/storage/action#","term":"backup","attributes":{}}],"attributes":{"occi":{"core":{"id":"4","title":"monitoring","summary":"Small
         image for monitoring purposes"},"storage":{"size":0.103515625,"state":"online"}},"org":{"opennebula":{"storage":{"id":"4","type":"OS","persistent":"NO","dev_prefix":"xvd","bus":"IDE"}}}},"id":"4"}]}'
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 13:49:42 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/storage/8
@@ -910,7 +910,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 13:49:43 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -942,7 +942,7 @@ http_interactions:
       string: ! '{"resources":[{"kind":"http://schemas.ogf.org/occi/infrastructure#storage","mixins":["http://opennebula.org/occi/infrastructure#storage"],"attributes":{"occi":{"core":{"id":"8","title":"debian6","summary":"Clean
         Debian6 (Squeeze) x64 image"},"storage":{"size":8.0,"state":"online"}},"org":{"opennebula":{"storage":{"id":"8","type":"OS","persistent":"NO","dev_prefix":"xvd","bus":"IDE"}}}},"id":"8"}]}'
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 13:49:43 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/storage/129
@@ -960,7 +960,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 13:49:43 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -992,7 +992,7 @@ http_interactions:
       string: ! '{"resources":[{"kind":"http://schemas.ogf.org/occi/infrastructure#storage","mixins":["http://opennebula.org/occi/infrastructure#storage"],"attributes":{"occi":{"core":{"id":"129","title":"CERIT-SC-Debian-6.0-0002.cerit-sc-cloud","summary":"CERIT-SC
         Debian 6.0 for OpenNebula"},"storage":{"size":0.404296875,"state":"online"}},"org":{"opennebula":{"storage":{"id":"129","type":"OS","persistent":"NO","dev_prefix":"vd","driver":"qcow2"}}}},"id":"129"}]}'
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 13:49:43 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/storage/375
@@ -1010,7 +1010,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 13:49:43 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -1041,7 +1041,7 @@ http_interactions:
       encoding: US-ASCII
       string: ! '{"resources":[{"kind":"http://schemas.ogf.org/occi/infrastructure#storage","mixins":["http://opennebula.org/occi/infrastructure#storage"],"attributes":{"occi":{"core":{"id":"375","title":"OL-6.3-MM-gold"},"storage":{"size":1.060546875,"state":"online"}},"org":{"opennebula":{"storage":{"id":"375","type":"OS","persistent":"NO","dev_prefix":"vd","driver":"qcow2"}}}},"id":"375"}]}'
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 13:49:43 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/storage/502
@@ -1059,7 +1059,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 13:49:43 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -1090,7 +1090,7 @@ http_interactions:
       encoding: US-ASCII
       string: ! '{"resources":[{"kind":"http://schemas.ogf.org/occi/infrastructure#storage","mixins":["http://opennebula.org/occi/infrastructure#storage"],"attributes":{"occi":{"core":{"id":"502","title":"debian6gal+RepEx_full_hapala_updated2","summary":"debian6gal+RepEx_full_nicki_updated2"},"storage":{"size":10.0,"state":"online"}},"org":{"opennebula":{"storage":{"id":"502","type":"OS","persistent":"YES","dev_prefix":"xvd"}}}},"id":"502"}]}'
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 13:49:43 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/storage/547
@@ -1108,7 +1108,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 13:49:43 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -1140,5 +1140,5 @@ http_interactions:
       string: ! '{"resources":[{"kind":"http://schemas.ogf.org/occi/infrastructure#storage","mixins":["http://opennebula.org/occi/infrastructure#storage"],"attributes":{"occi":{"core":{"id":"547","title":"winByAli","summary":"Z
         obrazu Aliho WinSrv2012_64b_Cloud.qcow2"},"storage":{"size":11.0927734375,"state":"online"}},"org":{"opennebula":{"storage":{"id":"547","type":"OS","persistent":"NO","dev_prefix":"xvd"}}}},"id":"547"}]}'
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 13:49:43 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 recorded_with: VCR 2.8.0

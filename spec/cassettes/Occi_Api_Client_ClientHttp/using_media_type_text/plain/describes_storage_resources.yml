@@ -15,7 +15,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 10 Jan 2013 17:44:39 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.20 (Ubuntu)
       X-Powered-By:
@@ -27,8 +27,8 @@ http_interactions:
       Accept:
       - application/occi+json,application/json,text/plain,text/uri-list,application/xml,text/xml,application/occi+xml,text/occi
       Set-Cookie:
-      - GRIDHTTP_PASSCODE=ec9b4b21351052e5aPTUJs; domain=localhost; path=/; secure
-      - rack.session=BAh7B0kiD3Nlc3Npb25faWQGOgZFRiJFZTIyZmM5ZmI2OTliY2JiZWQyMjYz%0AN2IyNTQ3NjMyMDkxYTFkNWVhOGIwYjVkYTNhYTllMTYyYjdkZTZiMzhkY0ki%0ADXRyYWNraW5nBjsARnsISSIUSFRUUF9VU0VSX0FHRU5UBjsARiItZGEzOWEz%0AZWU1ZTZiNGIwZDMyNTViZmVmOTU2MDE4OTBhZmQ4MDcwOUkiGUhUVFBfQUND%0ARVBUX0VOQ09ESU5HBjsARiItZGEzOWEzZWU1ZTZiNGIwZDMyNTViZmVmOTU2%0AMDE4OTBhZmQ4MDcwOUkiGUhUVFBfQUNDRVBUX0xBTkdVQUdFBjsARiItZGEz%0AOWEzZWU1ZTZiNGIwZDMyNTViZmVmOTU2MDE4OTBhZmQ4MDcwOQ%3D%3D%0A--24c9906d0e0c02c6976b065151f161a7e299022a;
+      - GRIDHTTP_PASSCODE=0000000000000000000000; domain=localhost; path=/; secure
+      - rack.session=000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A00000000000000000000000000000000000000000000000000%3D%3D%0A--0000000000000000000000000000000000000000;
         path=/; HttpOnly
       Content-Length:
       - '294'
@@ -42,7 +42,7 @@ http_interactions:
       encoding: US-ASCII
       string: ''
     http_version: 
-  recorded_at: Thu, 10 Jan 2013 17:44:39 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: head
     uri: https://localhost:3300/
@@ -58,7 +58,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 10 Jan 2013 17:45:15 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.20 (Ubuntu)
       X-Powered-By:
@@ -70,8 +70,8 @@ http_interactions:
       Accept:
       - application/occi+json,application/json,text/plain,text/uri-list,application/xml,text/xml,application/occi+xml,text/occi
       Set-Cookie:
-      - GRIDHTTP_PASSCODE=7d125d80959a0716fHCHTe; domain=localhost; path=/; secure
-      - rack.session=BAh7B0kiD3Nlc3Npb25faWQGOgZFRiJFZDNjNjc3YmUzNzQ0MzY3MzM3Y2Zk%0AOWIwZTFhNzIwYTc2YTE0MWFlNjJjMWU0NTJlN2E0OWM4Njg3OWE4NjY3ZUki%0ADXRyYWNraW5nBjsARnsISSIUSFRUUF9VU0VSX0FHRU5UBjsARiItZGEzOWEz%0AZWU1ZTZiNGIwZDMyNTViZmVmOTU2MDE4OTBhZmQ4MDcwOUkiGUhUVFBfQUND%0ARVBUX0VOQ09ESU5HBjsARiItZGEzOWEzZWU1ZTZiNGIwZDMyNTViZmVmOTU2%0AMDE4OTBhZmQ4MDcwOUkiGUhUVFBfQUNDRVBUX0xBTkdVQUdFBjsARiItZGEz%0AOWEzZWU1ZTZiNGIwZDMyNTViZmVmOTU2MDE4OTBhZmQ4MDcwOQ%3D%3D%0A--e07feba1354432e536f975e358760ce58bc0c896;
+      - GRIDHTTP_PASSCODE=0000000000000000000000; domain=localhost; path=/; secure
+      - rack.session=000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A00000000000000000000000000000000000000000000000000%3D%3D%0A--0000000000000000000000000000000000000000;
         path=/; HttpOnly
       Content-Length:
       - '294'
@@ -85,7 +85,7 @@ http_interactions:
       encoding: US-ASCII
       string: ''
     http_version: 
-  recorded_at: Thu, 10 Jan 2013 17:45:16 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://localhost:3300/-/
@@ -101,7 +101,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 10 Jan 2013 17:45:16 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.20 (Ubuntu)
       X-Powered-By:
@@ -113,8 +113,8 @@ http_interactions:
       Accept:
       - application/occi+json,application/json,text/plain,text/uri-list,application/xml,text/xml,application/occi+xml,text/occi
       Set-Cookie:
-      - GRIDHTTP_PASSCODE=ee85500fe2870dadFo8Fw9; domain=localhost; path=/; secure
-      - rack.session=BAh7B0kiD3Nlc3Npb25faWQGOgZFRiJFNjM1MTZiMTE0NjcwZTM4NDk5YTdm%0AYzU2YzU5OTFkZDE3NGRmMmIxYTNkMTgxMTgwYjUyNzk0MmJlNDIyYzIyY0ki%0ADXRyYWNraW5nBjsARnsISSIUSFRUUF9VU0VSX0FHRU5UBjsARiItZGEzOWEz%0AZWU1ZTZiNGIwZDMyNTViZmVmOTU2MDE4OTBhZmQ4MDcwOUkiGUhUVFBfQUND%0ARVBUX0VOQ09ESU5HBjsARiItZGEzOWEzZWU1ZTZiNGIwZDMyNTViZmVmOTU2%0AMDE4OTBhZmQ4MDcwOUkiGUhUVFBfQUNDRVBUX0xBTkdVQUdFBjsARiItZGEz%0AOWEzZWU1ZTZiNGIwZDMyNTViZmVmOTU2MDE4OTBhZmQ4MDcwOQ%3D%3D%0A--25ad0c0814ebb1a114053dfec7fd828ffa479b10;
+      - GRIDHTTP_PASSCODE=0000000000000000000000; domain=localhost; path=/; secure
+      - rack.session=000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A00000000000000000000000000000000000000000000000000%3D%3D%0A--0000000000000000000000000000000000000000;
         path=/; HttpOnly
       Content-Length:
       - '8975'
@@ -259,7 +259,7 @@ http_interactions:
 
 '
     http_version: 
-  recorded_at: Thu, 10 Jan 2013 17:45:16 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://localhost:3300/storage/
@@ -275,7 +275,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 10 Jan 2013 17:45:20 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.20 (Ubuntu)
       X-Powered-By:
@@ -287,8 +287,8 @@ http_interactions:
       Accept:
       - application/occi+json,application/json,text/plain,text/uri-list,application/xml,text/xml,application/occi+xml,text/occi
       Set-Cookie:
-      - GRIDHTTP_PASSCODE=8d778e88e5795e7cAcH87H; domain=localhost; path=/; secure
-      - rack.session=BAh7B0kiD3Nlc3Npb25faWQGOgZFRiJFOTI2NWQ0NjQ3YmI3NWI4MzY0MGZm%0ANTA3YTZlMjYxZDQ0ZjM1OWNkZWNkODFlMzExYzhkYzcyN2NlZjJmZmY3MUki%0ADXRyYWNraW5nBjsARnsISSIUSFRUUF9VU0VSX0FHRU5UBjsARiItZGEzOWEz%0AZWU1ZTZiNGIwZDMyNTViZmVmOTU2MDE4OTBhZmQ4MDcwOUkiGUhUVFBfQUND%0ARVBUX0VOQ09ESU5HBjsARiItZGEzOWEzZWU1ZTZiNGIwZDMyNTViZmVmOTU2%0AMDE4OTBhZmQ4MDcwOUkiGUhUVFBfQUNDRVBUX0xBTkdVQUdFBjsARiItZGEz%0AOWEzZWU1ZTZiNGIwZDMyNTViZmVmOTU2MDE4OTBhZmQ4MDcwOQ%3D%3D%0A--95011fc5e094792d3b6b5c81e3d10e35b9fca201;
+      - GRIDHTTP_PASSCODE=0000000000000000000000; domain=localhost; path=/; secure
+      - rack.session=000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A00000000000000000000000000000000000000000000000000%3D%3D%0A--0000000000000000000000000000000000000000;
         path=/; HttpOnly
       Content-Length:
       - '159'
@@ -302,7 +302,7 @@ http_interactions:
 
         https://localhost:3300/storage/5c1a7099-859e-5c3d-9386-740edbb610b8'
     http_version: 
-  recorded_at: Thu, 10 Jan 2013 17:45:20 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://localhost:3300/storage/32fc6c92-88aa-54dc-b814-be0df741278e
@@ -318,7 +318,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 10 Jan 2013 17:45:21 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.20 (Ubuntu)
       X-Powered-By:
@@ -330,8 +330,8 @@ http_interactions:
       Accept:
       - application/occi+json,application/json,text/plain,text/uri-list,application/xml,text/xml,application/occi+xml,text/occi
       Set-Cookie:
-      - GRIDHTTP_PASSCODE=36568f654d5fa296FMJBEE; domain=localhost; path=/; secure
-      - rack.session=BAh7B0kiD3Nlc3Npb25faWQGOgZFRiJFZTNkMWJmMDAzMGE3MjM5YzJiZWQ2%0AMWE4OGIwNzA1YTBjMzc5MzQzMjhjMjk1ZGQxNmE3YzgwOTllOTk0MDg3Nkki%0ADXRyYWNraW5nBjsARnsISSIUSFRUUF9VU0VSX0FHRU5UBjsARiItZGEzOWEz%0AZWU1ZTZiNGIwZDMyNTViZmVmOTU2MDE4OTBhZmQ4MDcwOUkiGUhUVFBfQUND%0ARVBUX0VOQ09ESU5HBjsARiItZGEzOWEzZWU1ZTZiNGIwZDMyNTViZmVmOTU2%0AMDE4OTBhZmQ4MDcwOUkiGUhUVFBfQUNDRVBUX0xBTkdVQUdFBjsARiItZGEz%0AOWEzZWU1ZTZiNGIwZDMyNTViZmVmOTU2MDE4OTBhZmQ4MDcwOQ%3D%3D%0A--c5669692b19c4ea132561da5fac716e82413bc22;
+      - GRIDHTTP_PASSCODE=0000000000000000000000; domain=localhost; path=/; secure
+      - rack.session=000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A00000000000000000000000000000000000000000000000000%3D%3D%0A--0000000000000000000000000000000000000000;
         path=/; HttpOnly
       Content-Length:
       - '498'
@@ -361,7 +361,7 @@ http_interactions:
 
 '
     http_version: 
-  recorded_at: Thu, 10 Jan 2013 17:45:21 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://localhost:3300/storage/5c1a7099-859e-5c3d-9386-740edbb610b8
@@ -377,7 +377,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 10 Jan 2013 17:45:21 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.20 (Ubuntu)
       X-Powered-By:
@@ -389,8 +389,8 @@ http_interactions:
       Accept:
       - application/occi+json,application/json,text/plain,text/uri-list,application/xml,text/xml,application/occi+xml,text/occi
       Set-Cookie:
-      - GRIDHTTP_PASSCODE=31be8605bcb14c62BMhc1e; domain=localhost; path=/; secure
-      - rack.session=BAh7B0kiD3Nlc3Npb25faWQGOgZFRiJFODE0YWFjMjE5NDQ0MTY5Njc5YmI3%0AZGEzZDU1OWZiZjY2ZDg5YWQ2OWY0ZTBmZDlkNzcwNTg0ZGFjN2ZkNTY3MUki%0ADXRyYWNraW5nBjsARnsISSIUSFRUUF9VU0VSX0FHRU5UBjsARiItZGEzOWEz%0AZWU1ZTZiNGIwZDMyNTViZmVmOTU2MDE4OTBhZmQ4MDcwOUkiGUhUVFBfQUND%0ARVBUX0VOQ09ESU5HBjsARiItZGEzOWEzZWU1ZTZiNGIwZDMyNTViZmVmOTU2%0AMDE4OTBhZmQ4MDcwOUkiGUhUVFBfQUNDRVBUX0xBTkdVQUdFBjsARiItZGEz%0AOWEzZWU1ZTZiNGIwZDMyNTViZmVmOTU2MDE4OTBhZmQ4MDcwOQ%3D%3D%0A--d6727396544ff3085d8b7bc3abf40719fa73cce0;
+      - GRIDHTTP_PASSCODE=0000000000000000000000; domain=localhost; path=/; secure
+      - rack.session=000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A000000000000000000000000000000000000000000000000000000000000%0A00000000000000000000000000000000000000000000000000%3D%3D%0A--0000000000000000000000000000000000000000;
         path=/; HttpOnly
       Content-Length:
       - '501'
@@ -420,7 +420,7 @@ http_interactions:
 
 '
     http_version: 
-  recorded_at: Thu, 10 Jan 2013 17:45:21 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: head
     uri: https://rocci-test:edited@localhost:3300/-/
@@ -438,7 +438,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 09:58:08 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -469,7 +469,7 @@ http_interactions:
       encoding: US-ASCII
       string: ''
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 09:58:09 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/-/
@@ -487,7 +487,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 09:58:09 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -679,7 +679,7 @@ http_interactions:
 
 '
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 09:58:09 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/storage/
@@ -697,7 +697,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 09:58:10 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -738,7 +738,7 @@ http_interactions:
 
         https://localhost:3300/storage/547'
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 09:58:10 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/storage/4
@@ -756,7 +756,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 09:58:11 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -815,7 +815,7 @@ http_interactions:
 
         Link: </storage/4?action=backup>;rel="http://schemas.ogf.org/occi/infrastructure/storage/action#backup"'
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 09:58:11 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/storage/8
@@ -833,7 +833,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 09:58:11 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -888,7 +888,7 @@ http_interactions:
 
         X-OCCI-Attribute: org.opennebula.storage.bus="IDE"'
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 09:58:12 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/storage/129
@@ -906,7 +906,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 09:58:12 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -961,7 +961,7 @@ http_interactions:
 
         X-OCCI-Attribute: org.opennebula.storage.driver="qcow2"'
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 09:58:12 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/storage/375
@@ -979,7 +979,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 09:58:13 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -1032,7 +1032,7 @@ http_interactions:
 
         X-OCCI-Attribute: org.opennebula.storage.driver="qcow2"'
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 09:58:13 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/storage/502
@@ -1050,7 +1050,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 09:58:13 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -1103,7 +1103,7 @@ http_interactions:
 
         X-OCCI-Attribute: org.opennebula.storage.dev_prefix="xvd"'
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 09:58:13 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/storage/547
@@ -1121,7 +1121,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 09:58:14 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -1174,5 +1174,5 @@ http_interactions:
 
         X-OCCI-Attribute: org.opennebula.storage.dev_prefix="xvd"'
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 09:58:14 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 recorded_with: VCR 2.8.0

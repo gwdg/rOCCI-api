@@ -17,7 +17,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 13:49:37 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -46,7 +46,7 @@ http_interactions:
       encoding: US-ASCII
       string: ''
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 13:49:37 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/-/
@@ -64,7 +64,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 13:49:38 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -783,7 +783,7 @@ http_interactions:
         IiwidGl0bGUiOiJkZWFjdGl2YXRlIHN0b3JhZ2VsaW5rIiwiYXR0cmlidXRl
         cyI6e319XX0=
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 13:49:38 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/network/
@@ -801,7 +801,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 13:49:39 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -838,7 +838,7 @@ http_interactions:
 
         https://localhost:3300/network/61'
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 13:49:39 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/network/1
@@ -856,7 +856,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 13:49:39 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -887,7 +887,7 @@ http_interactions:
       encoding: US-ASCII
       string: ! '{"resources":[{"kind":"http://schemas.ogf.org/occi/infrastructure#network","mixins":["http://opennebula.org/occi/infrastructure#network","http://schemas.ogf.org/occi/infrastructure/network#ipnetwork"],"attributes":{"occi":{"core":{"id":"1","title":"public"},"network":{"vlan":0,"state":"active","allocation":"static"}},"org":{"opennebula":{"network":{"id":"1","vlan":"NO","bridge":"xenbr0"}}}},"id":"1"}]}'
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 13:49:39 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/network/2
@@ -905,7 +905,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 13:49:39 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -936,7 +936,7 @@ http_interactions:
       encoding: US-ASCII
       string: ! '{"resources":[{"kind":"http://schemas.ogf.org/occi/infrastructure#network","mixins":["http://opennebula.org/occi/infrastructure#network","http://schemas.ogf.org/occi/infrastructure/network#ipnetwork"],"attributes":{"occi":{"core":{"id":"2","title":"monitoring"},"network":{"vlan":0,"state":"active","allocation":"dynamic"}},"org":{"opennebula":{"network":{"id":"2","vlan":"NO","bridge":"xenbr0","ip_start":"192.168.254.1","ip_end":"192.168.254.254"}}}},"id":"2"}]}'
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 13:49:39 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/network/12
@@ -954,7 +954,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 13:49:39 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -985,7 +985,7 @@ http_interactions:
       encoding: US-ASCII
       string: ! '{"resources":[{"kind":"http://schemas.ogf.org/occi/infrastructure#network","mixins":["http://opennebula.org/occi/infrastructure#network","http://schemas.ogf.org/occi/infrastructure/network#ipnetwork"],"attributes":{"occi":{"core":{"id":"12","title":"private"},"network":{"vlan":0,"state":"active","allocation":"static"}},"org":{"opennebula":{"network":{"id":"12","vlan":"NO","bridge":"xenbr0","ip_start":"10.4.0.1","ip_end":"10.4.0.254"}}}},"id":"12"}]}'
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 13:49:39 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
     method: get
     uri: https://rocci-test:edited@localhost:3300/network/61
@@ -1003,7 +1003,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 07 Feb 2014 13:49:39 GMT
+      - Thu, 01 Jan 1970 00:00:00 GMT
       Server:
       - Apache/2.2.22 (Debian)
       X-Frame-Options:
@@ -1034,5 +1034,5 @@ http_interactions:
       encoding: US-ASCII
       string: ! '{"resources":[{"kind":"http://schemas.ogf.org/occi/infrastructure#network","mixins":["http://opennebula.org/occi/infrastructure#network","http://schemas.ogf.org/occi/infrastructure/network#ipnetwork"],"attributes":{"occi":{"core":{"id":"61","title":"hubik-dev"},"network":{"vlan":0,"state":"active","address":"10.0.0.0/24","allocation":"dynamic"}},"org":{"opennebula":{"network":{"id":"61","vlan":"NO","bridge":"br0","ip_start":"10.0.0.1","ip_end":"10.0.0.254"}}}},"id":"61"}]}'
     http_version: 
-  recorded_at: Fri, 07 Feb 2014 13:49:40 GMT
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 recorded_with: VCR 2.8.0
