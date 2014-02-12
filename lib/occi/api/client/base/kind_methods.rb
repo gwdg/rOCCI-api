@@ -14,7 +14,7 @@ module Occi::Api::Client
       # @return [Array<String>] list of available kind type identifiers related to
       #                         the given type identifier
       def get_kind_type_identifiers_related_to(type_identifier)
-        Occi::Log.debug("Getting kind type identifiers related to #{type_identifier.inspect}")
+        Occi::Api::Log.debug("Getting kind type identifiers related to #{type_identifier.inspect}")
         collection = @model.get(type_identifier)
         collection.kinds.to_a.collect { |kind| kind.type_identifier }
       end

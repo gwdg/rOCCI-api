@@ -15,7 +15,7 @@ module Occi::Api::Client
       defaults = Hashie::Mash.new({
         :endpoint => "http://localhost:3000/",
         :auth => {:type => "none"},
-        :log => {:out => STDERR, :level => Occi::Log::WARN, :logger => nil},
+        :log => {:out => STDERR, :level => Occi::Api::Log::WARN, :logger => nil},
         :auto_connect => true,
         :media_type => nil
       })
@@ -25,7 +25,7 @@ module Occi::Api::Client
 
       @options = defaults.merge(options)
 
-      # set Occi::Log
+      # set Occi::Api::Log
       @logger = get_logger(@options[:log])
 
       # check the validity and canonize the endpoint URI

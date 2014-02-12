@@ -24,7 +24,7 @@ client = Occi::Api::Client::ClientHttp.new({
   },
   :log => {
     :out   => STDERR,
-    :level => Occi::Log::DEBUG
+    :level => Occi::Api::Log::DEBUG
   }
 })
 

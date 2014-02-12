@@ -16,7 +16,7 @@ module Occi
            :endpoint => ENV['ROCCI_SPEC_ENDPOINT'] || 'https://localhost:3300',
            :auth => hash_or_nil_helper( ENV['ROCCI_SPEC_AUTH_JSON'] ) || { :type  => "none" },
            :log => { :out   => "/dev/null",
-                     :level => Occi::Log::DEBUG },
+                     :level => Occi::Api::Log::DEBUG },
            :auto_connect => true,
            :media_type => "text/plain,text/occi"
           })

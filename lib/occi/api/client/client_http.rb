@@ -28,7 +28,7 @@ module Occi::Api::Client
     #      :endpoint => "http://localhost:3000/",
     #      :timeout => 15
     #      :auth => {:type => "none"},
-    #      :log => {:out => STDERR, :level => Occi::Log::WARN, :logger => nil},
+    #      :log => {:out => STDERR, :level => Occi::Api::Log::WARN, :logger => nil},
     #      :auto_connect => true,
     #      :media_type => nil
     #    }
@@ -110,7 +110,7 @@ module Occi::Api::Client
     def create(entity)
       raise "#{entity.class.name.inspect} not an entity!" unless entity.kind_of? Occi::Core::Entity
 
-      Occi::Log.debug "Entity kind: #{entity.kind.type_identifier.inspect}"
+      Occi::Api::Log.debug "Entity kind: #{entity.kind.type_identifier.inspect}"
       raise "No kind found for #{entity.inspect}" unless entity.kind
 
       # get location for this kind of entity
@@ -118,7 +118,7 @@ module Occi::Api::Client
       collection = Occi::Collection.new
 
       # is this entity a Resource or a Link?
-      Occi::Log.debug "Entity class: #{entity.class.name.inspect}"
+      Occi::Api::Log.debug "Entity class: #{entity.class.name.inspect}"
       collection.resources << entity if entity.kind_of? Occi::Core::Resource
       collection.links << entity if entity.kind_of? Occi::Core::Link
 
@@ -178,7 +178,7 @@ module Occi::Api::Client
       raise 'Resource not provided!' if resource_type_identifier.blank?
       path = path_for_kind_type_identifier(resource_type_identifier)
 
-      Occi::Log.debug("Deleting #{path.inspect} for #{resource_type_identifier.inspect}")
+      Occi::Api::Log.debug("Deleting #{path.inspect} for #{resource_type_identifier.inspect}")
       del path
     end
 

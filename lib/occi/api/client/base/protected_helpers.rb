@@ -7,13 +7,13 @@ module Occi::Api::Client
       # instances to the rOCCI client.
       #
       # @example
-      #    get_logger { :out => STDERR, :level => Occi::Log::WARN, :logger => nil }
+      #    get_logger { :out => STDERR, :level => Occi::Api::Log::WARN, :logger => nil }
       #
       # @param log_options [Hash] logger options
-      # @return [Occi::Log] instance of the logger
+      # @return [Occi::Api::Log] instance of the logger
       def get_logger(log_options)
-        unless log_options[:logger].kind_of?(Occi::Log)
-          logger = Occi::Log.new(log_options[:out])
+        unless log_options[:logger].kind_of?(Occi::Api::Log)
+          logger = Occi::Api::Log.new(log_options[:out])
           logger.level = log_options[:level]
         else
           logger = log_options[:logger]

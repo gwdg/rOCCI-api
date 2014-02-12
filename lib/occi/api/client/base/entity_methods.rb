@@ -15,7 +15,7 @@ module Occi::Api::Client
       # @param resource_type [String] resource name or resource identifier
       # @return [Occi::Core::Resource] new resource instance
       def get_resource(resource_type)
-        Occi::Log.debug("Instantiating #{resource_type.inspect}")
+        Occi::Api::Log.debug("Instantiating #{resource_type.inspect}")
 
         type_id = get_resource_type_identifier(resource_type)
         raise "Unknown resource type! #{resource_type.inspect}" unless type_id
