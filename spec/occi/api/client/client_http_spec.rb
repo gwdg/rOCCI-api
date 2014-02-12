@@ -295,17 +295,23 @@ module Occi
           expect(@client.delete 'https://crebain2.ics.muni.cz:12443/storage/696').to eql true
         end
 
-        it "triggers an action on a compute resource" #do
-#           TODO: Not yet implemented on server side
-#          startaction = Occi::Core::Action.new scheme='http://schemas.ogf.org/occi/infrastructure/compute/action#', term='start', title='start compute instance'
-#          startactioninstance = Occi::Core::ActionInstance.new startaction, nil
-#          @client.trigger "https://crebain2.ics.muni.cz:12443/compute/4053", startactioninstance
-#          expect ...
-#        end
+        it "triggers an action on a compute resource" do
+          startaction = Occi::Core::Action.new scheme='http://schemas.ogf.org/occi/infrastructure/compute/action#', term='start', title='start compute instance'
+          startactioninstance = Occi::Core::ActionInstance.new startaction, nil
+          expect(@client.trigger "https://crebain2.ics.muni.cz:12443/compute/4096", startactioninstance).to eq true
+        end
 
-        it "triggers an action on a storage resource"
+        it "triggers an action on a storage resource" do
+          onlineaction = Occi::Core::Action.new scheme='http://schemas.ogf.org/occi/infrastructure/storage/action#', term='online', title='activate storage'
+          onlineactioninstance = Occi::Core::ActionInstance.new onlineaction, nil
+          expect(@client.trigger "https://crebain2.ics.muni.cz:12443/storage/709", onlineactioninstance).to eq true
+        end
 
-        it "triggers an action on a network resource"
+        it "triggers an action on a network resource" do
+          upaction = Occi::Core::Action.new scheme='http://schemas.ogf.org/occi/infrastructure/network/action#', term='up', title='activate network'
+          upactioninstance = Occi::Core::ActionInstance.new upaction, nil
+          expect(@client.trigger "https://crebain2.ics.muni.cz:12443/network/66", upactioninstance).to eq true
+        end
 
         it "refreshes its model" do
 #        it "refreshes its model", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/refreshes_its_model" } do
@@ -478,11 +484,25 @@ module Occi
           expect(@client.delete 'https://crebain2.ics.muni.cz:12443/storage/697').to eql true
         end
 
-        it "triggers an action on a compute resource"
+        it "triggers an action on a compute resource" do
+          startaction = Occi::Core::Action.new scheme='http://schemas.ogf.org/occi/infrastructure/compute/action#', term='start', title='start compute instance'
+          startactioninstance = Occi::Core::ActionInstance.new startaction, nil
+          expect(@client.trigger "https://crebain2.ics.muni.cz:12443/compute/4096", startactioninstance).to eq true
+        end
 
-        it "triggers an action on a storage resource"
+        it "triggers an action on a storage resource" do
+          onlineaction = Occi::Core::Action.new scheme='http://schemas.ogf.org/occi/infrastructure/storage/action#', term='online', title='activate storage'
+          onlineactioninstance = Occi::Core::ActionInstance.new onlineaction, nil
+#          offlineaction = Occi::Core::Action.new scheme='http://schemas.ogf.org/occi/infrastructure/storage/action#', term='offline', title='deactivate storage'
+#          offlineactioninstance = Occi::Core::ActionInstance.new offlineaction, nil
+          expect(@client.trigger "https://crebain2.ics.muni.cz:12443/storage/709", onlineactioninstance).to eq true
+        end
 
-        it "triggers an action on a network resource"
+        it "triggers an action on a network resource" do
+          upaction = Occi::Core::Action.new scheme='http://schemas.ogf.org/occi/infrastructure/network/action#', term='up', title='activate network'
+          upactioninstance = Occi::Core::ActionInstance.new upaction, nil
+          expect(@client.trigger "https://crebain2.ics.muni.cz:12443/network/66", upactioninstance).to eq true
+        end
 
         it "refreshes its model" do
           @client.refresh
