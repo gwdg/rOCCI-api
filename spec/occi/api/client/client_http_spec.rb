@@ -15,7 +15,7 @@ module Occi
         before(:each) do
           @client = Occi::Api::Client::ClientHttp.new({
            :endpoint => ENV['ROCCI_SPEC_ENDPOINT'] || 'https://localhost:3300',
-           :auth => hash_or_nil_helper( ENV['ROCCI_SPEC_AUTH_JSON'] ) || { :type  => "none" },
+           :auth => hash_or_nil_helper( ENV['ROCCI_SPEC_AUTH_JSON'] ) || { :type => "basic", :username => "rocci-test", :password => "edited"},
            :log => { :out   => "/dev/null",
                      :level => Occi::Api::Log::DEBUG },
            :auto_connect => true,
@@ -121,19 +121,19 @@ module Occi
 
         it "lists compute resources" do
 #        it "lists compute resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/lists_compute_resources" } do
-          @client.list("compute").should eq ["https://crebain2.ics.muni.cz:12443/compute/4011"]
+          @client.list("compute").should eq ["https://localhost:3300/compute/4011"]
         end
 
         it "lists network resources" do
 #        it "lists network resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/lists_network_resources" } do
-          @client.list("network").should eq ["https://crebain2.ics.muni.cz:12443/network/1", "https://crebain2.ics.muni.cz:12443/network/2", "https://crebain2.ics.muni.cz:12443/network/12"]
+          @client.list("network").should eq ["https://localhost:3300/network/1", "https://localhost:3300/network/2", "https://localhost:3300/network/12"]
         end
 
         it "lists storage resources" do
 #        it "lists storage resources", :vcr => { :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/lists_storage_resources" } do
           @client.list("storage").should include(
-            "https://crebain2.ics.muni.cz:12443/storage/4",
-            "https://crebain2.ics.muni.cz:12443/storage/547"
+            "https://localhost:3300/storage/4",
+            "https://localhost:3300/storage/547"
           )
         end
 
@@ -263,14 +263,14 @@ module Occi
           compt = Occi::Infrastructure::Compute.new
           compt.mixins << 'http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#uuid_debianvm_5'
           compt.mixins << "http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#small"
-          expect(@client.create compt).to eql "https://crebain2.ics.muni.cz:12443/compute/4015"
+          expect(@client.create compt).to eql "https://localhost:3300/compute/4015"
         end
 
         it "creates a new storage resource" do
           stor = Occi::Infrastructure::Storage.new
           stor.size=0.006
           stor.title='spec'
-          expect(@client.create stor).to eql 'https://crebain2.ics.muni.cz:12443/storage/696'
+          expect(@client.create stor).to eql 'https://localhost:3300/storage/696'
         end
 
         it "creates a new network resource" do
@@ -279,39 +279,39 @@ module Occi
           net.title='privatetest'
           net.allocation='static'
           net.attributes["org.opennebula.network.bridge"]="xenbr0"
-          expect(@client.create net).to eql 'https://crebain2.ics.muni.cz:12443/network/63'
+          expect(@client.create net).to eql 'https://localhost:3300/network/63'
         end
 
         it "deploys an instance based on OVF/OVA file"
 
         it "deletes a compute resource" do
-          expect(@client.delete 'https://crebain2.ics.muni.cz:12443/compute/4015').to eql true
+          expect(@client.delete 'https://localhost:3300/compute/4015').to eql true
         end
 
         it "deletes a network resource" do
-          expect(@client.delete 'https://crebain2.ics.muni.cz:12443/network/63').to eql true
+          expect(@client.delete 'https://localhost:3300/network/63').to eql true
         end
 
         it "deletes a storage resource" do
-          expect(@client.delete 'https://crebain2.ics.muni.cz:12443/storage/696').to eql true
+          expect(@client.delete 'https://localhost:3300/storage/696').to eql true
         end
 
         it "triggers an action on a compute resource" do
           startaction = Occi::Core::Action.new scheme='http://schemas.ogf.org/occi/infrastructure/compute/action#', term='start', title='start compute instance'
           startactioninstance = Occi::Core::ActionInstance.new startaction, nil
-          expect(@client.trigger "https://crebain2.ics.muni.cz:12443/compute/4096", startactioninstance).to eq true
+          expect(@client.trigger "https://localhost:3300/compute/4096", startactioninstance).to eq true
         end
 
         it "triggers an action on a storage resource" do
           onlineaction = Occi::Core::Action.new scheme='http://schemas.ogf.org/occi/infrastructure/storage/action#', term='online', title='activate storage'
           onlineactioninstance = Occi::Core::ActionInstance.new onlineaction, nil
-          expect(@client.trigger "https://crebain2.ics.muni.cz:12443/storage/709", onlineactioninstance).to eq true
+          expect(@client.trigger "https://localhost:3300/storage/709", onlineactioninstance).to eq true
         end
 
         it "triggers an action on a network resource" do
           upaction = Occi::Core::Action.new scheme='http://schemas.ogf.org/occi/infrastructure/network/action#', term='up', title='activate network'
           upactioninstance = Occi::Core::ActionInstance.new upaction, nil
-          expect(@client.trigger "https://crebain2.ics.muni.cz:12443/network/66", upactioninstance).to eq true
+          expect(@client.trigger "https://localhost:3300/network/66", upactioninstance).to eq true
         end
 
         it "refreshes its model" do
@@ -351,17 +351,17 @@ module Occi
         end
 
         it "lists compute resources" do
-          expect(@client.list("compute")).to eq ["https://crebain2.ics.muni.cz:12443/compute/4011"]
+          expect(@client.list("compute")).to eq ["https://localhost:3300/compute/4011"]
         end
 
         it "lists network resources" do
-          @client.list("network").should eq ["https://crebain2.ics.muni.cz:12443/network/1", "https://crebain2.ics.muni.cz:12443/network/2", "https://crebain2.ics.muni.cz:12443/network/12", "https://crebain2.ics.muni.cz:12443/network/61"]
+          @client.list("network").should eq ["https://localhost:3300/network/1", "https://localhost:3300/network/2", "https://localhost:3300/network/12", "https://localhost:3300/network/61"]
         end
 
         it "lists storage resources" do
           @client.list("storage").should include(
-            "https://crebain2.ics.muni.cz:12443/storage/4",
-            "https://crebain2.ics.muni.cz:12443/storage/547"
+            "https://localhost:3300/storage/4",
+            "https://localhost:3300/storage/547"
           )
         end
 
@@ -454,14 +454,14 @@ module Occi
           compt = Occi::Infrastructure::Compute.new
           compt.mixins << 'http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#uuid_debianvm_5'
           compt.mixins << "http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#small"
-          expect(@client.create compt).to eql "https://crebain2.ics.muni.cz:12443/compute/4017"
+          expect(@client.create compt).to eql "https://localhost:3300/compute/4017"
         end
 
         it "creates a new storage resource" do
           stor = Occi::Infrastructure::Storage.new
           stor.size=0.006
           stor.title='spec'
-          expect(@client.create stor).to eql 'https://crebain2.ics.muni.cz:12443/storage/697'
+          expect(@client.create stor).to eql 'https://localhost:3300/storage/697'
         end
 
         it "creates a new network resource" do
@@ -470,25 +470,25 @@ module Occi
           net.title='privatetest'
           net.allocation='static'
           net.attributes["org.opennebula.network.bridge"]="xenbr0"
-          expect(@client.create net).to eql 'https://crebain2.ics.muni.cz:12443/network/64'
+          expect(@client.create net).to eql 'https://localhost:3300/network/64'
         end
 
         it "deletes a compute resource" do
-          expect(@client.delete 'https://crebain2.ics.muni.cz:12443/compute/4017').to eql true
+          expect(@client.delete 'https://localhost:3300/compute/4017').to eql true
         end
 
         it "deletes a network resource" do
-          expect(@client.delete 'https://crebain2.ics.muni.cz:12443/network/64').to eql true
+          expect(@client.delete 'https://localhost:3300/network/64').to eql true
         end
 
         it "deletes a storage resource" do
-          expect(@client.delete 'https://crebain2.ics.muni.cz:12443/storage/697').to eql true
+          expect(@client.delete 'https://localhost:3300/storage/697').to eql true
         end
 
         it "triggers an action on a compute resource" do
           startaction = Occi::Core::Action.new scheme='http://schemas.ogf.org/occi/infrastructure/compute/action#', term='start', title='start compute instance'
           startactioninstance = Occi::Core::ActionInstance.new startaction, nil
-          expect(@client.trigger "https://crebain2.ics.muni.cz:12443/compute/4096", startactioninstance).to eq true
+          expect(@client.trigger "https://localhost:3300/compute/4096", startactioninstance).to eq true
         end
 
         it "triggers an action on a storage resource" do
@@ -496,13 +496,13 @@ module Occi
           onlineactioninstance = Occi::Core::ActionInstance.new onlineaction, nil
 #          offlineaction = Occi::Core::Action.new scheme='http://schemas.ogf.org/occi/infrastructure/storage/action#', term='offline', title='deactivate storage'
 #          offlineactioninstance = Occi::Core::ActionInstance.new offlineaction, nil
-          expect(@client.trigger "https://crebain2.ics.muni.cz:12443/storage/709", onlineactioninstance).to eq true
+          expect(@client.trigger "https://localhost:3300/storage/709", onlineactioninstance).to eq true
         end
 
         it "triggers an action on a network resource" do
           upaction = Occi::Core::Action.new scheme='http://schemas.ogf.org/occi/infrastructure/network/action#', term='up', title='activate network'
           upactioninstance = Occi::Core::ActionInstance.new upaction, nil
-          expect(@client.trigger "https://crebain2.ics.muni.cz:12443/network/66", upactioninstance).to eq true
+          expect(@client.trigger "https://localhost:3300/network/66", upactioninstance).to eq true
         end
 
         it "refreshes its model" do
