@@ -5,7 +5,8 @@ module Occi
     module Client
 
 
-    vcr_options = { :record => :new_episodes }
+#    vcr_options = { :record => :new_episodes }
+    vcr_options = { :record => :none }
 #    vcr_options = { :record => :none, :cassette_name => "Occi_Api_Client_ClientHttp/using_media_type_text_plain/net_http_example_response" }
     describe ClientHttp, :vcr => vcr_options do
 

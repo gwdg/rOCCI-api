@@ -3,7 +3,8 @@ require 'rspec'
 module Occi
   module Api
 
-    vcr_options = { :record => :new_episodes }
+#    vcr_options = { :record => :new_episodes }
+    vcr_options = { :record => :none }
 
     describe Dsl, :vcr => vcr_options do
       class DummyClass
