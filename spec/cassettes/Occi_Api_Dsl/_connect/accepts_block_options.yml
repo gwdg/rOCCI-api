@@ -188,25 +188,25 @@ http_interactions:
         org.opennebula.network.bridge org.opennebula.network.vlan org.opennebula.network.phydev
         org.opennebula.network.ip_start org.opennebula.network.ip_end"
 
-        Category: uuid_monitoring_4;scheme="http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#";class="mixin";title="monitoring";rel="http://schemas.ogf.org/occi/infrastructure#os_tpl";location="/mixin/os_tpl/uuid_monitoring_4/"
+        Category: uuid_monitoring_4;scheme="http://localhost/occi/infrastructure/os_tpl#";class="mixin";title="monitoring";rel="http://schemas.ogf.org/occi/infrastructure#os_tpl";location="/mixin/os_tpl/uuid_monitoring_4/"
 
-        Category: uuid_debianvm_5;scheme="http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#";class="mixin";title="debianvm";rel="http://schemas.ogf.org/occi/infrastructure#os_tpl";location="/mixin/os_tpl/uuid_debianvm_5/"
+        Category: uuid_debianvm_5;scheme="http://localhost/occi/infrastructure/os_tpl#";class="mixin";title="debianvm";rel="http://schemas.ogf.org/occi/infrastructure#os_tpl";location="/mixin/os_tpl/uuid_debianvm_5/"
 
-        Category: uuid_monitoring_hubik_1280;scheme="http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#";class="mixin";title="monitoring-hubik";rel="http://schemas.ogf.org/occi/infrastructure#os_tpl";location="/mixin/os_tpl/uuid_monitoring_hubik_1280/"
+        Category: uuid_monitoring_hubik_1280;scheme="http://localhost/occi/infrastructure/os_tpl#";class="mixin";title="monitoring-hubik";rel="http://schemas.ogf.org/occi/infrastructure#os_tpl";location="/mixin/os_tpl/uuid_monitoring_hubik_1280/"
 
-        Category: medium;scheme="http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#";class="mixin";title="Medium
+        Category: medium;scheme="http://sitespecific.localhost/occi/infrastructure/resource_tpl#";class="mixin";title="Medium
         Instance";rel="http://schemas.ogf.org/occi/infrastructure#resource_tpl";location="/mixin/resource_tpl/medium/";attributes="occi.compute.architecture{immutable}
         occi.compute.cores{immutable} occi.compute.speed{immutable} occi.compute.memory{immutable}"
 
-        Category: small;scheme="http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#";class="mixin";title="Small
+        Category: small;scheme="http://sitespecific.localhost/occi/infrastructure/resource_tpl#";class="mixin";title="Small
         Instance";rel="http://schemas.ogf.org/occi/infrastructure#resource_tpl";location="/mixin/resource_tpl/small/";attributes="occi.compute.architecture{immutable}
         occi.compute.cores{immutable} occi.compute.speed{immutable} occi.compute.memory{immutable}"
 
-        Category: extra_large;scheme="http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#";class="mixin";title="Extra
+        Category: extra_large;scheme="http://sitespecific.localhost/occi/infrastructure/resource_tpl#";class="mixin";title="Extra
         Large Instance";rel="http://schemas.ogf.org/occi/infrastructure#resource_tpl";location="/mixin/resource_tpl/extra_large/";attributes="occi.compute.architecture{immutable}
         occi.compute.cores{immutable} occi.compute.speed{immutable} occi.compute.memory{immutable}"
 
-        Category: large;scheme="http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#";class="mixin";title="Large
+        Category: large;scheme="http://sitespecific.localhost/occi/infrastructure/resource_tpl#";class="mixin";title="Large
         Instance";rel="http://schemas.ogf.org/occi/infrastructure#resource_tpl";location="/mixin/resource_tpl/large/";attributes="occi.compute.architecture{immutable}
         occi.compute.cores{immutable} occi.compute.speed{immutable} occi.compute.memory{immutable}"
 

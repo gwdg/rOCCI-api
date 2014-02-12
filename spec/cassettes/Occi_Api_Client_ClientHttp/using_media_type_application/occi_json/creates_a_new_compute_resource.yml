@@ -789,7 +789,7 @@ http_interactions:
     uri: https://rocci-test:edited@localhost:3300/compute/
     body:
       encoding: US-ASCII
-      string: ! '{"resources":[{"kind":"http://schemas.ogf.org/occi/infrastructure#compute","mixins":["http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#uuid_debianvm_5","http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#small"],"attributes":{"occi":{"core":{"id":"f0d22be5-8231-4757-bd36-b5722b8e128d"}}},"id":"f0d22be5-8231-4757-bd36-b5722b8e128d"}]}'
+      string: ! '{"resources":[{"kind":"http://schemas.ogf.org/occi/infrastructure#compute","mixins":["http://localhost/occi/infrastructure/os_tpl#uuid_debianvm_5","http://sitespecific.localhost/occi/infrastructure/resource_tpl#small"],"attributes":{"occi":{"core":{"id":"f0d22be5-8231-4757-bd36-b5722b8e128d"}}},"id":"f0d22be5-8231-4757-bd36-b5722b8e128d"}]}'
     headers:
       Accept:
       - application/occi+json

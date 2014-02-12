@@ -139,18 +139,18 @@ module Occi
 
         it "lists all available mixins" do
           @client.list_mixins.should include(
-            "http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#large",
-            "http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#extra_large",
-            "http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#medium",
-            "http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#small",
-            "http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#uuid_monitoring_4"
+            "http://sitespecific.localhost/occi/infrastructure/resource_tpl#large",
+            "http://sitespecific.localhost/occi/infrastructure/resource_tpl#extra_large",
+            "http://sitespecific.localhost/occi/infrastructure/resource_tpl#medium",
+            "http://sitespecific.localhost/occi/infrastructure/resource_tpl#small",
+            "http://localhost/occi/infrastructure/os_tpl#uuid_monitoring_4"
           )
         end
 
         it "lists os_tpl mixins" do
           mixins = Occi::Core::Mixins.new
-          mixins << Occi::Core::Mixin.new("http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#", "uuid_monitoring_4")
-          mixins << Occi::Core::Mixin.new("http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#", "uuid_debianvm_5")
+          mixins << Occi::Core::Mixin.new("http://localhost/occi/infrastructure/os_tpl#", "uuid_monitoring_4")
+          mixins << Occi::Core::Mixin.new("http://localhost/occi/infrastructure/os_tpl#", "uuid_debianvm_5")
 
           expect(mixins).to be_subset(@client.get_mixins("os_tpl"))
           expect(mixins).to be_subset(@client.get_os_tpls)
@@ -159,16 +159,16 @@ module Occi
         it "lists mixins including self" do
           mixins = Occi::Core::Mixins.new
           mixins << Occi::Core::Mixin.new("http://schemas.ogf.org/occi/infrastructure#", "os_tpl")
-          mixins << Occi::Core::Mixin.new("http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#", "uuid_monitoring_4")
+          mixins << Occi::Core::Mixin.new("http://localhost/occi/infrastructure/os_tpl#", "uuid_monitoring_4")
 
           expect(mixins).to be_subset(@client.get_mixins("os_tpl", true))
         end
 
         it "lists mixins with only self (no related)" do
           mixins = Occi::Core::Mixins.new
-          mixins << Occi::Core::Mixin.new("http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#", "uuid_monitoring_4")
+          mixins << Occi::Core::Mixin.new("http://localhost/occi/infrastructure/os_tpl#", "uuid_monitoring_4")
 
-          expect(@client.get_mixins("http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#uuid_monitoring_4", true)).to eq mixins
+          expect(@client.get_mixins("http://localhost/occi/infrastructure/os_tpl#uuid_monitoring_4", true)).to eq mixins
         end
 
         it "fails to list mixins with only self (no related) without include_self=true" do
@@ -178,10 +178,10 @@ module Occi
 
         it "lists resource_tpl mixins" do
           mixins = Occi::Core::Mixins.new
-          mixins << Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#", "large")
-          mixins << Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#", "extra_large")
-          mixins << Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#", "medium")
-          mixins << Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#", "small")
+          mixins << Occi::Core::Mixin.new("http://sitespecific.localhost/occi/infrastructure/resource_tpl#", "large")
+          mixins << Occi::Core::Mixin.new("http://sitespecific.localhost/occi/infrastructure/resource_tpl#", "extra_large")
+          mixins << Occi::Core::Mixin.new("http://sitespecific.localhost/occi/infrastructure/resource_tpl#", "medium")
+          mixins << Occi::Core::Mixin.new("http://sitespecific.localhost/occi/infrastructure/resource_tpl#", "small")
 
           expect(mixins).to be_subset(@client.get_mixins("resource_tpl"))
           expect(mixins).to be_subset(@client.get_resource_tpls)
@@ -222,27 +222,27 @@ module Occi
 
         it "describes all available mixins" do
           expect(@client.get_mixins).to include(
-            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "large"),
-            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "extra_large"),
-            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "medium"),
-            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "small"),
-            Occi::Core::Mixin.new("http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl", "uuid_monitoring_4")
+            Occi::Core::Mixin.new("http://sitespecific.localhost/occi/infrastructure/resource_tpl", "large"),
+            Occi::Core::Mixin.new("http://sitespecific.localhost/occi/infrastructure/resource_tpl", "extra_large"),
+            Occi::Core::Mixin.new("http://sitespecific.localhost/occi/infrastructure/resource_tpl", "medium"),
+            Occi::Core::Mixin.new("http://sitespecific.localhost/occi/infrastructure/resource_tpl", "small"),
+            Occi::Core::Mixin.new("http://localhost/occi/infrastructure/os_tpl", "uuid_monitoring_4")
           )
         end
 
         it "finds and describes unscoped mixin" do
           mxn = @client.get_mixin('uuid_monitoring_4', nil, true)
-          mxn.type_identifier.should eq 'http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#uuid_monitoring_4'
+          mxn.type_identifier.should eq 'http://localhost/occi/infrastructure/os_tpl#uuid_monitoring_4'
         end
 
         it "finds and describes scoped os_tpl mixin" do
           mxn = @client.get_mixin('uuid_monitoring_4', "os_tpl", true)
-          mxn.type_identifier.should eq 'http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#uuid_monitoring_4'
+          mxn.type_identifier.should eq 'http://localhost/occi/infrastructure/os_tpl#uuid_monitoring_4'
         end
 
         it "finds and describes scoped resource_tpl mixin" do
           mxn = @client.get_mixin('large', "resource_tpl", true)
-          mxn.type_identifier.should eq 'http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#large'
+          mxn.type_identifier.should eq 'http://sitespecific.localhost/occi/infrastructure/resource_tpl#large'
         end
 
         it "returns nil when looking for a non-existent mixin" do
@@ -261,8 +261,8 @@ module Occi
 
         it "creates a new compute resource" do
           compt = Occi::Infrastructure::Compute.new
-          compt.mixins << 'http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#uuid_debianvm_5'
-          compt.mixins << "http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#small"
+          compt.mixins << 'http://localhost/occi/infrastructure/os_tpl#uuid_debianvm_5'
+          compt.mixins << "http://sitespecific.localhost/occi/infrastructure/resource_tpl#small"
           expect(@client.create compt).to eql "https://localhost:3300/compute/4015"
         end
 
@@ -367,18 +367,18 @@ module Occi
 
         it "lists all available mixins" do
           @client.list_mixins.should include(
-            "http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#large",
-            "http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#extra_large",
-            "http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#medium",
-            "http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#small",
-            "http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#uuid_monitoring_4"
+            "http://sitespecific.localhost/occi/infrastructure/resource_tpl#large",
+            "http://sitespecific.localhost/occi/infrastructure/resource_tpl#extra_large",
+            "http://sitespecific.localhost/occi/infrastructure/resource_tpl#medium",
+            "http://sitespecific.localhost/occi/infrastructure/resource_tpl#small",
+            "http://localhost/occi/infrastructure/os_tpl#uuid_monitoring_4"
           )
         end
 
         it "lists os_tpl mixins" do
           mixins = Occi::Core::Mixins.new
-          mixins << Occi::Core::Mixin.new("http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#", "uuid_monitoring_4")
-          mixins << Occi::Core::Mixin.new("http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#", "uuid_debianvm_5")
+          mixins << Occi::Core::Mixin.new("http://localhost/occi/infrastructure/os_tpl#", "uuid_monitoring_4")
+          mixins << Occi::Core::Mixin.new("http://localhost/occi/infrastructure/os_tpl#", "uuid_debianvm_5")
 
           expect(mixins).to be_subset(@client.get_mixins("os_tpl"))
           expect(mixins).to be_subset(@client.get_os_tpls)
@@ -386,10 +386,10 @@ module Occi
 
         it "lists resource_tpl mixins" do
           mixins = Occi::Core::Mixins.new
-          mixins << Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#", "large")
-          mixins << Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#", "extra_large")
-          mixins << Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#", "medium")
-          mixins << Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#", "small")
+          mixins << Occi::Core::Mixin.new("http://sitespecific.localhost/occi/infrastructure/resource_tpl#", "large")
+          mixins << Occi::Core::Mixin.new("http://sitespecific.localhost/occi/infrastructure/resource_tpl#", "extra_large")
+          mixins << Occi::Core::Mixin.new("http://sitespecific.localhost/occi/infrastructure/resource_tpl#", "medium")
+          mixins << Occi::Core::Mixin.new("http://sitespecific.localhost/occi/infrastructure/resource_tpl#", "small")
 
           expect(mixins).to be_subset(@client.get_mixins("resource_tpl"))
           expect(mixins).to be_subset(@client.get_resource_tpls)
@@ -427,33 +427,33 @@ module Occi
 
         it "describes all available mixins" do
           expect(@client.get_mixins).to include(
-            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "large"),
-            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "extra_large"),
-            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "medium"),
-            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "small"),
-            Occi::Core::Mixin.new("http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl", "uuid_monitoring_4")
+            Occi::Core::Mixin.new("http://sitespecific.localhost/occi/infrastructure/resource_tpl", "large"),
+            Occi::Core::Mixin.new("http://sitespecific.localhost/occi/infrastructure/resource_tpl", "extra_large"),
+            Occi::Core::Mixin.new("http://sitespecific.localhost/occi/infrastructure/resource_tpl", "medium"),
+            Occi::Core::Mixin.new("http://sitespecific.localhost/occi/infrastructure/resource_tpl", "small"),
+            Occi::Core::Mixin.new("http://localhost/occi/infrastructure/os_tpl", "uuid_monitoring_4")
           )
         end
 
         it "describes os_tpl mixins" do
           expect(@client.get_mixins("os_tpl")).to include(
-            Occi::Core::Mixin.new("http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl", "uuid_monitoring_4")
+            Occi::Core::Mixin.new("http://localhost/occi/infrastructure/os_tpl", "uuid_monitoring_4")
           )
         end
 
         it "describes resource_tpl mixins" do
           expect(@client.get_mixins).to include(
-            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "large"),
-            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "extra_large"),
-            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "medium"),
-            Occi::Core::Mixin.new("http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl", "small"),
+            Occi::Core::Mixin.new("http://sitespecific.localhost/occi/infrastructure/resource_tpl", "large"),
+            Occi::Core::Mixin.new("http://sitespecific.localhost/occi/infrastructure/resource_tpl", "extra_large"),
+            Occi::Core::Mixin.new("http://sitespecific.localhost/occi/infrastructure/resource_tpl", "medium"),
+            Occi::Core::Mixin.new("http://sitespecific.localhost/occi/infrastructure/resource_tpl", "small"),
           )
         end
 
         it "creates a new compute resource" do
           compt = Occi::Infrastructure::Compute.new
-          compt.mixins << 'http://occi.crebain2.ics.muni.cz/occi/infrastructure/os_tpl#uuid_debianvm_5'
-          compt.mixins << "http://sitespecific.cesnet.cz/occi/infrastructure/resource_tpl#small"
+          compt.mixins << 'http://localhost/occi/infrastructure/os_tpl#uuid_debianvm_5'
+          compt.mixins << "http://sitespecific.localhost/occi/infrastructure/resource_tpl#small"
           expect(@client.create compt).to eql "https://localhost:3300/compute/4017"
         end
 
