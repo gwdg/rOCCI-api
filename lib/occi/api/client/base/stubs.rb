@@ -64,42 +64,6 @@ module Occi::Api::Client
         raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
       end
 
-      # Deploys a compute resource based on an OVF/OVA descriptor available
-      # on a local file system.
-      #
-      # @example
-      #    client.deploy "~/MyVMs/rOcciVM.ovf" # => "http://localhost:3300/compute/343423...42njhdafa"
-      #
-      # @param location [String] location of an OVF/OVA file
-      # @return [String] URI of the new resource
-      def deploy(location)
-        raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
-      end
-
-      # Deploys a compute resource based on an OVF descriptor available
-      # directly as a String.
-      #
-      # @example
-      #    client.deploy_ovf "OVF DESCRIPTOR HERE" # => "http://localhost:3300/compute/343423...42njhdafa"
-      #
-      # @param descriptor [String] OVF descriptor (e.g., already read from a file or generated)
-      # @return [String] URI of the new resource
-      def deploy_ovf(descriptor)
-        raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
-      end
-
-      # Deploys a compute resource based on an OVA descriptor available
-      # directly as a String.
-      #
-      # @example
-      #    client.deploy_ova "OVA DESCRIPTOR HERE" # => "http://localhost:3300/compute/343423...42njhdafa"
-      #
-      # @param descriptor [String] OVA descriptor (e.g., already read from a file or generated)
-      # @return [String] URI of the new resource
-      def deploy_ova(descriptor)
-        raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
-      end
-
       # Deletes a resource or all resource of a certain resource type
       # from the server.
       #

@@ -275,8 +275,6 @@ module Occi
           expect(@client.create net).to eql 'https://localhost:3300/network/63'
         end
 
-        it "deploys an instance based on OVF/OVA file"
-
         it "deletes a compute resource" do
           expect(@client.delete 'https://localhost:3300/compute/4015').to eql true
         end

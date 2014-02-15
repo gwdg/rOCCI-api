@@ -14,14 +14,10 @@ Requirements
 * RubyGems have to be installed
 * Rake has to be installed (e.g., `gem install rake`)
 
-### Dependencies
-* `libxslt1-dev` or `libxslt-devel`
-* `libxml2-dev`or `libxml2-devel`
-
 ### Examples
 #### For distros based on Debian:
 ~~~
-apt-get install ruby rubygems ruby-dev libxslt1-dev libxml2-dev
+apt-get install ruby rubygems ruby-dev
 ~~~
 ~~~
 ruby -v
@@ -31,7 +27,7 @@ ruby -v
 
 #### For distros based on RHEL:
 ~~~
-yum install libxml2-devel libxslt-devel ruby-devel openssl-devel gcc gcc-c++ ruby rubygems
+yum install ruby-devel openssl-devel gcc gcc-c++ ruby rubygems
 ~~~
 ~~~
 ruby -v

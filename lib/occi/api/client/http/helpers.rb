@@ -68,8 +68,6 @@ module Occi::Api::Client
           media_type = case media_types
           when /application\/occi\+json/
             'application/occi+json'
-          when /application\/occi\+xml/
-            'application/occi+xml'
           when /text\/occi/
             'text/occi'
           else
