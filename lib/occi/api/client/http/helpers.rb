@@ -12,6 +12,12 @@ module Occi::Api::Client
       end
 
       # @see Occi::Api::Client::ClientBase
+      def configure_connection(options)
+        # timeout is the only global connection option at the moment
+        self.class.default_timeout options[:timeout].to_i unless options[:timeout].blank?
+      end
+
+      # @see Occi::Api::Client::ClientBase
       def get_auth(auth_options, fallback = false)
         # select appropriate authN type
         case auth_options[:type]

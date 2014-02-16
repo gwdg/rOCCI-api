@@ -40,8 +40,9 @@ module Occi::Api::Client
     def initialize(options = {})
       super options
 
+      # set a global base URI for all subsequent requests
+      # must be done after authN calls
       self.class.base_uri @endpoint.to_s
-      self.class.default_timeout @options[:timeout].to_i unless @options[:timeout].blank?
 
       # get model information from the endpoint
       # and create Occi::Model instance

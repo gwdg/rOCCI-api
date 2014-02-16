@@ -31,6 +31,9 @@ module Occi::Api::Client
       # check the validity and canonize the endpoint URI
       @endpoint = get_endpoint_uri(@options[:endpoint])
 
+      # set global connection options, such as timeout
+      configure_connection(@options)
+
       # pass auth options
       @auth_options = get_auth(@options[:auth])
 

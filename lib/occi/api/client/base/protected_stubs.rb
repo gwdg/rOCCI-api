@@ -3,6 +3,19 @@ module Occi::Api::Client
 
     module ProtectedStubs
 
+      # Sets global connection options before the first call
+      # to a remote server is made. For example, this allows
+      # the configuration of a global connection timeout, including
+      # pre-authentication and authentication calls.
+      #
+      # @example
+      #    configure_connection { :timeout => 180 }
+      #
+      # @param options [Hash] global options
+      def configure_connection(options)
+        raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
+      end
+
       # Sets auth method and appropriate httparty attributes. Supported auth methods
       # are: ["basic", "digest", "x509", "none"]
       #
