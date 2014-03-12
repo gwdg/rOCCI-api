@@ -40,7 +40,7 @@ module Occi::Api::Client
       #     # => #<Occi::Core::Resources>
       #
       # @param resource_type_identifier [String] resource type identifier, type name or resource location
-      # @return [Occi::Core::Resources] list of resource descriptions
+      # @return [Occi::Core::Resources, Occi::Core::Links] list of resource or link descriptions
       def describe(resource_type_identifier=nil)
         raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
       end
