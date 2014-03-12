@@ -107,12 +107,12 @@ module Occi::Api::Client
         Occi::Api::Log.debug "Response from location: #{path.inspect}"
         kind = @model.get_by_location(path) if @model
 
-        Occi::Api::Log.debug "Response should contain kind: #{kind.inspect}"
-        entity_type = nil
-        if kind && kind.related_to?(Occi::Core::Link)
-          entity_type = Occi::Core::Link
+        Occi::Api::Log.debug "Response should contain kind: #{kind ? kind.type_identifier.inspect : 'none'}"
+        entity_type = if kind && kind.related_to?(Occi::Core::Link.kind)
+          Occi::Core::Link
+        else
+          Occi::Core::Resource
         end
-        entity_type = Occi::Core::Resource unless entity_type
 
         Occi::Api::Log.debug "Parser call: #{response.content_type.inspect} #{path.include?('/-/')} " \
                         "#{entity_type} #{response.headers.inspect}"
