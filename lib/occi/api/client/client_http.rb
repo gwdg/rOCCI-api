@@ -104,7 +104,12 @@ module Occi::Api::Client
         descriptions.merge! get(path)
       end
 
-      descriptions.resources
+      # decide what to return, in case of mixed collections prefer resources
+      if descriptions.resources.empty?
+        descriptions.links
+      else
+        descriptions.resources
+      end
     end
 
     # @see Occi::Api::Client::ClientBase
