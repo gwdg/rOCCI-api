@@ -91,12 +91,19 @@ module Occi::Api::Client
       elsif @model.get_by_id(resource_type_identifier)
         # we got type identifier
         # get all available resources of this type
-        locations = list(resource_type_identifier)
 
-        # make the requests
-        locations.each do |location|
-          path = sanitize_instance_link(location)
-          descriptions.merge! get(path)
+        if @media_type == 'application/occi+json'
+          # all at once
+          descriptions = get(path_for_kind_type_identifier(resource_type_identifier))
+        else
+          # one resource at a time
+          locations = list(resource_type_identifier)
+
+          # make the requests
+          locations.each do |location|
+            path = sanitize_instance_link(location)
+            descriptions.merge! get(path)
+          end
         end
       else
         # this is a link of a specific resource (absolute or relative)
