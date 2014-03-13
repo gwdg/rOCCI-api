@@ -48,7 +48,7 @@ module Occi::Api::Client
           raise ::Occi::Api::Client::Errors::AuthnError,
                 "Unable to get Keystone's URL from the response!" unless match && match[2]
 
-          @keystone_url = match[2].chomp('/')
+          @keystone_url = match[2].chomp('/').chomp('/v2.0')
         end
 
         def set_auth_token(tenant = nil)
