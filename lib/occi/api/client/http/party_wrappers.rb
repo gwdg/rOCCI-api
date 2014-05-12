@@ -29,7 +29,17 @@ module Occi::Api::Client
 
         response = self.class.get(path, :headers => headers)
         response_msg = response_message response
-        raise "HTTP GET failed! #{response_msg}" unless response.code == 200
+
+        unless response.code == 200
+          if response.headers["x-request-id"]
+            message = "HTTP GET with ID[#{response.headers["x-request-id"].inspect}] failed! " \
+                      "#{response_msg} : #{response.body.inspect}"
+          else
+            message = "HTTP GET failed! #{response_msg} : #{response.body.inspect}"
+          end
+
+          raise message
+        end
 
         get_process_response(path, response)
       end
@@ -55,7 +65,17 @@ module Occi::Api::Client
 
         response = send_coll_request(path, collection)
         response_msg = response_message(response)
-        raise "HTTP POST failed! #{response_msg}" unless response.code.between? 200, 201
+
+        unless response.code.between?(200, 201)
+          if response.headers["x-request-id"]
+            message = "HTTP POST with ID[#{response.headers["x-request-id"].inspect}] failed! " \
+                      "#{response_msg} : #{response.body.inspect}"
+          else
+            message = "HTTP POST failed! #{response_msg} : #{response.body.inspect}"
+          end
+
+          raise message
+        end
 
         collection.send(:standalone_action_instance?) ? post_action(response) : post_create(response)
       end
@@ -78,7 +98,14 @@ module Occi::Api::Client
         if response.code.between? 200, 201
           Occi::Parser.parse(response.content_type, response.body)
         else
-          raise "HTTP POST failed! #{response_msg}"
+          if response.headers["x-request-id"]
+            message = "HTTP PUT with ID[#{response.headers["x-request-id"].inspect}] failed! " \
+                      "#{response_msg} : #{response.body.inspect}"
+          else
+            message = "HTTP PUT failed! #{response_msg} : #{response.body.inspect}"
+          end
+
+          raise message
         end
       end
 
@@ -94,9 +121,18 @@ module Occi::Api::Client
         raise ArgumentError, "Path is a required argument!" if path.blank?
 
         response = self.class.delete(path)
-
         response_msg = response_message(response)
-        raise "HTTP DELETE failed! #{response_msg}" unless response.code == 200
+
+        unless response.code == 200
+          if response.headers["x-request-id"]
+            message = "HTTP DELETE with ID[#{response.headers["x-request-id"].inspect}] failed! " \
+                      "#{response_msg} : #{response.body.inspect}"
+          else
+            message = "HTTP DELETE failed! #{response_msg} : #{response.body.inspect}"
+          end
+
+          raise message
+        end
 
         true
       end
