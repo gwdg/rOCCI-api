@@ -1,6 +1,8 @@
 require 'rubygems'
 require 'rubygems/package'
 
+require 'ostruct'
+
 require 'occi-core'
 
 module Occi::Api; end
