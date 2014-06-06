@@ -27,7 +27,7 @@ module Occi
         end
 
         it "establishes connection" do
-          @client.connected.should be_true
+          @client.connected.should be true
         end
 
         it "instantiates a compute resource using type name" do
@@ -337,7 +337,7 @@ module Occi
         end
 
         it "establishes connection" do
-          @client.connected.should be_true
+          @client.connected.should be true
         end
 
         it "lists compute resources" do
