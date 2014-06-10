@@ -18,7 +18,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = `git ls-files -- {test,spec}/*`.split("\n")
   gem.require_paths = ["lib"]
 
-  gem.add_dependency 'occi-core', '~> 4.2.14'
+  gem.add_dependency 'occi-core', '~> 4.2.15'
   gem.add_dependency 'httparty'
   gem.add_dependency 'json'
 
