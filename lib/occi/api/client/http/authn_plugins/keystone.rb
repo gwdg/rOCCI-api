@@ -7,13 +7,18 @@ module Occi::Api::Client
         KEYSTONE_URI_REGEXP = /^(Keystone|snf-auth) uri='(.+)'$/
 
         def setup(options = {})
-          # get Keystone URL if possible, get unscoped token
+          # get Keystone URL if possible
           set_keystone_base_url
+
+          # get an un-scoped token
           set_auth_token
 
-          # use unscoped token for tenant discovery, get scoped token
-          tenant = get_prefered_tenant
-          set_auth_token(tenant)
+          # use the un-scoped token for tenant discovery
+          # and get a scoped token
+          get_prefered_tenant
+
+          raise ::Occi::Api::Client::Errors::AuthnError,
+                "Unable to get a tenant from Keystone, fallback failed!" if @env_ref.class.headers['X-Auth-Token'].blank?
         end
 
         def authenticate(options = {})
@@ -46,20 +51,16 @@ module Occi::Api::Client
 
           match = KEYSTONE_URI_REGEXP.match(authN_header)
           raise ::Occi::Api::Client::Errors::AuthnError,
-                "Unable to get Keystone's URL from the response!" unless match && match[2]
+                "Unable to get Keystone's URL from the response, fallback failed!" unless match && match[2]
 
           @keystone_url = match[2].chomp('/').chomp('/v2.0')
         end
 
         def set_auth_token(tenant = nil)
-          headers = @env_ref.class.headers.clone
-          headers['Content-Type'] = "application/json"
-          headers['Accept'] = headers['Content-Type']
-
           response = @env_ref.class.post(
             "#{@keystone_url}/v2.0/tokens",
             :body => get_keystone_req(tenant),
-            :headers => headers
+            :headers => get_req_headers
           )
           Occi::Api::Log.debug response.inspect
 
@@ -67,7 +68,7 @@ module Occi::Api::Client
             @env_ref.class.headers['X-Auth-Token'] = response['access']['token']['id']
           else
             raise ::Occi::Api::Client::Errors::AuthnError,
-                  "Unable to get a token from Keystone!"
+                  "Unable to get a token from Keystone, fallback failed!"
           end
         end
 
@@ -85,42 +86,43 @@ module Occi::Api::Client
             }
           else
             raise ::Occi::Api::Client::Errors::AuthnError,
-                  "Unable to request a token from Keystone! Chosen AuthN not supported."
+                  "Unable to request a token from Keystone! Chosen " \
+                  "AuthN is not supported, fallback failed!"
           end
 
-          body['auth']['tenantName'] = tenant if tenant && !tenant.empty?
+          body['auth']['tenantName'] = tenant unless tenant.blank?
           body.to_json
         end
 
         def get_prefered_tenant(match = nil)
+          response = @env_ref.class.get(
+            "#{@keystone_url}/v2.0/tenants",
+            :headers => get_req_headers
+          )
+          Occi::Api::Log.debug response.inspect
+
+          raise ::Occi::Api::Client::Errors::AuthnError,
+                "Keystone didn't return any tenants, fallback failed!" if response['tenants'].blank?
+
+          response['tenants'].each do |tenant|
+            begin
+              Occi::Api::Log.debug "Authenticating for tenant #{tenant['name'].inspect}"
+              set_auth_token(tenant['name'])
+
+              # found a working tenant, stop looking
+              break
+            rescue ::Occi::Api::Client::Errors::AuthnError
+              # ignoring and trying the next tenant
+            end
+          end
+        end
+
+        def get_req_headers
           headers = @env_ref.class.headers.clone
           headers['Content-Type'] = "application/json"
           headers['Accept'] = headers['Content-Type']
 
-          response = @env_ref.class.get(
-            "#{@keystone_url}/v2.0/tenants",
-            :headers => headers
-          )
-          Occi::Api::Log.debug response.inspect
-
-          # TODO: impl match with regexp in case of multiple tenants?
-          raise ::Occi::Api::Client::Errors::AuthnError,
-                "Keystone didn't return any tenants!" unless response['tenants'] && response['tenants'].first
-          for x in response['tenants']
-                tenant = x['name']
-                begin
-                    set_auth_token(tenant)
-                rescue ::Occi::Api::Client::Errors::AuthnError
-                    # Try next token
-                else
-                    # Token is ok, break
-                    break
-                end
-          end
-          raise ::Occi::Api::Client::Errors::AuthnError,
-                "Unable to get a tenant from Keystone!" unless tenant
-
-          tenant
+          headers
         end
 
       end
