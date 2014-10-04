@@ -1,78 +1,8 @@
-require 'openssl'
-
-if defined? JRUBY_VERSION
-  require 'java'
-end
-
 module Occi::Api::Client
 
   class AuthnUtils
 
     CERT_REGEXP = /\n?(-----BEGIN CERTIFICATE-----\n.+?\n-----END CERTIFICATE-----)\n/m
-
-    # Reads credentials from a PKCS#12 compliant file. Returns
-    # X.509 certificate and decrypted private key in PEM
-    # formatted string.
-    #
-    # @example
-    #    AuthnUtils.extract_pem_from_pkcs12 "~/.globus/usercert.p12", "123456"
-    #      # => #<String>
-    #
-    # @param path_to_p12_file [String] Path to a PKCS#12 file with credentials
-    # @param p12_password [String] Password needed to unlock the PKCS#12 file
-    # @return [String] Decrypted credentials in a PEM formatted string
-    def self.extract_pem_from_pkcs12(path_to_p12_file, p12_password)
-      # decode certificate and its private key
-      if defined? JRUBY_VERSION
-        extract_pem_from_pkcs12_java(path_to_p12_file, p12_password)
-      else
-        extract_pem_from_pkcs12_c(path_to_p12_file, p12_password)
-      end
-    end
-
-    def self.extract_pem_from_pkcs12_java(path_to_p12_file, p12_password)
-      # Java-based Ruby, read PKCS12 manually
-      # using KeyStore
-      keystore = Java::JavaSecurity::KeyStore.getInstance("PKCS12")
-      p12_input_stream = Java::JavaIo::FileInputStream.new(path_to_p12_file)
-      pass_char_array = Java::JavaLang::String.new(p12_password).to_char_array
-
-      # load and unlock PKCS#12 store
-      keystore.load p12_input_stream, pass_char_array
-
-      # read the first certificate and PK
-      cert = keystore.getCertificate("1")
-      pk = keystore.getKey("1", pass_char_array)
-
-      pem_from_pkcs12 = ""
-
-      pem_from_pkcs12 << "-----BEGIN CERTIFICATE-----\n"
-      pem_from_pkcs12 << Java::JavaxXmlBind::DatatypeConverter.printBase64Binary(cert.getEncoded())
-      pem_from_pkcs12 << "\n-----END CERTIFICATE-----"
-
-      pem_from_pkcs12 << "\n"
-
-      pem_from_pkcs12 << "-----BEGIN PRIVATE KEY-----\n"
-      pem_from_pkcs12 << Java::JavaxXmlBind::DatatypeConverter.printBase64Binary(pk.getEncoded())
-      pem_from_pkcs12 << "\n-----END PRIVATE KEY-----"
-
-      pem_from_pkcs12
-    end
-
-    def self.extract_pem_from_pkcs12_c(path_to_p12_file, p12_password)
-      # C-based Ruby, use OpenSSL::PKCS12
-      pem_from_pkcs12 = ""
-
-      pkcs12 = OpenSSL::PKCS12.new(
-        File.open(path_to_p12_file, 'rb'),
-        p12_password
-      )
-
-      # store cert and private key in a single PEM formatted string
-      pem_from_pkcs12 << pkcs12.certificate.to_pem << pkcs12.key.to_pem
-
-      pem_from_pkcs12
-    end
 
     # Reads X.509 certificates from a file to an array.
     #
@@ -83,7 +13,8 @@ module Occi::Api::Client
     # @param ca_file [String] Path to a PEM file containing certificates
     # @return [Array<String>] An array of read certificates
     def self.certs_to_file_ary(ca_file)
-      # TODO: read and separate multiple certificates
+      raise ArgumentError, "PKCS12 file #{ca_file.inspect} " \
+                           "is not supported in VOMS mode!" if /\A(.)+\.p12\z/ =~ ca_file
       certs_str = File.open(ca_file).read
 
       certs_ary = certs_str.scan(CERT_REGEXP)

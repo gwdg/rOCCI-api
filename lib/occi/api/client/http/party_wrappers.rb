@@ -66,7 +66,7 @@ module Occi::Api::Client
         response = send_coll_request(path, collection)
         response_msg = response_message(response)
 
-        unless response.code.between?(200, 201)
+        unless response.code.between? 200, 202
           if response.headers["x-request-id"]
             message = "HTTP POST with ID[#{response.headers["x-request-id"].inspect}] failed! " \
                       "#{response_msg} : #{response.body.inspect}"
@@ -95,9 +95,7 @@ module Occi::Api::Client
         response = send_coll_request(path, collection, :put)
         response_msg = response_message(response)
 
-        if response.code.between? 200, 201
-          Occi::Parser.parse(response.content_type, response.body)
-        else
+        unless response.code.between? 200, 202
           if response.headers["x-request-id"]
             message = "HTTP PUT with ID[#{response.headers["x-request-id"].inspect}] failed! " \
                       "#{response_msg} : #{response.body.inspect}"
@@ -107,6 +105,8 @@ module Occi::Api::Client
 
           raise message
         end
+
+        Occi::Parser.parse(response.content_type, response.body)
       end
 
       # Performs DELETE requests and returns True on success.
@@ -123,7 +123,7 @@ module Occi::Api::Client
         response = self.class.delete(path)
         response_msg = response_message(response)
 
-        unless response.code == 200
+        unless response.code.between? 200, 202
           if response.headers["x-request-id"]
             message = "HTTP DELETE with ID[#{response.headers["x-request-id"].inspect}] failed! " \
                       "#{response_msg} : #{response.body.inspect}"
