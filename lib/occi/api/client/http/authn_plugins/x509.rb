@@ -14,16 +14,12 @@ module Occi::Api::Client
           raise ArgumentError, "Missing required option 'user_cert' for x509 auth!" unless @options[:user_cert]
           raise ArgumentError, "The file specified in 'user_cert' does not exist!" unless File.exists? @options[:user_cert]
 
-          # handle PKCS#12 credentials before passing them
-          # to httparty
+          # handle credentials, separate PKCS12 from PEM
+          cert_content = File.open(@options[:user_cert], 'rb').read
           if /\A(.)+\.p12\z/ =~ @options[:user_cert]
-            pem_cert = ::Occi::Api::Client::AuthnUtils.extract_pem_from_pkcs12(@options[:user_cert], @options[:user_cert_password])
-            @env_ref.class.pem pem_cert, ''
+            @env_ref.class.pkcs12 cert_content, @options[:user_cert_password]
           else
-            # httparty will handle ordinary PEM formatted credentials
-            # TODO: Issue #49, check PEM credentials in jRuby
-            pem_cert = File.open(@options[:user_cert], 'rb').read
-            @env_ref.class.pem pem_cert, @options[:user_cert_password]
+            @env_ref.class.pem cert_content, @options[:user_cert_password]
           end
 
           @env_ref.class.ssl_ca_path @options[:ca_path] if @options[:ca_path]

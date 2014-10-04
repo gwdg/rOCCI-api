@@ -1,10 +1,10 @@
 rOCCI-api - A Ruby OCCI Framework
 =================================
 
-[![Build Status](https://secure.travis-ci.org/gwdg/rOCCI-api.png)](http://travis-ci.org/gwdg/rOCCI-api)
-[![Dependency Status](https://gemnasium.com/gwdg/rOCCI-api.png)](https://gemnasium.com/gwdg/rOCCI-api)
+[![Build Status](https://secure.travis-ci.org/EGI-FCTF/rOCCI-api.png)](http://travis-ci.org/EGI-FCTF/rOCCI-api)
+[![Dependency Status](https://gemnasium.com/EGI-FCTF/rOCCI-api.png)](https://gemnasium.com/EGI-FCTF/rOCCI-api)
 [![Gem Version](https://fury-badge.herokuapp.com/rb/occi-api.png)](https://badge.fury.io/rb/occi-api)
-[![Code Climate](https://codeclimate.com/github/gwdg/rOCCI-api.png)](https://codeclimate.com/github/gwdg/rOCCI-api)
+[![Code Climate](https://codeclimate.com/github/EGI-FCTF/rOCCI-api.png)](https://codeclimate.com/github/EGI-FCTF/rOCCI-api)
 
 Requirements
 ------------
@@ -12,7 +12,6 @@ Requirements
 ### Ruby
 * Ruby 1.9.3 is required
 * RubyGems have to be installed
-* Rake has to be installed (e.g., `gem install rake`)
 
 ### Examples
 #### For distros based on Debian:
@@ -44,12 +43,10 @@ Installation
 
 To install the most recent stable version
 
-    gem install rake
     gem install occi-api
 
 To install the most recent beta version
 
-    gem install rake
     gem install occi-api --pre
 
 ### From source (dev)
@@ -60,7 +57,7 @@ To install the most recent beta version
 
 To build and install the bleeding edge version from master
 
-    git clone git://github.com/gwdg/rOCCI-api.git
+    git clone git://github.com/EGI-FCTF/rOCCI-api.git
     cd rOCCI-api
     gem install bundler
     bundle install
@@ -87,212 +84,17 @@ ruby -v
 
 Usage
 -----
-### Auth
-
-For Basic auth use
-
-    auth = Hashie::Mash.new
-    auth.type = 'basic'
-    auth.username = 'user'
-    auth.password = 'mypass'
- 
-For Digest auth use
-
-    auth = Hashie::Mash.new
-    auth.type = 'digest'
-    auth.username = 'user'
-    auth.password = 'mypass'
-
-For X.509 auth use
- 
-    auth = Hashie::Mash.new
-    auth.type = 'x509'
-    auth.user_cert = '/Path/To/My/usercert.pem'
-    auth.user_cert_password = 'MyPassword'
-    auth.ca_path = '/Path/To/root-certificates'
-
-### DSL
-In your scripts, you can use the OCCI client DSL.
-
-To include the DSL definitions in a script use
-
-    extend Occi::Api::Dsl
-
-To include the DSL definitions in a class use
-
-    include Occi::Api::Dsl
-
-To connect to an OCCI endpoint/server (e.g. running on http://localhost:3300/ )
-
-    # defaults
-    options = {
-      :endpoint => "http://localhost:3300/",
-      :auth => {:type => "none"},
-      :log => {:out => STDERR, :level => Occi::Api::Log::WARN, :logger => nil},
-      :auto_connect => "value", auto_connect => true,
-      :media_type => nil
-    }
-
-    connect(:http, options ||= {})
-
-To get the list of available resource, mixin, entity or link types use
-
-    resource_types
-    mixin_types
-    entity_types
-    link_types
-
-To get compute, storage or network descriptions use
-
-    describe "compute"
-    describe "storage"
-    describe "network"
-
-To get the location of compute, storage or network resources use
-
-    list "compute"
-    list "storage"
-    list "network"
-
-To get the identifiers of specific mixins in specific mixin types use
-
-    mixin "my_template", "os_tpl"
-    mixin "small", "resource_tpl"
-
-To get the identifiers of specific mixins with unknown types use
-
-    mixin "medium"
-
-To get mixin descriptions use
-
-    mixin "medium", nil, true
-    mixin "my_template", "os_tpl", true
-
-To get a list of names of all / OS templates / Resource templates mixins use
-
-    mixins
-    mixins "os_tpl"
-    mixins "resource_tpl"
-
-To create a new compute resource use
-
-    os = mixin 'my_os', 'os_tpl'
-    size = mixin 'large', 'resource_tpl'
-    cmpt = resource "compute"
-    cmpt.mixins << os << size
-    cmpt.title = "My VM"
-    create cmpt
-
-To get a description of a specific resource use
-
-    describe "/compute/<OCCI_ID>"
-    describe "/storage/<OCCI_ID>"
-    describe "/network/<OCCI_ID>"
-
-To delete a specific resource use
-
-    delete "/compute/<OCCI_ID>"
-    delete "/storage/<OCCI_ID>"
-    delete "/network/<OCCI_ID>"
-
-### API
-If you need low level access to parts of the OCCI client or need to use more than one instance
-at a time, you should use the OCCI client API directly.
-
-To connect to an OCCI endpoint/server (e.g. running on http://localhost:3300/ )
-
-    # defaults
-    options = {
-      :endpoint => "http://localhost:3300/",
-      :auth => {:type => "none"},
-      :log => {:out => STDERR, :level => Occi::Api::Log::WARN, :logger => nil},
-      :auto_connect => "value", auto_connect => true,
-      :media_type => nil
-    }
-
-    client = Occi::Api::Client::ClientHttp.new(options ||= {})
-
-All available categories are automatically registered to the OCCI model during client initialization. You can get them via
-
-    client.model
-
-To get the list of available resource, mixin, entity or link types use
-
-    client.get_resource_types
-    client.get_mixin_types
-    client.get_entity_types
-    client.get_link_types
-
-To get compute, storage or network descriptions use
-
-    client.describe "compute"
-    client.describe "storage"
-    client.describe "network"
-
-To get the location of compute, storage or network resources use
-
-    client.list "compute"
-    client.list "storage"
-    client.list "network"
-
-To get the identifiers of specific mixins in specific mixin types use
-
-    client.find_mixin "my_template", "os_tpl"
-    client.find_mixin "small", "resource_tpl"
-
-To get the identifiers of specific mixins with unknown types use
-
-    client.find_mixin "medium"
-
-To get mixin descriptions use
-
-    client.find_mixin "medium", nil, true
-    client.find_mixin "my_template", "os_tpl", true
-
-To get a list of names of all / OS templates / Resource templates mixins use
-
-    client.get_mixins
-    client.get_mixins "os_tpl"
-    client.get_mixins "resource_tpl"
-
-To create a new compute resource use
-
-    os = client.find_mixin 'my_os', 'os_tpl'
-    size = client.find_mixin 'large', 'resource_tpl'
-    cmpt = client.get_resource "compute"
-    cmpt.mixins << os << size
-    cmpt.title = "My VM"
-    client.create cmpt
-
-To get a description of a specific resource use
-
-    client.describe "/compute/<OCCI_ID>"
-    client.describe "/storage/<OCCI_ID>"
-    client.describe "/network/<OCCI_ID>"
-
-To delete a specific resource use
-
-    client.delete "/compute/<OCCI_ID>"
-    client.delete "/storage/<OCCI_ID>"
-    client.delete "/network/<OCCI_ID>"
-
-### Logging
-
-The OCCI gem includes its own logging mechanism using a message queue. By default, no one is listening to that queue.
-A new OCCI Logger can be initialized by specifying the log destination (either a filename or an IO object like
-STDOUT) and the log level.
-
-    logger = Occi::Api::Log.new STDOUT
-    logger.level = Occi::Api::Log::INFO
-
-You can create multiple Loggers to receive the log output.
-
-You can always, even if there is no logger defined, log output using the class methods of OCCI::Api::Log e.g.
-
-    Occi::Api::Log.info("Test message")
+Detailed documentation is available in our [Wiki](https://github.com/EGI-FCTF/rOCCI-api/wiki).
 
 Changelog
 ---------
+
+### Version 4.3
+* Updated dependencies
+* Powered by rOCCI-core 4.3.x
+
+### Version 4.2
+* Updated dependencies
 
 ### Version 4.1
 * Dropped Ruby 1.8.x support
@@ -362,7 +164,7 @@ Development
 
 Checkout latest version from GIT:
 
-    git clone git://github.com/gwdg/rOCCI-api.git
+    git clone git://github.com/EGI-FCTF/rOCCI-api.git
 
 Change to rOCCI-api folder
 
@@ -374,11 +176,11 @@ Install dependencies for deployment
 
 ### Code Documentation
 
-[Code Documentation for rOCCI-api by YARD](http://rubydoc.info/github/gwdg/rOCCI-api/)
+[Code Documentation for rOCCI-api by YARD](http://rubydoc.info/github/EGI-FCTF/rOCCI-api/)
 
 ### Continuous integration
 
-[Continuous integration for rOCCI-api by Travis-CI](http://travis-ci.org/gwdg/rOCCI-api/)
+[Continuous integration for rOCCI-api by Travis-CI](http://travis-ci.org/EGI-FCTF/rOCCI-api/)
 
 ### Contribute
 
