@@ -33,8 +33,7 @@ module Occi::Api::Client
       #
       # @return [Array<String>] list of available entity types in a human-readable format
       def get_entity_types
-        collection = @model.get(Occi::Core::Entity.kind.type_identifier)
-        collection.kinds.to_a.collect { |kind| kind.term }
+        get_types(Occi::Core::Entity.kind)
       end
 
       # Retrieves all available entity type identifiers.
@@ -59,19 +58,7 @@ module Occi::Api::Client
       # @param type [String] short entity type
       # @return [String, nil] entity type identifier for the given entity type
       def get_entity_type_identifier(type)
-        return type if (type =~ URI::ABS_URI) || (type && type.start_with?('/'))
-
-        collection = @model.get(Occi::Core::Entity.kind.type_identifier)
-        e_kinds = collection.kinds.to_a.select { |e| e.term == type }
-        tis = e_kinds.collect { |e| e.type_identifier }
-        tis.uniq!
-
-        if tis.length > 1
-          raise Occi::Api::Client::Errors::AmbiguousNameError,
-                "Entity type #{type.inspect} is ambiguous, use a type identifier!"
-        end
-
-        tis.first
+        get_type_identifier(type, Occi::Core::Entity.kind)
       end
 
       # Retrieves all available resource types.
@@ -81,8 +68,7 @@ module Occi::Api::Client
       #
       # @return [Array<String>] list of available resource types in a human-readable format
       def get_resource_types
-        collection = @model.get(Occi::Core::Resource.kind.type_identifier)
-        collection.kinds.to_a.collect { |kind| kind.term }
+        get_types(Occi::Core::Resource.kind)
       end
 
       # Retrieves all available resource type identifiers.
@@ -107,19 +93,7 @@ module Occi::Api::Client
       # @param type [String] short resource type
       # @return [String, nil] resource type identifier for the given resource type
       def get_resource_type_identifier(type)
-        return type if (type =~ URI::ABS_URI) || (type && type.start_with?('/'))
-
-        collection = @model.get(Occi::Core::Resource.kind.type_identifier)
-        r_kinds = collection.kinds.to_a.select { |r| r.term == type }
-        tis = r_kinds.collect { |r| r.type_identifier }
-        tis.uniq!
-
-        if tis.length > 1
-          raise Occi::Api::Client::Errors::AmbiguousNameError,
-                "Resource type #{type.inspect} is ambiguous, use a type identifier!"
-        end
-
-        tis.first
+        get_type_identifier(type, Occi::Core::Resource.kind)
       end
 
       # Retrieves all available link types.
@@ -129,8 +103,7 @@ module Occi::Api::Client
       #
       # @return [Array<String>] list of available link types in a human-readable format
       def get_link_types
-        collection = @model.get(Occi::Core::Link.kind.type_identifier)
-        collection.kinds.to_a.collect { |kind| kind.term }
+        get_types(Occi::Core::Link.kind)
       end
 
       # Retrieves all available link type identifiers.
@@ -154,19 +127,31 @@ module Occi::Api::Client
       # @param type [String] short link type
       # @return [String, nil] link type identifier for the given link type
       def get_link_type_identifier(type)
+        get_type_identifier(type, Occi::Core::Link.kind)
+      end
+
+      private
+
+      def get_type_identifier(type, related_to)
         return type if (type =~ URI::ABS_URI) || (type && type.start_with?('/'))
 
-        collection = @model.get(Occi::Core::Link.kind.type_identifier)
-        l_kinds = collection.kinds.to_a.select { |r| r.term == type }
-        tis = l_kinds.collect { |r| r.type_identifier }
+        collection = @model.get(related_to.type_identifier)
+        e_kinds = collection.kinds.to_a.select { |e| e.term == type }
+        tis = e_kinds.collect { |e| e.type_identifier }
         tis.uniq!
 
         if tis.length > 1
           raise Occi::Api::Client::Errors::AmbiguousNameError,
-                "Link type #{type.inspect} is ambiguous, use a type identifier!"
+                "#{related_to.type_identifier.split('#').capitalize} type " \
+                "#{type.inspect} is ambiguous, use a type identifier!"
         end
 
         tis.first
+      end
+
+      def get_types(related_to)
+        collection = @model.get(related_to.type_identifier)
+        collection ? collection.kinds.to_a.collect { |kind| kind.term } : []
       end
 
     end
