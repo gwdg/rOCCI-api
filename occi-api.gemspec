@@ -21,6 +21,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'occi-core', '~> 4.3', '>= 4.3.0'
   gem.add_dependency 'httparty', '~> 0.13', '>= 0.13.1'
   gem.add_dependency 'json', '~> 1.8', '>= 1.8.1'
+  gem.add_dependency 'persistent_httparty', '~> 0.1', '>= 0.1.2'
 
   gem.required_ruby_version = '>= 1.9.3'
 end
