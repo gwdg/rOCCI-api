@@ -1,5 +1,5 @@
 require 'httparty'
-require 'persistent_httparty'
+#require 'persistent_httparty'
 
 # load all parts of the ClientHttp
 Dir[File.join(File.dirname(__FILE__), 'http', '*.rb')].each { |file| require file.gsub('.rb', '') }
@@ -12,7 +12,8 @@ module Occi::Api::Client
     include HTTParty
 
     # Take advantage of persistent HTTP connections
-    persistent_connection_adapter
+    # TODO: currently breaks SSL w/ X.509 auth, investigate why
+    #persistent_connection_adapter
 
     # TODO: change default Accept to JSON as soon as it is properly
     #       implemented in OpenStack's OCCI-OS
