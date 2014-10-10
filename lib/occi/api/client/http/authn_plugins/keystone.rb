@@ -10,12 +10,15 @@ module Occi::Api::Client
           # get Keystone URL if possible
           set_keystone_base_url
 
-          # get an un-scoped token
-          set_auth_token
-
-          # use the un-scoped token for tenant discovery
-          # and get a scoped token
-          get_prefered_tenant
+          if !ENV['ROCCI_CLIENT_KEYSTONE_TENANT'].blank?
+            # get a scoped token for the specified tenant directly
+            set_auth_token ENV['ROCCI_CLIENT_KEYSTONE_TENANT']
+          else
+            # get an unscoped token, use the unscoped token
+            # for tenant discovery and get a scoped token
+            set_auth_token
+            get_first_working_tenant
+          end
 
           raise ::Occi::Api::Client::Errors::AuthnError,
                 "Unable to get a tenant from Keystone, fallback failed!" if @env_ref.class.headers['X-Auth-Token'].blank?
@@ -94,7 +97,7 @@ module Occi::Api::Client
           body.to_json
         end
 
-        def get_prefered_tenant(match = nil)
+        def get_first_working_tenant
           response = @env_ref.class.get(
             "#{@keystone_url}/v2.0/tenants",
             :headers => get_req_headers
