@@ -181,11 +181,11 @@ module Occi::Api::Client
 
         # include a Request ID if it is available
         if response.headers["x-request-id"]
-          message = "HTTP #{response.request.http_method.upcase} with " \
+          message = "#{response.request.http_method} with " \
                     "ID[#{response.headers["x-request-id"].inspect}] failed! " \
                     "#{response_msg} : #{response.body.inspect}"
         else
-          message = "HTTP #{response.request.http_method.upcase} failed! " \
+          message = "#{response.request.http_method} failed! " \
                     "#{response_msg} : #{response.body.inspect}"
         end
 
