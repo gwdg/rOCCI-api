@@ -36,7 +36,7 @@ module Occi::Api::Client
           @keystone_url = /^Keystone uri='(.+)'$/.match(response.headers['www-authenticate'])[1]
           raise ::Occi::Api::Client::Errors::AuthnError, "Unable to get Keystone's URL from the response!" unless @keystone_url
 
-          @keystone_url = @keystone_url.chomp('/')
+          @keystone_url = @keystone_url.chomp('/').chomp('/v2.0')
         end
 
         def set_auth_token(tenant = nil)
