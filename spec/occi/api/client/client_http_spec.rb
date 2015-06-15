@@ -9,6 +9,11 @@ module Occi
     vcr_options = { :record => :none }
     describe ClientHttp, :vcr => vcr_options do
 
+      context "endpoint handling" do
+        it "removes query string from endpoint"
+        it "correctly handles endpoint with path"
+      end
+
       context "using media type text/plain" do
 
         before(:each) do
