@@ -38,6 +38,7 @@ module Occi::Api::Client
         # normalize URIs, remove trailing slashes
         endpoint = URI(endpoint)
         endpoint.path = endpoint.path.gsub(/\/+/, '/').chomp('/')
+        endpoint.query = nil
 
         endpoint
       end
