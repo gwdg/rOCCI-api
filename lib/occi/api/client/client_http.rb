@@ -47,11 +47,13 @@ module Occi::Api::Client
 
       # set a global base URI for all subsequent requests
       # must be done after authN calls
-      self.class.base_uri @endpoint.to_s
+      endpoint_base_uri = "#{@endpoint.scheme}://#{@endpoint.host}"
+      endpoint_base_uri << ":#{@endpoint.port}" unless @endpoint.port == @endpoint.default_port
+      self.class.base_uri endpoint_base_uri
 
       # get model information from the endpoint
       # and create Occi::Model instance
-      model_collection = get('/-/')
+      model_collection = get("#{@endpoint.path}/-/")
       @model = get_model(model_collection)
 
       # auto-connect?
