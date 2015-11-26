@@ -3,6 +3,9 @@ module Occi::Api::Client
 
     module PartyWrappers
 
+      # Acceptable responses indicating OK
+      OK_RANGE = [200, 201, 202, 204].freeze
+
       # Performs GET request and parses the responses to collections.
       #
       # @example
@@ -174,7 +177,7 @@ module Occi::Api::Client
 
       def report_failure(response)
         # Is there something to report?
-        return if response.code.between? 200, 202
+        return if OK_RANGE.include? response.code
 
         # get a human-readable response message
         response_msg = response_message(response)
