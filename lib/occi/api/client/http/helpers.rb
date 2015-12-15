@@ -20,21 +20,22 @@ module Occi::Api::Client
       # @see Occi::Api::Client::ClientBase
       def get_auth(auth_options, fallback = false)
         # select appropriate authN type
-        case auth_options[:type]
-        when "basic"
-          @authn_plugin = Http::AuthnPlugins::Basic.new self, auth_options
-        when "digest"
-          @authn_plugin = Http::AuthnPlugins::Digest.new self, auth_options
-        when "x509"
-          @authn_plugin = Http::AuthnPlugins::X509.new self, auth_options
-        when "keystone"
-          raise ::Occi::Api::Client::Errors::AuthnError, "This authN method is for fallback only!" unless fallback
-          @authn_plugin = Http::AuthnPlugins::Keystone.new self, auth_options
-        when "none", nil
-          @authn_plugin = Http::AuthnPlugins::Dummy.new self
-        else
-          raise ::Occi::Api::Client::Errors::AuthnError, "Unknown authN method [#{@auth_options[:type]}]!"
-        end
+        @authn_plugin = case auth_options[:type]
+                        when "basic", "digest", "x509", "token"
+                          Http::AuthnPlugins.const_get(auth_options[:type].capitalize).new(
+                            self,
+                            auth_options
+                          )
+                        when "keystone"
+                          raise ::Occi::Api::Client::Errors::AuthnError,
+                                "This authN method is for fallback only!" unless fallback
+                          Http::AuthnPlugins::Keystone.new self, auth_options
+                        when "none", nil
+                          Http::AuthnPlugins::Dummy.new self
+                        else
+                          raise ::Occi::Api::Client::Errors::AuthnError,
+                                "Unknown authN method [#{@auth_options[:type]}]!"
+                        end
 
         @authn_plugin.setup
 
