@@ -1,7 +1,7 @@
 ---
 http_interactions:
 - request:
-    method: head
+    method: get
     uri: https://localhost:3300/
     body:
       encoding: US-ASCII
@@ -44,7 +44,7 @@ http_interactions:
     http_version: 
   recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
-    method: head
+    method: get
     uri: https://localhost:3300/
     body:
       encoding: US-ASCII
@@ -422,7 +422,7 @@ http_interactions:
     http_version: 
   recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
 - request:
-    method: head
+    method: get
     uri: https://rocci-test:edited@localhost:3300/-/
     body:
       encoding: US-ASCII
