@@ -1,7 +1,7 @@
 ---
 http_interactions:
 - request:
-    method: head
+    method: get
     uri: https://rocci-test:edited@localhost:3300/-/
     body:
       encoding: US-ASCII
