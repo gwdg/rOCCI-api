@@ -12,11 +12,11 @@ module Occi::Api::Client
           @env_ref = env_ref
           @fallbacks = []
         end
-        
+
         def setup(options = {}); end
 
         def authenticate(options = {})
-          response = @env_ref.class.head("#{@env_ref.endpoint.to_s}/-/")
+          response = @env_ref.class.get("#{@env_ref.endpoint.to_s}/-/")
           raise ::Occi::Api::Client::Errors::AuthnError, "Authentication failed with code #{response.code.to_s}!" unless response.success?
         end
 
