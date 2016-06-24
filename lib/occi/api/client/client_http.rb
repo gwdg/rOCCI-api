@@ -78,10 +78,10 @@ module Occi::Api::Client
       )
 
       response_msg = response_message(response)
-      raise "HTTP GET failed! #{response_msg}" unless response.code == 200
+      raise "HTTP GET failed! #{response_msg}" unless [200, 204].include?(response.code)
 
       # TODO: remove the gsub OCCI-OS hack as soon as they stop using 'uri:'
-      response.body.gsub(/\# uri:\/(compute|storage|network)\/[\n]?/, '').split("\n").compact
+      (response.body || '').gsub(/\# uri:\/(compute|storage|network)\/[\n]?/, '').split("\n").compact
     end
 
     # @see Occi::Api::Client::ClientBase
