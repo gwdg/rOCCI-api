@@ -57,6 +57,9 @@ module Occi::Api::Client
           response = @env_ref.class.get @keystone_url
           Occi::Api::Log.debug response.inspect
 
+          raise ::Occi::Api::Client::Errors::AuthnError,
+                "Unable to get Keystone API version from the response, fallback failed!" if (400..599).include?(response.code)
+
           # multiple choices, sort them by version id
           if response.code == 300
             versions = response['versions']['values'].sort_by { |v| v['id']}
