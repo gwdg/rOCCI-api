@@ -7,6 +7,11 @@ module Occi::Api::Dsl
       @client.get_resource(*args)
     end
 
+    def link(*args)
+      check
+      @client.get_link(*args)
+    end
+
     def list(*args)
       check
       @client.list(*args)
