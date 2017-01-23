@@ -26,6 +26,28 @@ module Occi::Api::Client
         new_resource
       end
 
+      # Creates a new link instance, link should be specified
+      # by its name or identifier.
+      #
+      # @example
+      #   client.get_link "storagelink" # => Occi::Core::Link
+      #   client.get_link "http://schemas.ogf.org/occi/infrastructure#storagelink"
+      #    # => Occi::Core::Link
+      #
+      # @param link_type [String] link name or link identifier
+      # @return [Occi::Core::Link] new link instance
+      def get_link(link_type)
+        Occi::Api::Log.debug("Instantiating #{link_type.inspect}")
+
+        type_id = get_link_type_identifier(link_type)
+        raise "Unknown link type! #{link_type.inspect}" unless type_id
+
+        new_link = Occi::Core::Link.new(type_id)
+        new_link.model = @model
+
+        new_link
+      end
+
       # Retrieves all available entity types.
       #
       # @example
