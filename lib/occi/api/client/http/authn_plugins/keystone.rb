@@ -4,7 +4,7 @@ module Occi::Api::Client
 
       class Keystone < Base
 
-        KEYSTONE_URI_REGEXP = /^(Keystone|snf-auth) uri='(.+)'$/
+        KEYSTONE_URI_REGEXP = /^(Keystone|snf-auth) uri=("|')(.+)("|')$/
         KEYSTONE_VERSION_REGEXP = /^v([0-9]).*$/
 
         def setup(options = {})
@@ -48,9 +48,9 @@ module Occi::Api::Client
 
           match = KEYSTONE_URI_REGEXP.match(authN_header)
           raise ::Occi::Api::Client::Errors::AuthnError,
-                "Unable to get Keystone's URL from the response, fallback failed!" unless match && match[2]
+                "Unable to get Keystone's URL from the response, fallback failed!" unless match && match[3]
 
-          @keystone_url = match[2]
+          @keystone_url = match[3]
         end
 
         def set_auth_token(tenant = nil)
@@ -220,8 +220,8 @@ module Occi::Api::Client
 
         def set_voms_unscoped_token
           response = @env_ref.class.post(
-            # egi.eu and voms below should be configurable
-            "#{@base_url}/OS-FEDERATION/identity_providers/egi.eu/protocols/mapped/voms",
+            # egi.eu and mapped below should be configurable
+            "#{@base_url}/OS-FEDERATION/identity_providers/egi.eu/protocols/mapped/auth",
           )
           Occi::Api::Log.debug response.inspect
 
@@ -235,7 +235,7 @@ module Occi::Api::Client
 
         def get_first_working_project
           response = @env_ref.class.get(
-            "#{@base_url}/projects",
+            "#{@base_url}/auth/projects",
             :headers => get_req_headers
           )
           Occi::Api::Log.debug response.inspect
@@ -270,7 +270,7 @@ module Occi::Api::Client
           }
           response = @env_ref.class.post(
             "#{@base_url}/auth/tokens",
-            :body => body,
+            :body => body.to_json,
             :headers => get_req_headers
           )
 
