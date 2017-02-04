@@ -12,6 +12,7 @@ module Occi::Api::Client
           set_keystone_base_url
 
           # discover Keystone API version
+          @env_ref.class.headers.delete 'X-Auth-Token'
           set_auth_token ENV['ROCCI_CLIENT_KEYSTONE_TENANT']
 
           raise ::Occi::Api::Client::Errors::AuthnError,
