@@ -1,0 +1,262 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://rocci-test:edited@localhost:3300/-/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - text/plain,text/occi
+      User-Agent:
+      - rOCCI-core/4.2.5 rOCCI-api/4.2.0.beta.12 OCCI/1.1 ruby-x86_64-linux/1.9.3p194
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 01 Jan 1970 00:00:00 GMT
+      Server:
+      - Apache/2.2.22 (Debian)
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Ua-Compatible:
+      - chrome=1
+      Etag:
+      - ! '"4ca185da501239625a99fad36f211cb7"'
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - d8027fa0-e4cf-49ee-b4b5-597993a47d9d
+      X-Runtime:
+      - '0.159299'
+      X-Powered-By:
+      - Phusion Passenger 4.0.29
+      Status:
+      - 200 OK
+      Vary:
+      - Accept-Encoding
+      Content-Type:
+      - text/plain; charset=utf-8
+    body:
+      encoding: US-ASCII
+      string: ''
+    http_version: 
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
+- request:
+    method: get
+    uri: https://rocci-test:edited@localhost:3300/-/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - text/plain,text/occi
+      User-Agent:
+      - rOCCI-core/4.2.5 rOCCI-api/4.2.0.beta.12 OCCI/1.1 ruby-x86_64-linux/1.9.3p194
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 01 Jan 1970 00:00:00 GMT
+      Server:
+      - Apache/2.2.22 (Debian)
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Ua-Compatible:
+      - chrome=1
+      Etag:
+      - ! '"4ca185da501239625a99fad36f211cb7"'
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - 42290f32-21fd-4c80-bf9d-83cd1104de3b
+      X-Runtime:
+      - '0.102157'
+      X-Powered-By:
+      - Phusion Passenger 4.0.29
+      Status:
+      - 200 OK
+      Vary:
+      - Accept-Encoding
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - text/plain; charset=utf-8
+    body:
+      encoding: US-ASCII
+      string: ! 'Category: entity;scheme="http://schemas.ogf.org/occi/core#";class="kind";title="entity";location="/entity/";attributes="occi.core.id{immutable}
+        occi.core.title"
+
+        Category: resource;scheme="http://schemas.ogf.org/occi/core#";class="kind";title="resource";rel="http://schemas.ogf.org/occi/core#entity";location="/resource/";attributes="occi.core.id{immutable}
+        occi.core.title occi.core.summary"
+
+        Category: link;scheme="http://schemas.ogf.org/occi/core#";class="kind";title="link";rel="http://schemas.ogf.org/occi/core#entity";location="/link/";attributes="occi.core.id{immutable}
+        occi.core.title occi.core.target occi.core.source"
+
+        Category: compute;scheme="http://schemas.ogf.org/occi/infrastructure#";class="kind";title="compute
+        resource";rel="http://schemas.ogf.org/occi/core#resource";location="/compute/";attributes="occi.core.id{immutable}
+        occi.core.title occi.core.summary occi.compute.architecture occi.compute.cores
+        occi.compute.hostname occi.compute.memory occi.compute.speed occi.compute.state{immutable}";actions="http://schemas.ogf.org/occi/infrastructure/compute/action#start
+        http://schemas.ogf.org/occi/infrastructure/compute/action#stop http://schemas.ogf.org/occi/infrastructure/compute/action#restart
+        http://schemas.ogf.org/occi/infrastructure/compute/action#suspend"
+
+        Category: storage;scheme="http://schemas.ogf.org/occi/infrastructure#";class="kind";title="storage
+        resource";rel="http://schemas.ogf.org/occi/core#resource";location="/storage/";attributes="occi.core.id{immutable}
+        occi.core.title occi.core.summary occi.storage.size occi.storage.state{immutable}";actions="http://schemas.ogf.org/occi/infrastructure/storage/action#online
+        http://schemas.ogf.org/occi/infrastructure/storage/action#offline http://schemas.ogf.org/occi/infrastructure/storage/action#backup
+        http://schemas.ogf.org/occi/infrastructure/storage/action#snapshot http://schemas.ogf.org/occi/infrastructure/storage/action#resize"
+
+        Category: network;scheme="http://schemas.ogf.org/occi/infrastructure#";class="kind";title="network
+        resource";rel="http://schemas.ogf.org/occi/core#resource";location="/network/";attributes="occi.core.id{immutable}
+        occi.core.title occi.core.summary occi.network.vlan occi.network.label occi.network.state{immutable}";actions="http://schemas.ogf.org/occi/infrastructure/network/action#up
+        http://schemas.ogf.org/occi/infrastructure/network/action#down"
+
+        Category: networkinterface;scheme="http://schemas.ogf.org/occi/infrastructure#";class="kind";title="networkinterface
+        link";rel="http://schemas.ogf.org/occi/core#link";location="/link/networkinterface/";attributes="occi.core.id{immutable}
+        occi.core.title occi.core.target occi.core.source occi.networkinterface.interface{immutable}
+        occi.networkinterface.mac occi.networkinterface.state{immutable}";actions="http://schemas.ogf.org/occi/infrastructure/networkinterface/action#up
+        http://schemas.ogf.org/occi/infrastructure/networkinterface/action#down"
+
+        Category: storagelink;scheme="http://schemas.ogf.org/occi/infrastructure#";class="kind";title="storage
+        link";rel="http://schemas.ogf.org/occi/core#link";location="/link/storagelink/";attributes="occi.core.id{immutable}
+        occi.core.title occi.core.target occi.core.source occi.storagelink.deviceid
+        occi.storagelink.mountpoint occi.storagelink.state{immutable}";actions="http://schemas.ogf.org/occi/infrastructure/storagelink/action#online
+        http://schemas.ogf.org/occi/infrastructure/storagelink/action#offline"
+
+        Category: console;scheme="http://schemas.ogf.org/occi/infrastructure/compute#";class="kind";title="Link
+        to the VM''s console";rel="http://schemas.ogf.org/occi/core#link";location="/link/consolelink/"
+
+        Category: resource_tpl;scheme="http://schemas.ogf.org/occi/infrastructure#";class="mixin";title="resource
+        template";location="/mixin/resource_tpl/"
+
+        Category: os_tpl;scheme="http://schemas.ogf.org/occi/infrastructure#";class="mixin";title="operating
+        system template";location="/mixin/os_tpl/"
+
+        Category: ipnetwork;scheme="http://schemas.ogf.org/occi/infrastructure/network#";class="mixin";title="IP
+        network mixin";location="/mixin/ipnetwork/";attributes="occi.network.address
+        occi.network.gateway occi.network.allocation"
+
+        Category: ipnetworkinterface;scheme="http://schemas.ogf.org/occi/infrastructure/networkinterface#";class="mixin";title="IP
+        network interface mixin";location="/mixin/ipnetworkinterface/";attributes="occi.networkinterface.address
+        occi.networkinterface.gateway occi.networkinterface.allocation"
+
+        Category: public_key;scheme="http://schemas.openstack.org/instance/credentials#";class="mixin";title="OpenStack''s
+        contextualization extension - credentials";location="/mixin/public_key/";attributes="org.openstack.credentials.publickey.name{immutable}
+        org.openstack.credentials.publickey.data{immutable}"
+
+        Category: user_data;scheme="http://schemas.openstack.org/compute/instance#";class="mixin";title="OpenStack''s
+        contextualization extension - user_data";location="/mixin/user_data/";attributes="org.openstack.compute.user_data{immutable}"
+
+        Category: storage;scheme="http://opennebula.org/occi/infrastructure#";class="mixin";title="OpenNebula
+        specific Storage attributes";location="/mixin/storage/";attributes="org.opennebula.storage.id{immutable}
+        org.opennebula.storage.type{immutable} org.opennebula.storage.persistent{immutable}
+        org.opennebula.storage.dev_prefix{immutable} org.opennebula.storage.bus{immutable}
+        org.opennebula.storage.driver{immutable} org.opennebula.storage.fstype{immutable}
+        org.opennebula.storage.path{immutable}"
+
+        Category: compute;scheme="http://opennebula.org/occi/infrastructure#";class="mixin";title="OpenNebula
+        specific Compute attributes";location="/mixin/compute/";attributes="org.opennebula.compute.id{immutable}
+        org.opennebula.compute.cpu{immutable} org.opennebula.compute.kernel{immutable}
+        org.opennebula.compute.initrd{immutable} org.opennebula.compute.root{immutable}
+        org.opennebula.compute.kernel_cmd{immutable} org.opennebula.compute.bootloader{immutable}
+        org.opennebula.compute.boot{immutable}"
+
+        Category: networkinterface;scheme="http://opennebula.org/occi/infrastructure#";class="mixin";title="OpenNebula
+        specific Networkinterface attributes";location="/mixin/networkinterface/";attributes="org.opennebula.networkinterface.bridge{immutable}
+        org.opennebula.networkinterface.script{immutable} org.opennebula.networkinterface.model{immutable}
+        org.opennebula.networkinterface.white_ports_tcp{immutable} org.opennebula.networkinterface.black_ports_tcp{immutable}
+        org.opennebula.networkinterface.white_ports_udp{immutable} org.opennebula.networkinterface.black_ports_udp{immutable}
+        org.opennebula.networkinterface.icmp{immutable}"
+
+        Category: storagelink;scheme="http://opennebula.org/occi/infrastructure#";class="mixin";title="OpenNebula
+        specific Storagelink attributes";location="/mixin/storagelink/";attributes="org.opennebula.storagelink.bus{immutable}
+        org.opennebula.storagelink.driver{immutable} org.opennebula.storagelink.dev_prefix{immutable}"
+
+        Category: network;scheme="http://opennebula.org/occi/infrastructure#";class="mixin";title="OpenNebula
+        specific Network attributes";location="/mixin/network/";attributes="org.opennebula.network.id{immutable}
+        org.opennebula.network.bridge{immutable} org.opennebula.network.vlan{immutable}
+        org.opennebula.network.phydev{immutable} org.opennebula.network.ip_start{immutable}
+        org.opennebula.network.ip_end{immutable}"
+
+        Category: uuid_monitoring_4;scheme="http://localhost/occi/infrastructure/os_tpl#";class="mixin";title="monitoring";rel="http://schemas.ogf.org/occi/infrastructure#os_tpl";location="/mixin/os_tpl/uuid_monitoring_4/"
+
+        Category: uuid_debianvm_5;scheme="http://localhost/occi/infrastructure/os_tpl#";class="mixin";title="debianvm";rel="http://schemas.ogf.org/occi/infrastructure#os_tpl";location="/mixin/os_tpl/uuid_debianvm_5/"
+
+        Category: medium;scheme="http://sitespecific.localhost/occi/infrastructure/resource_tpl#";class="mixin";title="Medium
+        Instance";rel="http://schemas.ogf.org/occi/infrastructure#resource_tpl";location="/mixin/resource_tpl/medium/";attributes="occi.compute.architecture
+        occi.compute.cores{immutable} occi.compute.speed{immutable} occi.compute.memory{immutable}"
+
+        Category: small;scheme="http://sitespecific.localhost/occi/infrastructure/resource_tpl#";class="mixin";title="Small
+        Instance";rel="http://schemas.ogf.org/occi/infrastructure#resource_tpl";location="/mixin/resource_tpl/small/";attributes="occi.compute.architecture
+        occi.compute.cores{immutable} occi.compute.speed{immutable} occi.compute.memory{immutable}"
+
+        Category: extra_large;scheme="http://sitespecific.localhost/occi/infrastructure/resource_tpl#";class="mixin";title="Extra
+        Large Instance";rel="http://schemas.ogf.org/occi/infrastructure#resource_tpl";location="/mixin/resource_tpl/extra_large/";attributes="occi.compute.architecture{immutable}
+        occi.compute.cores{immutable} occi.compute.speed{immutable} occi.compute.memory{immutable}"
+
+        Category: large;scheme="http://sitespecific.localhost/occi/infrastructure/resource_tpl#";class="mixin";title="Large
+        Instance";rel="http://schemas.ogf.org/occi/infrastructure#resource_tpl";location="/mixin/resource_tpl/large/";attributes="occi.compute.architecture{immutable}
+        occi.compute.cores{immutable} occi.compute.speed{immutable} occi.compute.memory{immutable}"
+
+        Category: start;scheme="http://schemas.ogf.org/occi/infrastructure/compute/action#";class="action";title="start
+        compute instance"
+
+        Category: stop;scheme="http://schemas.ogf.org/occi/infrastructure/compute/action#";class="action";title="stop
+        compute instance";attributes="method"
+
+        Category: restart;scheme="http://schemas.ogf.org/occi/infrastructure/compute/action#";class="action";title="restart
+        compute instance";attributes="method"
+
+        Category: suspend;scheme="http://schemas.ogf.org/occi/infrastructure/compute/action#";class="action";title="suspend
+        compute instance";attributes="method"
+
+        Category: online;scheme="http://schemas.ogf.org/occi/infrastructure/storage/action#";class="action";title="activate
+        storage"
+
+        Category: offline;scheme="http://schemas.ogf.org/occi/infrastructure/storage/action#";class="action";title="deactivate
+        storage"
+
+        Category: backup;scheme="http://schemas.ogf.org/occi/infrastructure/storage/action#";class="action";title="backup
+        storage"
+
+        Category: snapshot;scheme="http://schemas.ogf.org/occi/infrastructure/storage/action#";class="action";title="snapshot
+        storage"
+
+        Category: resize;scheme="http://schemas.ogf.org/occi/infrastructure/storage/action#";class="action";title="resize
+        storage";attributes="size{required}"
+
+        Category: up;scheme="http://schemas.ogf.org/occi/infrastructure/network/action#";class="action";title="activate
+        network"
+
+        Category: down;scheme="http://schemas.ogf.org/occi/infrastructure/network/action#";class="action";title="deactivate
+        network"
+
+        Category: up;scheme="http://schemas.ogf.org/occi/infrastructure/networkinterface/action#";class="action";title="activate
+        networkinterface"
+
+        Category: down;scheme="http://schemas.ogf.org/occi/infrastructure/networkinterface/action#";class="action";title="deactivate
+        networkinterface"
+
+        Category: online;scheme="http://schemas.ogf.org/occi/infrastructure/storagelink/action#";class="action";title="activate
+        storagelink"
+
+        Category: offline;scheme="http://schemas.ogf.org/occi/infrastructure/storagelink/action#";class="action";title="deactivate
+        storagelink"
+
+'
+    http_version: 
+  recorded_at: Thu, 01 Jan 1970 00:00:00 GMT
+recorded_with: VCR 2.8.0
