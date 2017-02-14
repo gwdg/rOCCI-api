@@ -145,7 +145,8 @@ module Occi::Api::Client
       end
 
       def post_action(response)
-        true
+        coll = Occi::Parser.parse(response.content_type, response.body, true)
+        coll.mixins.any? ? coll.mixins : true
       end
 
       def post_create(response)

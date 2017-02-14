@@ -19,11 +19,11 @@ Gem::Specification.new do |gem|
   gem.require_paths = ['lib']
 
   gem.add_dependency 'occi-core', '>= 4.3.5', '< 5'
-  gem.add_dependency 'httparty', '>= 0.13.1', '< 1'
+  gem.add_dependency 'httparty', '>= 0.13.1', '< 0.14'
   gem.add_dependency 'json', '>= 1.8.1', '< 3'
 
   gem.add_development_dependency 'vcr', '>= 3.0', '< 4'
-  gem.add_development_dependency 'rubygems-tasks', '>= 0.2.4', '< 1'
+  gem.add_development_dependency 'rubygems-tasks', '>= 0.2.4', '< 0.3'
   gem.add_development_dependency 'rspec', '>= 3.5.0', '< 4'
   gem.add_development_dependency 'rake', '>= 12', '< 13'
   gem.add_development_dependency 'builder', '>= 3.2.3', '< 4'
