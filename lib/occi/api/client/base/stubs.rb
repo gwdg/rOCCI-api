@@ -90,6 +90,18 @@ module Occi::Api::Client
         raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
       end
 
+      # Updates given resource with the specified mixin(s).
+      #
+      # @example
+      #    TODO: add examples
+      #
+      # @param resource_type_identifier [String] resource type or type identifier
+      # @param mixins [Occi::Core::Mixins] collection of mixins
+      # @return [Boolean] status
+      def update(resource_type_identifier, mixins)
+        raise Occi::Api::Client::Errors::NotImplementedError, "#{__method__} is just a stub!"
+      end
+
       # Refreshes the Occi::Model used inside the client. Useful for
       # updating the model without creating a new instance or
       # reconnecting. Saves a lot of time in an interactive mode.

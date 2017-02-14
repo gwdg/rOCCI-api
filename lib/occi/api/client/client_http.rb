@@ -174,6 +174,23 @@ module Occi::Api::Client
     end
 
     # @see Occi::Api::Client::ClientBase
+    def update(resource_type_identifier, mixins)
+      raise 'Resource not provided!' if resource_type_identifier.blank?
+      raise 'Mixins not provided!' if mixins.blank?
+
+      # attempt to resolve shortened identifiers
+      resource_type_identifier = get_resource_type_identifier(resource_type_identifier)
+      path = path_for_kind_type_identifier(resource_type_identifier)
+
+      # prepare data
+      collection = Occi::Collection.new
+      collection.mixins = mixins
+
+      # make the request
+      post path, collection
+    end
+
+    # @see Occi::Api::Client::ClientBase
     def refresh
       # re-download the model from the server
       model_collection = get('/-/')
