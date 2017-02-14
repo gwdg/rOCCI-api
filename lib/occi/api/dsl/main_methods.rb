@@ -37,6 +37,11 @@ module Occi::Api::Dsl
       @client.trigger(*args)
     end
 
+    def update(*args)
+      check
+      @client.update(*args)
+    end
+
     def refresh
       check
       @client.refresh
