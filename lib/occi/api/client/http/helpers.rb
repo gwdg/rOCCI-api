@@ -30,6 +30,8 @@ module Occi::Api::Client
                           raise ::Occi::Api::Client::Errors::AuthnError,
                                 "This authN method is for fallback only!" unless fallback
                           Http::AuthnPlugins::Keystone.new self, auth_options
+                        when "oauth2"
+                          Http::AuthnPlugins::Keystone.new self, auth_options
                         when "none", nil
                           Http::AuthnPlugins::Dummy.new self
                         else

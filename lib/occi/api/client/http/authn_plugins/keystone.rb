@@ -13,7 +13,10 @@ module Occi::Api::Client
 
           # discover Keystone API version
           @env_ref.class.headers.delete 'X-Auth-Token'
-          set_auth_token ENV['ROCCI_CLIENT_KEYSTONE_TENANT']
+          if @options[:type] == 'oauth2'
+            keystone_version = 3
+          end
+          set_auth_token ENV['ROCCI_CLIENT_KEYSTONE_TENANT'], keystone_version
 
           raise ::Occi::Api::Client::Errors::AuthnError,
                 "Unable to get a tenant from Keystone, fallback failed!" if @env_ref.class.headers['X-Auth-Token'].blank?
@@ -54,14 +57,14 @@ module Occi::Api::Client
           @keystone_url = match[3]
         end
 
-        def set_auth_token(tenant = nil)
+        def set_auth_token(tenant = nil, keystone_version = nil)
           response = @env_ref.class.get @keystone_url
           Occi::Api::Log.debug response.inspect
 
           raise ::Occi::Api::Client::Errors::AuthnError,
                 "Unable to get Keystone API version from the response, fallback failed!" if (400..599).include?(response.code)
 
-          # multiple choices, sort them by version id
+          # multiple choices, sort them by version id (preferred is v2)
           if response.code == 300
             versions = response['versions']['values'].sort_by { |v| v['id']}
           else
@@ -74,18 +77,28 @@ module Occi::Api::Client
             raise ::Occi::Api::Client::Errors::AuthnError,
                   "Unable to get Keystone API version from the response, fallback failed!" unless match && match[1]
             if match[1] == '2'
-              handler_class = KeystoneV2
+              if keystone_version == nil or keystone_version == 2
+                Occi::Api::Log.debug "Selecting Keystone V2 interface"
+                handler_class = KeystoneV2
+              else
+                next
+              end
             elsif match[1] == '3'
-              handler_class = KeystoneV3
+              if keystone_version == nil or keystone_version == 3
+                Occi::Api::Log.debug "Selecting Keystone V3 interface"
+                handler_class = KeystoneV3
+              else
+                next
+              end
             end
             v['links'].each do |link|
               begin
                 if link['rel'] == 'self'
-                 keystone_url = link['href'].chomp('/')
-                 keystone_handler = handler_class.new(keystone_url, @env_ref, @options)
-                 token = keystone_handler.set_auth_token(tenant)
-                 # found a working keystone, stop looking
-                 return
+                  keystone_url = link['href'].chomp('/')
+                  keystone_handler = handler_class.new(keystone_url, @env_ref, @options)
+                  token = keystone_handler.set_auth_token(tenant)
+                  # found a working keystone, stop looking
+                  return
                 end
               rescue ::Occi::Api::Client::Errors::AuthnError
                 # ignore and try with next link
@@ -194,23 +207,16 @@ module Occi::Api::Client
 
         def set_auth_token(tenant = nil)
           if @options[:original_type] == "x509"
-            voms_authenticate(tenant)
+            set_voms_unscoped_token
+          elsif @options[:type] == "oauth2"
+            set_oauth2_unscoped_token
           elsif @options[:username] && @options[:password]
-            passwd_authenticate(tenant)
+            passwd_authenticate
           else
             raise ::Occi::Api::Client::Errors::AuthnError,
                   "Unable to request a token from Keystone! Chosen " \
                   "AuthN is not supported, fallback failed!"
           end
-        end
-
-        def passwd_authenticate(tenant = nil)
-          raise ::Occi::Api::Client::Errors::AuthnError,
-                "Needs to be implemented, check http://developer.openstack.org/api-ref-identity-v3.html#authenticatePasswordUnscoped"
-        end
-
-        def voms_authenticate(tenant = nil)
-          set_voms_unscoped_token
 
           if !tenant.blank?
             set_scoped_token(tenant)
@@ -219,10 +225,33 @@ module Occi::Api::Client
           end
         end
 
+        def passwd_authenticate
+          raise ::Occi::Api::Client::Errors::AuthnError,
+                "Needs to be implemented, check http://developer.openstack.org/api-ref-identity-v3.html#authenticatePasswordUnscoped"
+        end
+
         def set_voms_unscoped_token
           response = @env_ref.class.post(
-            # egi.eu and mapped below should be configurable
+            # FIXME(enolfc) egi.eu and mapped below should be configurable
             "#{@base_url}/OS-FEDERATION/identity_providers/egi.eu/protocols/mapped/auth",
+          )
+          Occi::Api::Log.debug response.inspect
+
+          if response.success?
+            @env_ref.class.headers['X-Auth-Token'] = response.headers['x-subject-token']
+          else
+            raise ::Occi::Api::Client::Errors::AuthnError,
+                  "Unable to get a token from Keystone, fallback failed!"
+          end
+        end
+
+        def set_oauth2_unscoped_token
+          headers = get_req_headers
+          headers['Authorization'] = "Bearer #{@options[:token]}"
+          response = @env_ref.class.post(
+            # FIXME(enolfc) egi.eu and oidc below should be configurable
+            "#{@base_url}/OS-FEDERATION/identity_providers/egi.eu/protocols/oidc/auth",
+            :headers => headers
           )
           Occi::Api::Log.debug response.inspect
 
@@ -287,7 +316,7 @@ module Occi::Api::Client
 
         def get_req_headers
           headers = @env_ref.class.headers.clone
-          headers['Content-Type'] = "application/json"
+          headers['Content-Type'] = 'application/json'
           headers['Accept'] = headers['Content-Type']
 
           headers
